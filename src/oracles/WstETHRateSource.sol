@@ -12,24 +12,30 @@ interface IWstETH {
 
 contract WstETHRateSource is IRateSource, Ownable {
     IWstETH public immutable wstETH;
+    address public immutable WSTETH_ADDRESS;
     
     uint64 public override updatedAt;
     
     uint256 public override ratePerSecond; 
     
     uint256 private lastExchangeRate; 
-    uint64 private lastUpdateTime;    
+    uint64 private lastUpdateTime;
     
-    address public constant WSTETH_ADDRESS = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
-    
-    uint64 public constant MIN_UPDATE_INTERVAL = 1 hours;
-    
-    uint256 public constant MAX_RATE_PER_SECOND = 5e15; 
+    uint64 public immutable MIN_UPDATE_INTERVAL;
+    uint256 public immutable MAX_RATE_PER_SECOND;
     
     event RateUpdated(uint256 newRate, uint256 exchangeRate, uint64 timestamp);
     
-    constructor(address _wstETH, address _admin) Ownable(_admin) {
+    constructor(
+        address _wstETH, 
+        address _admin, 
+        uint64 _minUpdateInterval, 
+        uint256 _maxRatePerSecond
+    ) Ownable(_admin) {
         wstETH = IWstETH(_wstETH);
+        WSTETH_ADDRESS = _wstETH;
+        MIN_UPDATE_INTERVAL = _minUpdateInterval;
+        MAX_RATE_PER_SECOND = _maxRatePerSecond;
         
         lastExchangeRate = _readExchangeRate();
         lastUpdateTime = uint64(block.timestamp);
@@ -88,7 +94,7 @@ contract WstETHRateSource is IRateSource, Ownable {
         updatedAt = uint64(block.timestamp);
     }
     
-    function getUnderlyingToken() external pure returns (address) {
+    function getUnderlyingToken() external view returns (address) {
         return WSTETH_ADDRESS;
     }
     

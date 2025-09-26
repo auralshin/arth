@@ -17,6 +17,7 @@ import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 import {ArthHook} from "../src/hooks/ArthHook.sol";
 import {BaseIndex} from "../src/oracles/BaseIndex.sol";
 import {PythOracleAdapter} from "../src/oracles/PythOracleAdapter.sol";
+import {WstETHRateSource} from "../src/oracles/WstETHRateSource.sol";
 import {ArthPoolFactory} from "../src/factory/ArthPoolFactory.sol";
 import {ArthLiquidityCaps} from "../src/risk/ArthLiquidityCaps.sol";
 import {ArthV4Router} from "../src/periphery/ArthV4Router.sol";
@@ -71,6 +72,20 @@ contract DeployAll is Script {
             address envPyth = _envAddressOrZero("PYTH_CONTRACT");
             require(envPyth != address(0), "Unknown network and PYTH_CONTRACT not set");
             return envPyth;
+        }
+    }
+
+    function _getWstETHAddress() internal view returns (address) {
+        uint256 chainId = block.chainid;
+        
+        if (chainId == 1) {
+            return 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0; // Mainnet wstETH
+        } else if (chainId == 11155111) {
+            return 0xB82381A3fBD3FaFA77B3a7bE693342618240067b; // Sepolia wstETH
+        } else {
+            address envWstETH = _envAddressOrZero("WSTETH");
+            require(envWstETH != address(0), "Unknown network and WSTETH not set in .env");
+            return envWstETH;
         }
     }
 
@@ -232,8 +247,44 @@ contract DeployAll is Script {
             1 hours, 
             new address[](0) 
         );
+        
+        // Deploy WstETH Rate Source
+        address wstETHAddr = _getWstETHAddress();
+        console2.log("Deploying WstETHRateSource with wstETH address:", wstETHAddr);
+        WstETHRateSource wstETHRateSource = new WstETHRateSource(
+            wstETHAddr,
+            msg.sender, // admin
+            1 hours,    // min update interval
+            5e15        // max rate per second (0.5% per second)
+        );
+        console2.log("WstETHRateSource deployed at:", address(wstETHRateSource));
+        
+        // Add WstETH rate source to BaseIndex
+        base.addSource(address(wstETHRateSource));
+        console2.log("Added WstETHRateSource to BaseIndex");
+        
         RiskEngine risk = new RiskEngine(msg.sender);
-        ArthPoolFactory factory = new ArthPoolFactory(manager);
+        
+        // Configure RiskEngine with wstETH as collateral
+        RiskEngine.PriceSource memory wstETHPriceSource = RiskEngine.PriceSource({
+            adapter: address(0), // No adapter, using manual price for now
+            pythId: bytes32(0),
+            maxAge: 0,
+            minConfBps: 0,
+            denom: 0,
+            manualPriceX18: 3000e18, // ~$3000 per wstETH (approximate)
+            useAdapter: false
+        });
+        
+        risk.upsertCollateral(
+            wstETHAddr,
+            1000, // 10% haircut
+            true, // enabled
+            wstETHPriceSource
+        );
+        console2.log("Configured wstETH as collateral in RiskEngine");
+        
+        ArthPoolFactory factory = new ArthPoolFactory(manager, msg.sender);
 
         ArthController controller = new ArthController(msg.sender, timelock);
 

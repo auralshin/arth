@@ -11,17 +11,18 @@ import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 import {Currency} from "@uniswap/v4-core/src/types/Currency.sol";
 import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
 import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ArthPoolFactory {
+contract ArthPoolFactory is Ownable {
     using PoolIdLibrary for PoolKey;
 
     IPoolManager public immutable MANAGER;
-    
+
     address public immutable THIS_FACTORY = address(this);
 
     event PoolCreated(PoolId poolId, address hook, uint64 maturity);
 
-    constructor(IPoolManager _manager) {
+    constructor(IPoolManager _manager, address owner) Ownable(owner) {
         MANAGER = _manager;
     }
 
@@ -38,11 +39,22 @@ contract ArthPoolFactory {
         bytes32 salt
     ) external returns (PoolId id, address hookAddr) {
         require(salt != bytes32(0), "SaltRequired");
-        hookAddr = address(new ArthHook{salt: salt}(MANAGER, baseIndex, riskEngine, address(this), pythAdapter));
+        hookAddr = address(
+            new ArthHook{salt: salt}(
+                MANAGER,
+                baseIndex,
+                riskEngine,
+                address(this),
+                pythAdapter
+            )
+        );
 
-        uint160 FLAGS = Hooks.AFTER_INITIALIZE_FLAG | Hooks.BEFORE_SWAP_FLAG
-            | Hooks.BEFORE_ADD_LIQUIDITY_FLAG | Hooks.AFTER_ADD_LIQUIDITY_FLAG
-            | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG | Hooks.AFTER_REMOVE_LIQUIDITY_FLAG;
+        uint160 FLAGS = Hooks.AFTER_INITIALIZE_FLAG |
+            Hooks.BEFORE_SWAP_FLAG |
+            Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
+            Hooks.AFTER_ADD_LIQUIDITY_FLAG |
+            Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
+            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG;
 
         require((uint160(hookAddr) & FLAGS) == FLAGS, "HookFlagsMismatch");
 
@@ -62,7 +74,7 @@ contract ArthPoolFactory {
         emit PoolCreated(id, hookAddr, maturityTs);
     }
 
-    function setRouter(address hookAddr, address router) external {
+    function setRouter(address hookAddr, address router) external onlyOwner {
         ArthHook(hookAddr).setRouter(router);
     }
 }

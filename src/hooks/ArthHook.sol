@@ -10,9 +10,7 @@ import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 import {ModifyLiquidityParams, SwapParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
 import {BalanceDelta, BalanceDeltaLibrary} from "@uniswap/v4-core/src/types/BalanceDelta.sol";
 import {Currency} from "@uniswap/v4-core/src/types/Currency.sol";
-import {
-    BeforeSwapDelta, BeforeSwapDeltaLibrary
-} from "@uniswap/v4-core/src/types/BeforeSwapDelta.sol";
+import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "@uniswap/v4-core/src/types/BeforeSwapDelta.sol";
 
 import {IRiskEngine} from "../interfaces/IRiskEngine.sol";
 import {IBaseIndex} from "../interfaces/IBaseIndex.sol";
@@ -21,9 +19,13 @@ import {Errors} from "../libraries/Errors.sol";
 
 contract ArthHook is IHooks {
     event FundingAccrued(PoolId indexed id, int256 growthX128Delta, uint32 dt);
-    
+
     event FundingOwedCleared(
-        address indexed owner, PoolId indexed id, int24 lower, int24 upper, int256 amount
+        address indexed owner,
+        PoolId indexed id,
+        int24 lower,
+        int24 upper,
+        int256 amount
     );
 
     address public ROUTER;
@@ -35,13 +37,13 @@ contract ArthHook is IHooks {
     using PoolIdLibrary for PoolKey;
 
     IPoolManager public immutable MANAGER;
-    
+
     IBaseIndex public immutable BASE_INDEX;
-    
+
     IRiskEngine public immutable RISK;
-    
+
     address public immutable FACTORY;
-    
+
     PythOracleAdapter public immutable PYTH_ADAPTER;
 
     uint256 internal constant FP = 1 << 128;
@@ -90,7 +92,13 @@ contract ArthHook is IHooks {
         emit FundingOwedCleared(owner, key.toId(), lower, upper, amt);
     }
 
-    constructor(IPoolManager _manager, IBaseIndex _base, IRiskEngine _risk, address _factory, PythOracleAdapter _pythAdapter) {
+    constructor(
+        IPoolManager _manager,
+        IBaseIndex _base,
+        IRiskEngine _risk,
+        address _factory,
+        PythOracleAdapter _pythAdapter
+    ) {
         MANAGER = _manager;
         BASE_INDEX = _base;
         RISK = _risk;
@@ -98,7 +106,11 @@ contract ArthHook is IHooks {
         PYTH_ADAPTER = _pythAdapter;
     }
 
-    function getHookPermissions() external pure returns (Hooks.Permissions memory p) {
+    function getHookPermissions()
+        external
+        pure
+        returns (Hooks.Permissions memory p)
+    {
         p.afterInitialize = true;
         p.beforeSwap = true;
         p.beforeAddLiquidity = true;
@@ -123,16 +135,21 @@ contract ArthHook is IHooks {
         pm.maturity = maturityTs;
         pm.lastCumIdx = cum;
         pm.lastTs = ts;
-        if (maturityTs == 0 || (maturityTs != 0 && block.timestamp >= maturityTs)) {
+        if (
+            maturityTs == 0 ||
+            (maturityTs != 0 && block.timestamp >= maturityTs)
+        ) {
             pm.frozen = true;
         }
     }
 
-    function _positionKey(address owner, PoolId id, int24 tickLower, int24 tickUpper, bytes32 salt)
-        internal
-        pure
-        returns (bytes32)
-    {
+    function _positionKey(
+        address owner,
+        PoolId id,
+        int24 tickLower,
+        int24 tickUpper,
+        bytes32 salt
+    ) internal pure returns (bytes32) {
         bytes32 idv = PoolId.unwrap(id);
         uint256 tl = uint256(int256(tickLower));
         uint256 tu = uint256(int256(tickUpper));
@@ -158,7 +175,11 @@ contract ArthHook is IHooks {
         if (pm.totalLiquidity > 0) {
             uint256 idxDelta = cum - pm.lastCumIdx;
             int256 growthDelta = int256((idxDelta * FP) / pm.totalLiquidity);
-            pm.fundingGrowthGlobalX128 += uint256(growthDelta);
+            if (growthDelta >= 0) {
+                pm.fundingGrowthGlobalX128 += uint256(growthDelta);
+            } else {
+                pm.fundingGrowthGlobalX128 -= uint256(-growthDelta);
+            }
             emit FundingAccrued(id, growthDelta, uint32(ts - pm.lastTs));
         }
 
@@ -186,7 +207,8 @@ contract ArthHook is IHooks {
             return;
         }
 
-        uint256 growthDelta = pm.fundingGrowthGlobalX128 - p.fundingGrowthSnapshotX128;
+        uint256 growthDelta = pm.fundingGrowthGlobalX128 -
+            p.fundingGrowthSnapshotX128;
         if (growthDelta != 0) {
             int256 delta = int256((growthDelta * p.liquidity) / FP);
             p.fundingOwedToken1 += delta;
@@ -239,31 +261,30 @@ contract ArthHook is IHooks {
         p.fundingOwedToken1 = 0;
     }
 
-    function beforeInitialize(address, PoolKey calldata, uint160)
-        external
-        pure
-        override
-        returns (bytes4)
-    {
+    function beforeInitialize(
+        address,
+        PoolKey calldata,
+        uint160
+    ) external pure override returns (bytes4) {
         return IHooks.beforeInitialize.selector;
     }
 
-    function afterInitialize(address, PoolKey calldata key, uint160, int24)
-        external
-        view
-        override
-        returns (bytes4)
-    {
+    function afterInitialize(
+        address,
+        PoolKey calldata key,
+        uint160,
+        int24
+    ) external view override returns (bytes4) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
-        
+
         address underlying = BASE_INDEX.underlying();
         address currency0 = Currency.unwrap(key.currency0);
         address currency1 = Currency.unwrap(key.currency1);
-        
+
         if (currency0 != underlying && currency1 != underlying) {
             revert Errors.UnderlyingMismatch();
         }
-        
+
         return IHooks.afterInitialize.selector;
     }
 
@@ -280,7 +301,13 @@ contract ArthHook is IHooks {
         PoolId id = key.toId();
         _accrue(id);
         if (poolMeta[id].frozen) revert Errors.PoolMatured();
-        _updatePositionOwed(trader, id, params.tickLower, params.tickUpper, params.salt);
+        _updatePositionOwed(
+            trader,
+            id,
+            params.tickLower,
+            params.tickUpper,
+            params.salt
+        );
 
         RISK.requireIM(trader, block.timestamp);
 
@@ -301,9 +328,17 @@ contract ArthHook is IHooks {
 
         PoolId id = key.toId();
         _applyLiquidityDelta(
-            trader, id, params.tickLower, params.tickUpper, params.salt, params.liquidityDelta
+            trader,
+            id,
+            params.tickLower,
+            params.tickUpper,
+            params.salt,
+            params.liquidityDelta
         );
-        return (IHooks.afterAddLiquidity.selector, BalanceDeltaLibrary.ZERO_DELTA);
+        return (
+            IHooks.afterAddLiquidity.selector,
+            BalanceDeltaLibrary.ZERO_DELTA
+        );
     }
 
     function beforeRemoveLiquidity(
@@ -318,7 +353,13 @@ contract ArthHook is IHooks {
 
         PoolId id = key.toId();
         _accrue(id);
-        _updatePositionOwed(trader, id, params.tickLower, params.tickUpper, params.salt);
+        _updatePositionOwed(
+            trader,
+            id,
+            params.tickLower,
+            params.tickUpper,
+            params.salt
+        );
         return IHooks.beforeRemoveLiquidity.selector;
     }
 
@@ -336,9 +377,17 @@ contract ArthHook is IHooks {
 
         PoolId id = key.toId();
         _applyLiquidityDelta(
-            trader, id, params.tickLower, params.tickUpper, params.salt, params.liquidityDelta
+            trader,
+            id,
+            params.tickLower,
+            params.tickUpper,
+            params.salt,
+            params.liquidityDelta
         );
-        return (IHooks.afterRemoveLiquidity.selector, BalanceDeltaLibrary.ZERO_DELTA);
+        return (
+            IHooks.afterRemoveLiquidity.selector,
+            BalanceDeltaLibrary.ZERO_DELTA
+        );
     }
 
     function beforeSwap(
@@ -360,30 +409,33 @@ contract ArthHook is IHooks {
         return (this.beforeSwap.selector, BeforeSwapDeltaLibrary.ZERO_DELTA, 0);
     }
 
-    function afterSwap(address, PoolKey calldata, SwapParams calldata, BalanceDelta, bytes calldata)
-        external
-        pure
-        override
-        returns (bytes4, int128)
-    {
+    function afterSwap(
+        address,
+        PoolKey calldata,
+        SwapParams calldata,
+        BalanceDelta,
+        bytes calldata
+    ) external pure override returns (bytes4, int128) {
         return (IHooks.afterSwap.selector, int128(0));
     }
 
-    function beforeDonate(address, PoolKey calldata, uint256, uint256, bytes calldata)
-        external
-        pure
-        override
-        returns (bytes4)
-    {
+    function beforeDonate(
+        address,
+        PoolKey calldata,
+        uint256,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
         return IHooks.beforeDonate.selector;
     }
 
-    function afterDonate(address, PoolKey calldata, uint256, uint256, bytes calldata)
-        external
-        pure
-        override
-        returns (bytes4)
-    {
+    function afterDonate(
+        address,
+        PoolKey calldata,
+        uint256,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
         return IHooks.afterDonate.selector;
     }
 }
