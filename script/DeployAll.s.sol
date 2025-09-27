@@ -30,6 +30,10 @@ import {IRiskEngine} from "../src/interfaces/IRiskEngine.sol";
 import {RiskEngine} from "../src/risk/RiskEngine.sol";
 import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
 
+// Mock contracts for testing
+import {MockStETH} from "../src/mocks/mockstETH.sol";
+import {MockWstETH} from "../src/mocks/mockwstETH.sol";
+
 contract DeployAll is Script {
     using Strings for uint256;
     using PoolIdLibrary for PoolKey;
@@ -147,11 +151,13 @@ contract DeployAll is Script {
         address manager,
         address baseIndex,
         address riskEngine,
-        address factory
+        address factory,
+        address pythAdapter
     ) internal pure returns (bytes32) {
+        // Must match the real ArthHook constructor signature exactly
         bytes memory init = abi.encodePacked(
             type(ArthHook).creationCode,
-            abi.encode(manager, baseIndex, riskEngine, factory)
+            abi.encode(manager, baseIndex, riskEngine, factory, pythAdapter)
         );
         return keccak256(init);
     }
@@ -160,6 +166,7 @@ contract DeployAll is Script {
         bytes32 initCodeHash,
         address deployer
     ) internal pure returns (bytes32 salt, address predicted) {
+        // These are the exact flags from getHookPermissions() in ArthHook
         uint160 FLAGS = Hooks.AFTER_INITIALIZE_FLAG |
             Hooks.BEFORE_SWAP_FLAG |
             Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
@@ -167,17 +174,23 @@ contract DeployAll is Script {
             Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
             Hooks.AFTER_REMOVE_LIQUIDITY_FLAG;
 
+        // Hook addresses must have the right flags in the last 16 bits
         uint160 MASK = uint160((1 << 16) - 1); 
 
         unchecked {
-            for (uint256 i = 1; ; ++i) {
+            for (uint256 i = 1; i < 1000000; ++i) { // Add upper limit to prevent infinite loop
                 bytes32 s = bytes32(i);
+                // Calculate CREATE2 address
                 bytes32 h = keccak256(
                     abi.encodePacked(bytes1(0xff), deployer, s, initCodeHash)
                 );
                 address a = address(uint160(uint256(h)));
-                if ((uint160(a) & MASK) == FLAGS) return (s, a);
+                
+                if ((uint160(a) & MASK) == FLAGS) {
+                    return (s, a);
+                }
             }
+            revert("Could not mine hook address with correct flags");
         }
     }
 
@@ -210,14 +223,6 @@ contract DeployAll is Script {
         require(maturity > block.timestamp, "BAD_MATURITY");
         require(sqrtPriceX96 != 0, "BAD_SQRT_PRICE");
 
-        (address c0Addr, address c1Addr, bool flipped) = _sort(
-            token0Env,
-            token1Env
-        );
-        if (flipped) {
-            sqrtPriceX96 = _invertSqrtPriceX96(sqrtPriceX96);
-        }
-
         vm.startBroadcast();
 
         if (pmAddr == address(0)) {
@@ -228,6 +233,29 @@ contract DeployAll is Script {
 
         IPoolManager manager = IPoolManager(pmAddr);
 
+        // Deploy mock contracts first for testing
+        console2.log("=== Deploying Mock Contracts ===");
+        MockStETH mockStETH = new MockStETH();
+        console2.log("MockStETH deployed at:", address(mockStETH));
+        
+        MockWstETH mockWstETH = new MockWstETH(address(mockStETH));
+        console2.log("MockWstETH deployed at:", address(mockWstETH));
+        
+        // Mint some initial mock stETH for testing
+        mockStETH.mintPooledEth(msg.sender, 1000000 * 1e18); // 1M stETH
+        console2.log("Minted 1M stETH to deployer");
+        
+        // Update token1 to use mock wstETH
+        token1Env = address(mockWstETH);
+        
+        (address c0Addr, address c1Addr, bool flipped) = _sort(
+            token0Env,
+            token1Env
+        );
+        if (flipped) {
+            sqrtPriceX96 = _invertSqrtPriceX96(sqrtPriceX96);
+        }
+        
         address[] memory proposers = new address[](1);
         address[] memory executors = new address[](1);
         proposers[0] = msg.sender;
@@ -248,9 +276,9 @@ contract DeployAll is Script {
             new address[](0) 
         );
         
-        // Deploy WstETH Rate Source
-        address wstETHAddr = _getWstETHAddress();
-        console2.log("Deploying WstETHRateSource with wstETH address:", wstETHAddr);
+        // Deploy WstETH Rate Source using mock wstETH
+        address wstETHAddr = address(mockWstETH);
+        console2.log("Deploying WstETHRateSource with mock wstETH address:", wstETHAddr);
         WstETHRateSource wstETHRateSource = new WstETHRateSource(
             wstETHAddr,
             msg.sender, // admin
@@ -314,7 +342,8 @@ contract DeployAll is Script {
             address(manager),
             address(base),
             address(risk),
-            address(factory)
+            address(factory),
+            address(pythAdapter)
         );
         (bytes32 salt, address predictedHook) = _mine(
             initHash,
@@ -338,6 +367,10 @@ contract DeployAll is Script {
             salt
         );
 
+        // Post-deploy sanity check
+        require(hook == predictedHook, "HOOK_ADDR_MISMATCH: mined initCodeHash/args/deployer differ");
+        console2.log("SUCCESS: Hook address matches prediction!");
+        
         factory.setRouter(hook, address(router));
         
         base.setController(address(controller));
@@ -392,8 +425,6 @@ contract DeployAll is Script {
         console2.log(address(receipts));
         console2.log("Hook (Pool)");
         console2.log(hook);
-        console2.log("Predicted hook");
-        console2.log(predictedHook);
 
         console2.log("PoolId (bytes32)");
         console2.logBytes32(PoolId.unwrap(id));

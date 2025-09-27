@@ -49,14 +49,15 @@ contract ArthPoolFactory is Ownable {
             )
         );
 
-        uint160 FLAGS = Hooks.AFTER_INITIALIZE_FLAG |
+        uint160 EXPECTED_FLAGS = Hooks.AFTER_INITIALIZE_FLAG |
             Hooks.BEFORE_SWAP_FLAG |
             Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
             Hooks.AFTER_ADD_LIQUIDITY_FLAG |
             Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
             Hooks.AFTER_REMOVE_LIQUIDITY_FLAG;
 
-        require((uint160(hookAddr) & FLAGS) == FLAGS, "HookFlagsMismatch");
+        uint160 MASK = uint160((1 << 16) - 1);
+        require((uint160(hookAddr) & MASK) == EXPECTED_FLAGS, "HookFlagsMismatch");
 
         PoolKey memory key = PoolKey({
             currency0: currency0,

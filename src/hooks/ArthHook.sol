@@ -231,16 +231,23 @@ contract ArthHook is IHooks {
         Position storage p = positions[key];
 
         if (liquidityDelta > 0) {
-            uint128 add = uint128(uint256(liquidityDelta));
+            uint256 add256 = uint256(liquidityDelta);
+            if (add256 > type(uint128).max)
+                revert Errors.LiquidityDeltaTooLarge();
+            uint128 add = uint128(add256);
             p.liquidity += add;
             pm.totalLiquidity += add;
         } else if (liquidityDelta < 0) {
-            uint128 sub = uint128(uint256(-liquidityDelta));
+            uint256 sub256 = uint256(-liquidityDelta);
+            if (sub256 > type(uint128).max)
+                revert Errors.LiquidityDeltaTooLarge();
+            uint128 sub = uint128(sub256);
             if (p.liquidity < sub) revert Errors.LiquidityUnderflow();
             p.liquidity -= sub;
             if (pm.totalLiquidity < sub) revert Errors.PoolLiquidityUnderflow();
             pm.totalLiquidity -= sub;
         }
+
         p.fundingGrowthSnapshotX128 = pm.fundingGrowthGlobalX128;
     }
 
@@ -271,19 +278,12 @@ contract ArthHook is IHooks {
 
     function afterInitialize(
         address,
-        PoolKey calldata key,
+        PoolKey calldata,
         uint160,
         int24
     ) external view override returns (bytes4) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
 
-        address underlying = BASE_INDEX.underlying();
-        address currency0 = Currency.unwrap(key.currency0);
-        address currency1 = Currency.unwrap(key.currency1);
-
-        if (currency0 != underlying && currency1 != underlying) {
-            revert Errors.UnderlyingMismatch();
-        }
 
         return IHooks.afterInitialize.selector;
     }

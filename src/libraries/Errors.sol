@@ -135,7 +135,8 @@ library Errors {
     
     error UseRouter();
 
-    
+    error LiquidityDeltaTooLarge();
+
     error ETHSendFailed();
     
     error MulticallFailed();
