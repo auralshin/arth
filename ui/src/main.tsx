@@ -7,6 +7,7 @@ import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { wagmiConfig } from './config';
 import { BrowserRouter } from 'react-router-dom';
+import { NotificationProvider } from './components/NotificationSystem';
 
 const qc = new QueryClient();
 
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={qc}>
-          <AppRouter />
+          <NotificationProvider>
+            <AppRouter />
+          </NotificationProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </BrowserRouter>
