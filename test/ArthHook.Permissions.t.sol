@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.26;
 
 import {Test} from "forge-std/Test.sol";
-
 import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
 import {PoolManager} from "@uniswap/v4-core/src/PoolManager.sol";
 import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
 import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
+import {HookMiner} from "@uniswap/v4-periphery/src/utils/HookMiner.sol";
 
 import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 import {Currency} from "@uniswap/v4-core/src/types/Currency.sol";
-import {SwapParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
+import {SwapParams, ModifyLiquidityParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
 import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "@uniswap/v4-core/src/types/BeforeSwapDelta.sol";
-import {ModifyLiquidityParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
+import {BalanceDelta} from "@uniswap/v4-core/src/types/BalanceDelta.sol";
 
-import {ArthPoolFactory} from "../src/factory/ArthPoolFactory.sol";
 import {ArthHook} from "../src/hooks/ArthHook.sol";
+import {ArthPoolFactory} from "../src/factory/ArthPoolFactory.sol";
 import {BaseIndex} from "../src/oracles/BaseIndex.sol";
 import {PythOracleAdapter} from "../src/oracles/PythOracleAdapter.sol";
-import {MockPyth} from "../lib/pyth-sdk-solidity/MockPyth.sol";
-import {IBaseIndex} from "../src/interfaces/IBaseIndex.sol";
+import {MockPyth} from "@pythnetwork/pyth-sdk-solidity/MockPyth.sol";
 import {IRiskEngine} from "../src/interfaces/IRiskEngine.sol";
+import {IBaseIndex} from "../src/interfaces/IBaseIndex.sol";
 import {RiskEngine} from "../src/risk/RiskEngine.sol";
 import {Errors} from "../src/libraries/Errors.sol";
 
@@ -29,15 +29,17 @@ contract ArthHook_Permissions is Test {
     using PoolIdLibrary for PoolKey;
 
     IPoolManager manager;
-    BaseIndex base;
     ArthPoolFactory factory;
+    BaseIndex base;
     RiskEngine risk;
     MockPyth mockPyth;
-    PythOracleAdapter pythAdapter;
+    PythOracleAdapter pyth;
+    ArthHook hook;
 
-    address owner = address(0xa);
-    address alice = address(0xA11CE);
-    address bob = address(0xB0B);
+    address public owner = address(0xBEEF);
+    address public router = address(0xCAFE);
+    address public alice = address(0xA11CE);
+    address public bob = address(0xB0B);
 
     function _computeAddress(
         address deployer,
@@ -64,27 +66,33 @@ contract ArthHook_Permissions is Test {
     function _findSalt(address deployer) internal view returns (bytes32) {
         bytes memory creation = type(ArthHook).creationCode;
 
-        bytes memory args = abi.encode(
+        // Constructor arguments for ArthHook (new singleton pattern)
+        bytes memory constructorArgs = abi.encode(
             manager,
-            IBaseIndex(address(base)),
-            IRiskEngine(address(risk)),
-            address(factory),
-            pythAdapter
+            address(factory)
         );
-        bytes memory creationWithArgs = abi.encodePacked(creation, args);
+        bytes memory creationWithArgs = abi.encodePacked(creation, constructorArgs);
 
-        uint160 want = (Hooks.AFTER_INITIALIZE_FLAG |
+        uint160 flags = uint160(
+            Hooks.AFTER_INITIALIZE_FLAG |
             Hooks.BEFORE_SWAP_FLAG |
             Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
             Hooks.AFTER_ADD_LIQUIDITY_FLAG |
             Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
-            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG);
-        uint160 mask = Hooks.ALL_HOOK_MASK;
+            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
+        );
 
-        for (uint256 s = 1; s < 50_000; ++s) {
-            address a = _computeAddress(deployer, s, creationWithArgs);
-            if ((uint160(a) & mask) == want && a.code.length == 0) {
-                return bytes32(s);
+        // Use a more systematic approach to find the salt
+        // The flags need to match the lower bits of the address
+        for (uint256 s = 0; s < 100_000; ++s) {
+            address predicted = _computeAddress(deployer, s, creationWithArgs);
+            
+            // Check if the lower bits match our desired flags
+            if ((uint160(predicted) & uint160(0xFFFF)) == (flags & uint160(0xFFFF))) {
+                // Additional check to make sure we're not colliding with existing code
+                if (predicted.code.length == 0) {
+                    return bytes32(s);
+                }
             }
         }
         revert("could not find salt");
@@ -93,36 +101,71 @@ contract ArthHook_Permissions is Test {
     function setUp() public {
         manager = new PoolManager(owner);
 
-        address[] memory sources = new address[](0);
-        base = new BaseIndex(
-            address(this), 
-            address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2), 
-            200_000, 
-            200_000, 
-            3600, 
-            sources
-        );
+        address[] memory srcs;
+        base = new BaseIndex(address(this), address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2), 200_000, 200_000, 3600, srcs);
 
         risk = new RiskEngine(owner);
         vm.prank(owner);
-        risk.setOperator(address(this), true); 
+        risk.setOperator(address(this), true);
 
-        mockPyth = new MockPyth(60, 1); 
-        pythAdapter = new PythOracleAdapter(address(mockPyth), 60); 
+        mockPyth = new MockPyth(60, 1);
+        pyth = new PythOracleAdapter(address(mockPyth), 60);
 
         factory = new ArthPoolFactory(manager, owner);
+
+        // Fix: mine and deploy hook with CREATE2 so BaseHook validation passes
+        (ArthHook h,) = _deployArthHookViaMiner(
+            address(this), // deployer (the test itself)
+            manager, 
+            address(factory)
+        );
+        hook = h;
+
+        // wire router (ArthHook.onlyFactory)
+        vm.prank(address(factory));
+        hook.setRouter(router);
     }
 
-    function _createPool()
+    function _deployArthHookViaMiner(
+        address deployer,
+        IPoolManager _manager,
+        address _factory
+    ) internal returns (ArthHook h, address predicted) {
+        uint160 flags = uint160(
+            Hooks.AFTER_INITIALIZE_FLAG |
+            Hooks.BEFORE_SWAP_FLAG     |
+            Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
+            Hooks.AFTER_ADD_LIQUIDITY_FLAG  |
+            Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
+            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
+        );
+        bytes memory args = abi.encode(_manager, _factory);
+        (address want, bytes32 salt) = HookMiner.find(deployer, flags, type(ArthHook).creationCode, args);
+        h = new ArthHook{salt: salt}(_manager, _factory);
+        require(address(h) == want, "mined addr mismatch");
+        predicted = want;
+    }
+
+    function _mkKey(address t0, address t1) internal view returns (PoolKey memory key) {
+        key = PoolKey({
+            currency0: Currency.wrap(t0),
+            currency1: Currency.wrap(t1),
+            fee: 3000,
+            tickSpacing: 60,
+            hooks: IHooks(address(hook))
+        });
+    }    function _createPool()
         internal
-        returns (PoolKey memory key, PoolId id, address hook)
+        returns (PoolKey memory key, PoolId id, address hookAddr)
     {
         Currency c0 = Currency.wrap(address(0xC002)); 
         Currency c1 = Currency.wrap(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)); 
 
-        bytes32 salt = _findSalt(address(factory));
+        // set singleton hook
+        vm.prank(owner);
+        factory.setHook(address(hook));
 
-        (id, hook) = factory.createPool(
+        (id, hookAddr) = factory.createPool(
             c0,
             c1,
             3000,
@@ -131,8 +174,7 @@ contract ArthHook_Permissions is Test {
             uint64(block.timestamp + 30 days),
             IBaseIndex(address(base)),
             IRiskEngine(address(risk)),
-            pythAdapter,
-            salt
+            pyth
         );
 
         key = PoolKey({
@@ -140,27 +182,28 @@ contract ArthHook_Permissions is Test {
             currency1: c1,
             fee: 3000,
             tickSpacing: 60,
-            hooks: IHooks(hook)
+            hooks: IHooks(hookAddr)
         });
-
-        vm.prank(address(factory));
-        ArthHook(hook).setRouter(address(this));
     }
 
 
     function test_FlagsIncludeAddRemoveHooks() public {
         (, , address hookAddr) = _createPool();
 
-        uint160 mask = Hooks.ALL_HOOK_MASK;
-        uint160 want = (Hooks.AFTER_INITIALIZE_FLAG |
+        uint160 expectedFlags = uint160(
+            Hooks.AFTER_INITIALIZE_FLAG |
             Hooks.BEFORE_SWAP_FLAG |
             Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
             Hooks.AFTER_ADD_LIQUIDITY_FLAG |
             Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
-            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG);
+            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
+        );
 
-        uint160 flags = uint160(hookAddr) & mask;
-        assertEq(flags, want, "hook LSB flags must include add/remove");
+        // Check that the lower 16 bits match our expected flags
+        uint160 actualFlags = uint160(hookAddr) & uint160(0xFFFF);
+        uint160 expectedLowerBits = expectedFlags & uint160(0xFFFF);
+        
+        assertEq(actualFlags, expectedLowerBits, "hook LSB flags must include add/remove");
     }
 
     function test_RiskGate_UsesSender_Address() public {
@@ -168,15 +211,16 @@ contract ArthHook_Permissions is Test {
 
         risk.onFundingAccrued(bob, int256(1e18));
 
-        vm.startPrank(address(manager), address(this));
         SwapParams memory sp = SwapParams({
             zeroForOne: true,
             amountSpecified: 1,
             sqrtPriceLimitX96: 0
         });
+        
+        // Call hook as PoolManager (BaseHook check) with router as tx.origin (UseRouter check)
+        vm.prank(address(manager), router);
         (bytes4 sel, BeforeSwapDelta d, uint24 optFee) = ArthHook(hookAddr)
-            .beforeSwap(address(this), key, sp, abi.encode(alice));
-        vm.stopPrank();
+            .beforeSwap(router, key, sp, abi.encode(alice));
 
         assertEq(sel, IHooks.beforeSwap.selector);
         assertEq(
@@ -185,10 +229,10 @@ contract ArthHook_Permissions is Test {
         );
         assertEq(optFee, 0);
 
-        vm.startPrank(address(manager), address(this));
+        // Call hook as PoolManager but expect revert due to bob's insufficient equity
+        vm.prank(address(manager), router);
         vm.expectRevert(Errors.InsufficientEquity.selector);
-        ArthHook(hookAddr).beforeSwap(address(this), key, sp, abi.encode(bob));
-        vm.stopPrank();
+        ArthHook(hookAddr).beforeSwap(router, key, sp, abi.encode(bob));
     }
 
     function test_AfterInitialize_Selector() public {
@@ -213,7 +257,6 @@ contract ArthHook_Permissions is Test {
         vm.prank(address(factory));
         ArthHook(hookAddr).setMaturity(id, uint64(block.timestamp - 1)); 
 
-        vm.prank(address(manager));
         ModifyLiquidityParams memory ap = ModifyLiquidityParams({
             tickLower: -60,
             tickUpper: 60,
@@ -221,9 +264,11 @@ contract ArthHook_Permissions is Test {
             salt: bytes32(0)
         });
 
+        // Call hook as PoolManager (BaseHook check) with router as tx.origin and sender
+        vm.prank(address(manager), router);
         vm.expectRevert(Errors.PoolMatured.selector);
         ArthHook(hookAddr).beforeAddLiquidity(
-            address(this),
+            router,
             key,
             ap,
             abi.encode(alice)

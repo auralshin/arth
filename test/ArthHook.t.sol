@@ -1,28 +1,25 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.26;
 
 import {Test} from "forge-std/Test.sol";
-
+import {console} from "forge-std/console.sol";
 import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
 import {PoolManager} from "@uniswap/v4-core/src/PoolManager.sol";
 import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
 import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
-
+import {HookMiner} from "@uniswap/v4-periphery/src/utils/HookMiner.sol";
 import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 import {Currency} from "@uniswap/v4-core/src/types/Currency.sol";
-import {SwapParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
-import {
-    BeforeSwapDelta, BeforeSwapDeltaLibrary
-} from "@uniswap/v4-core/src/types/BeforeSwapDelta.sol";
-
-import {ModifyLiquidityParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
+import {ModifyLiquidityParams, SwapParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
+import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "@uniswap/v4-core/src/types/BeforeSwapDelta.sol";
+import {BalanceDelta} from "@uniswap/v4-core/src/types/BalanceDelta.sol";
 
 import {ArthPoolFactory} from "../src/factory/ArthPoolFactory.sol";
 import {ArthHook} from "../src/hooks/ArthHook.sol";
 import {BaseIndex} from "../src/oracles/BaseIndex.sol";
 import {PythOracleAdapter} from "../src/oracles/PythOracleAdapter.sol";
-import {MockPyth} from "../lib/pyth-sdk-solidity/MockPyth.sol";
+import {MockPyth} from "@pythnetwork/pyth-sdk-solidity/MockPyth.sol";
 import {IBaseIndex} from "../src/interfaces/IBaseIndex.sol";
 import {IRiskEngine} from "../src/interfaces/IRiskEngine.sol";
 import {RiskEngine} from "../src/risk/RiskEngine.sol";
@@ -32,185 +29,633 @@ contract ArthHookTest is Test {
     using PoolIdLibrary for PoolKey;
 
     IPoolManager manager;
-    BaseIndex base;
     ArthPoolFactory factory;
+    BaseIndex base;
     RiskEngine risk;
     MockPyth mockPyth;
     PythOracleAdapter pythAdapter;
 
-    address owner = address(0xa);
-    address alice = address(0xA11CE);
-    address bob = address(0xB0B);
-
-    function _computeAddress(address deployer, uint256 salt, bytes memory creationCodeWithArgs)
-        internal
-        pure
-        returns (address)
-    {
-        return address(
-            uint160(
-                uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            bytes1(0xFF), deployer, salt, keccak256(creationCodeWithArgs)
-                        )
-                    )
-                )
-            )
-        );
-    }
-
-    function _findSalt(address deployer) internal view returns (bytes32) {
-        bytes memory creation = type(ArthHook).creationCode;
-
-        bytes memory args = abi.encode(
-            manager, IBaseIndex(address(base)), IRiskEngine(address(risk)), address(factory), pythAdapter
-        );
-        bytes memory creationWithArgs = abi.encodePacked(creation, args);
-
-        uint160 want = (
-            Hooks.AFTER_INITIALIZE_FLAG | Hooks.BEFORE_SWAP_FLAG | Hooks.BEFORE_ADD_LIQUIDITY_FLAG
-                | Hooks.AFTER_ADD_LIQUIDITY_FLAG | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG
-                | Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
-        );
-        uint160 mask = Hooks.ALL_HOOK_MASK;
-
-        for (uint256 s = 1; s < 50_000; ++s) {
-            address a = _computeAddress(deployer, s, creationWithArgs);
-            if ((uint160(a) & mask) == want && a.code.length == 0) {
-                return bytes32(s);
-            }
-        }
-        revert("could not find salt");
-    }
+    address owner  = address(0xA);
+    address router = address(this);
+    address alice  = address(0xA11CE);
+    address bob    = address(0xB0B);
 
     function setUp() public {
         manager = new PoolManager(owner);
 
         address[] memory sources = new address[](0);
         base = new BaseIndex(
-            address(this), 
-            address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2), 
-            200_000, 
-            200_000, 
-            3600, 
+            address(this),
+            address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2),
+            200_000,
+            200_000,
+            3600,
             sources
         );
 
         risk = new RiskEngine(owner);
-        vm.prank(owner);
-        risk.setOperator(address(this), true);
-
-        mockPyth = new MockPyth(60, 1); 
-        pythAdapter = new PythOracleAdapter(address(mockPyth), 60); 
-
+        mockPyth = new MockPyth(60, 1);
+        pythAdapter = new PythOracleAdapter(address(mockPyth), 60);
         factory = new ArthPoolFactory(manager, owner);
+
+        // 1) Mine + deploy WITH deployer = address(this) - no prank active here
+        (ArthHook hook,) = _deployArthHookViaMiner(
+            address(this), // same deployer for find + new
+            manager,
+            address(factory)
+        );
+
+        // 2) Do all onlyOwner ops under a single prank
+        vm.startPrank(owner);
+        risk.setOperator(address(this), true);
+        factory.setHook(address(hook));
+        factory.setRouter(address(hook), router);
+        risk.setOperator(address(hook), true);
+
+        vm.stopPrank();
+
+        // sanity: owner is correct and hook was set
+        assertEq(factory.owner(), owner, "factory owner mismatch");
+        assertTrue(factory.HOOK() != address(0), "HOOK not set");
     }
 
-    function _createPool() internal returns (PoolKey memory key, PoolId id, address hook) {
-        Currency c0 = Currency.wrap(address(0xC002)); 
-        Currency c1 = Currency.wrap(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)); 
+    function _deployArthHookViaMiner(
+        address deployer,
+        IPoolManager _manager,
+        address _factory
+    ) internal returns (ArthHook hook, address predicted) {
+        uint160 flags = uint160(
+            Hooks.AFTER_INITIALIZE_FLAG |
+            Hooks.BEFORE_SWAP_FLAG |
+            Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
+            Hooks.AFTER_ADD_LIQUIDITY_FLAG |
+            Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
+            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
+        );
+        bytes memory args = abi.encode(_manager, _factory);
+        console.log("HookMiner deployer:", deployer);
+        console.log("HookMiner flags:", flags);
+        
+        (address want, bytes32 salt) =
+            HookMiner.find(deployer, flags, type(ArthHook).creationCode, args);
 
-        bytes32 salt = _findSalt(address(factory));
+        console.log("HookMiner predicted address:", want);
+        console.log("HookMiner salt:", uint256(salt));
+        
+        uint160 wantLower16 = uint160(want) & uint160(0xFFFF);
+        uint160 flagsLower16 = flags & uint160(0xFFFF);
+        console.log("Want address lower 16:", wantLower16);
+        console.log("Flags lower 16:", flagsLower16);
+        
+        // Deployed by THIS test; address must match mined one
+        hook = new ArthHook{salt: salt}(_manager, _factory);
+        console.log("Actually deployed at:", address(hook));
+        require(address(hook) == want, "ArthHook: mined address mismatch");
+        predicted = want;
+    }
 
-        (id, hook) = factory.createPool(
-            c0,
-            c1,
-            3000,
-            60,
-            79228162514264337593543950336, 
-            uint64(block.timestamp + 30 days),
+    function _registerPool(
+        Currency c0,
+        Currency c1,
+        uint24 fee,
+        int24 tickSpacing,
+        uint160 sqrtPriceX96,
+        uint64 maturity
+    ) internal returns (PoolKey memory key, PoolId id, ArthHook hook) {
+        address hookAddr;
+        (id, hookAddr) = factory.createPool(
+            c0, c1, fee, tickSpacing, sqrtPriceX96, maturity,
             IBaseIndex(address(base)),
             IRiskEngine(address(risk)),
-            pythAdapter,
-            salt
+            pythAdapter
         );
 
-        key = PoolKey({currency0: c0, currency1: c1, fee: 3000, tickSpacing: 60, hooks: IHooks(hook)});
-
-        vm.prank(address(factory));
-        ArthHook(hook).setRouter(address(this));
+        hook = ArthHook(hookAddr);
+        key = PoolKey({
+            currency0: c0,
+            currency1: c1,
+            fee: fee,
+            tickSpacing: tickSpacing,
+            hooks: IHooks(address(hook))
+        });
     }
 
-    function test_CreatePoolAndMaturitySet() public {
-        (, PoolId id, address hookAddr) = _createPool();
-        assertTrue(hookAddr != address(0), "hook deployed");
+    // ──────────────────────────────────────────────────────────────────────────
+    // Factory / Hook deployment
+    // ──────────────────────────────────────────────────────────────────────────
 
-        (uint64 maturity,,,,,) = ArthHook(hookAddr).poolMeta(id);
-        assertGt(maturity, 0, "maturity set via factory");
-    }
+    function test_HookDeploymentFlags() public view {
+        address h = factory.HOOK();
+        assertTrue(h != address(0), "hook deployed");
 
-    function test_HookAddressHasCorrectFlags() public {
-        (,, address hookAddr) = _createPool();
-
-        uint160 mask = Hooks.ALL_HOOK_MASK;
-        uint160 want = (
-            Hooks.AFTER_INITIALIZE_FLAG | Hooks.BEFORE_SWAP_FLAG | Hooks.BEFORE_ADD_LIQUIDITY_FLAG
-                | Hooks.AFTER_ADD_LIQUIDITY_FLAG | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG
-                | Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
+        uint160 expectedFlags = uint160(
+            Hooks.AFTER_INITIALIZE_FLAG |
+            Hooks.BEFORE_SWAP_FLAG |
+            Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
+            Hooks.AFTER_ADD_LIQUIDITY_FLAG |
+            Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
+            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
         );
-
-        uint160 flags = uint160(hookAddr) & mask;
-        assertEq(flags, want, "hook LSBs match desired flags");
+        uint160 lower = uint160(h) & uint160(0xFFFF);
+        assertEq(lower, expectedFlags & uint160(0xFFFF), "flags lower-16");
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Pool registration & maturity
+    // ──────────────────────────────────────────────────────────────────────────
+
+    function test_RegisterPool_setsMaturity() public {
+        Currency c0 = Currency.wrap(address(0xC002));
+        Currency c1 = Currency.wrap(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        (PoolKey memory key, PoolId id, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
+        (uint64 m,, , , , ) = hook.poolMeta(id);
+        assertGt(m, 0);
+
+        // afterInitialize selector sanity
+        vm.prank(address(manager));
+        bytes4 sel = hook.afterInitialize(address(this), key, 2**96, 0);
+        assertEq(sel, IHooks.afterInitialize.selector);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // OnlyPoolManager & router gate
+    // ──────────────────────────────────────────────────────────────────────────
+
+    function test_OnlyPoolManager_guard() public {
+        Currency c0 = Currency.wrap(address(0xAAA1));
+        Currency c1 = Currency.wrap(address(0xAAA2));
+        (PoolKey memory key,, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
+
+        SwapParams memory sp = SwapParams({ zeroForOne: true, amountSpecified: 1, sqrtPriceLimitX96: 0 });
+        vm.expectRevert();
+        hook.beforeSwap(address(this), key, sp, abi.encode(alice));
+    }
+
+    function test_RouterGate_UseRouter() public {
+        Currency c0 = Currency.wrap(address(0xBBB1));
+        Currency c1 = Currency.wrap(address(0xBBB2));
+        (PoolKey memory key,, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
+
+        SwapParams memory sp = SwapParams({ zeroForOne: true, amountSpecified: 1, sqrtPriceLimitX96: 0 });
+        vm.startPrank(address(manager), address(this));
+        vm.expectRevert(Errors.UseRouter.selector);
+        hook.beforeSwap(address(0xDEAD), key, sp, abi.encode(alice));
+        vm.stopPrank();
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Risk engine gates
+    // ──────────────────────────────────────────────────────────────────────────
 
     function test_RiskGate_AllowsHealthy() public {
-    (PoolKey memory key,, address hookAddr) = _createPool();
+        Currency c0 = Currency.wrap(address(0xCCC1));
+        Currency c1 = Currency.wrap(address(0xCCC2));
+        (PoolKey memory key,, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
 
-    vm.startPrank(address(manager), address(this));
-    SwapParams memory sp = SwapParams({zeroForOne: true, amountSpecified: 1, sqrtPriceLimitX96: 0});
-    (bytes4 sel, BeforeSwapDelta d, uint24 optFee) = ArthHook(hookAddr).beforeSwap(address(this), key, sp, abi.encode(alice));
-    vm.stopPrank();
+        vm.startPrank(address(manager), address(this));
+        SwapParams memory sp = SwapParams({ zeroForOne: true, amountSpecified: 1, sqrtPriceLimitX96: 0 });
+        (bytes4 sel, BeforeSwapDelta d, uint24 optFee) = hook.beforeSwap(router, key, sp, abi.encode(alice));
+        vm.stopPrank();
 
-    assertEq(sel, IHooks.beforeSwap.selector);
-    assertEq(BeforeSwapDelta.unwrap(d), BeforeSwapDelta.unwrap(BeforeSwapDeltaLibrary.ZERO_DELTA));
-    assertEq(optFee, 0);
+        assertEq(sel, IHooks.beforeSwap.selector);
+        assertEq(BeforeSwapDelta.unwrap(d), BeforeSwapDelta.unwrap(BeforeSwapDeltaLibrary.ZERO_DELTA));
+        assertEq(optFee, 0);
     }
 
     function test_RiskGate_BlocksUnhealthy() public {
-    (PoolKey memory key,, address hookAddr) = _createPool();
+        Currency c0 = Currency.wrap(address(0xDDD1));
+        Currency c1 = Currency.wrap(address(0xDDD2));
+        (PoolKey memory key,, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
 
-    risk.onFundingAccrued(bob, int256(1e18)); 
+        risk.onFundingAccrued(bob, int256(1e18));
 
-    vm.startPrank(address(manager), address(this));
-    SwapParams memory sp = SwapParams({zeroForOne: true, amountSpecified: 1, sqrtPriceLimitX96: 0});
-    vm.expectRevert(Errors.InsufficientEquity.selector);
-    ArthHook(hookAddr).beforeSwap(address(this), key, sp, abi.encode(bob));
-    vm.stopPrank();
+        vm.startPrank(address(manager), address(this));
+        SwapParams memory sp = SwapParams({ zeroForOne: true, amountSpecified: 1, sqrtPriceLimitX96: 0 });
+        vm.expectRevert(Errors.InsufficientEquity.selector);
+        hook.beforeSwap(router, key, sp, abi.encode(bob));
+        vm.stopPrank();
     }
 
-    function test_AfterInitialize_Selector() public {
-        (PoolKey memory key,, address hookAddr) = _createPool();
+    // ──────────────────────────────────────────────────────────────────────────
+    // Liquidity add/remove + position enumeration
+    // ──────────────────────────────────────────────────────────────────────────
 
-        vm.prank(address(manager));
-        bytes4 sel =
-            ArthHook(hookAddr).afterInitialize(address(this), key, 79228162514264337593543950336, 0);
-        assertEq(sel, IHooks.afterInitialize.selector, "afterInitialize selector");
-    }
+    function test_AddRemoveLiquidity_updatesTotalsAndEnumeration() public {
+        Currency c0 = Currency.wrap(address(0xEEE1));
+        Currency c1 = Currency.wrap(address(0xEEE2));
+        (PoolKey memory key, PoolId id, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
 
-    function test_SetMaturity_OnlyFactory() public {
-        (, PoolId id, address hookAddr) = _createPool();
-        vm.expectRevert(Errors.NotFactory.selector);
-        ArthHook(hookAddr).setMaturity(id, uint64(block.timestamp + 10 days));
-        vm.prank(address(factory));
-        ArthHook(hookAddr).setMaturity(id, uint64(block.timestamp + 11 days));
-    }
-
-    function test_MaturityBlocksAddLiquidity() public {
-        (PoolKey memory key, PoolId id, address hookAddr) = _createPool();
-
-        vm.prank(address(factory));
-        ArthHook(hookAddr).setMaturity(id, uint64(block.timestamp - 1));
-
-        vm.prank(address(manager)); 
-        ModifyLiquidityParams memory ap = ModifyLiquidityParams({
+        ModifyLiquidityParams memory addP = ModifyLiquidityParams({
             tickLower: -60,
             tickUpper: 60,
-            liquidityDelta: 1,
+            liquidityDelta: int256(1_000_000),
             salt: bytes32(0)
         });
 
+        vm.startPrank(address(manager), address(this));
+        hook.beforeAddLiquidity(router, key, addP, abi.encode(alice));
+        hook.afterAddLiquidity(router, key, addP, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+        vm.stopPrank();
+
+        (,, , uint256 growthX128, uint128 totalL, bool frozen) = hook.poolMeta(id);
+        assertEq(totalL, 1_000_000);
+        assertTrue(!frozen);
+        assertEq(growthX128, 0);
+
+        bytes32[] memory keys = hook.getUserPositionKeys(alice);
+        assertEq(keys.length, 1);
+
+        ModifyLiquidityParams memory remP = ModifyLiquidityParams({
+            tickLower: -60,
+            tickUpper: 60,
+            liquidityDelta: -int256(1_000_000),
+            salt: bytes32(0)
+        });
+
+        vm.startPrank(address(manager), address(this));
+        hook.beforeRemoveLiquidity(router, key, remP, abi.encode(alice));
+        hook.afterRemoveLiquidity(router, key, remP, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+        vm.stopPrank();
+
+        (,, , growthX128, totalL, frozen) = hook.poolMeta(id);
+        assertEq(totalL, 0);
+        assertEq(hook.getUserPositionKeys(alice).length, 0);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Funding growth math & owed
+    // ──────────────────────────────────────────────────────────────────────────
+
+    function test_FundingGrowth_NoLiquidity_NoChange() public {
+        Currency c0 = Currency.wrap(address(0xF001));
+        Currency c1 = Currency.wrap(address(0xF002));
+        (PoolKey memory key, PoolId id, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
+
+        vm.startPrank(address(manager), address(this));
+        hook.beforeSwap(router, key, SwapParams({zeroForOne:true, amountSpecified:1, sqrtPriceLimitX96:0}), abi.encode(alice));
+        vm.stopPrank();
+
+        (,, , uint256 growthX128, uint128 totalL,) = hook.poolMeta(id);
+        assertEq(totalL, 0);
+        assertEq(growthX128, 0);
+    }
+
+    function test_FundingGrowth_WithLiquidity_AndFundingOwed() public {
+        Currency c0 = Currency.wrap(address(0xF101));
+        Currency c1 = Currency.wrap(address(0xF102));
+        (PoolKey memory key, PoolId id, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
+
+        int24 lower = -60; int24 upper = 60; bytes32 salt = bytes32(0); int256 L = 1_000_000_000_000;
+        ModifyLiquidityParams memory addP = ModifyLiquidityParams({ tickLower:lower, tickUpper:upper, liquidityDelta:L, salt:salt });
+
+        vm.startPrank(address(manager), address(this));
+        hook.beforeAddLiquidity(router, key, addP, abi.encode(alice));
+        hook.afterAddLiquidity(router, key, addP, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+        vm.stopPrank();
+
+        uint256 rate = base.ratePerSecond();
+        uint256 t0 = block.timestamp; vm.warp(t0 + 12345); uint256 dt = block.timestamp - t0;
+
+        vm.startPrank(address(manager), address(this));
+        hook.beforeSwap(router, key, SwapParams({zeroForOne:true, amountSpecified:1, sqrtPriceLimitX96:0}), abi.encode(alice));
+        vm.stopPrank();
+
+        (,, , uint256 growthX128, uint128 totalL,) = hook.poolMeta(id);
+        assertEq(uint128(totalL), uint128(uint256(L)));
+
+        // Trigger funding owed update without changing liquidity
+        vm.startPrank(address(manager), address(this));
+        hook.beforeRemoveLiquidity(router, key, ModifyLiquidityParams({tickLower:lower, tickUpper:upper, liquidityDelta:0, salt:salt}), abi.encode(alice));
+        vm.stopPrank();
+
+        int256 owed = hook.fundingOwedToken1(alice, key, lower, upper, salt);
+        assertEq(owed, int256(rate * dt));
+
+        uint256 FP = 1 << 128; uint256 perLToAmt = (growthX128 * uint256(L)) / FP;
+        assertEq(int256(perLToAmt), owed);
+    }
+
+    function test_ClearFundingOwed_RouterOnly() public {
+        Currency c0 = Currency.wrap(address(0xF201));
+        Currency c1 = Currency.wrap(address(0xF202));
+        (PoolKey memory key,, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 30 days));
+
+        int24 lower = -60; int24 upper = 60; bytes32 salt = bytes32(0);
+        ModifyLiquidityParams memory addP = ModifyLiquidityParams({ tickLower:lower, tickUpper:upper, liquidityDelta:1, salt:salt });
+
+        vm.startPrank(address(manager), address(this));
+        hook.beforeAddLiquidity(router, key, addP, abi.encode(alice));
+        hook.afterAddLiquidity(router, key, addP, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+
+        vm.warp(block.timestamp + 1000);
+        hook.beforeSwap(router, key, SwapParams({zeroForOne:true, amountSpecified:1, sqrtPriceLimitX96:0}), abi.encode(alice));
+        hook.beforeRemoveLiquidity(router, key, ModifyLiquidityParams({tickLower:lower, tickUpper:upper, liquidityDelta:0, salt:salt}), abi.encode(alice));
+        vm.stopPrank();
+
+        int256 owed = hook.fundingOwedToken1(alice, key, lower, upper, salt);
+        assertGt(owed, 0);
+
+        vm.expectRevert(Errors.NotRouter.selector);
+        hook.clearFundingOwedToken1(alice, key, lower, upper, salt);
+
+        vm.prank(router);
+        int256 cleared = hook.clearFundingOwedToken1(alice, key, lower, upper, salt);
+        assertEq(cleared, owed);
+        assertEq(hook.fundingOwedToken1(alice, key, lower, upper, salt), 0);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Maturity freeze
+    // ──────────────────────────────────────────────────────────────────────────
+
+    function test_MaturityBlocksAddLiquidity() public {
+        Currency c0 = Currency.wrap(address(0xF301));
+        Currency c1 = Currency.wrap(address(0xF302));
+        (PoolKey memory key, PoolId id, ArthHook hook) = _registerPool(c0, c1, 3000, 60, 2**96, uint64(block.timestamp + 1 days));
+
+        // set maturity in the past
+        vm.prank(address(factory)); // factory is authorized in hook
+        hook.setMaturity(id, uint64(block.timestamp - 1));
+
+        vm.prank(address(manager));
+        ModifyLiquidityParams memory ap = ModifyLiquidityParams({ tickLower:-60, tickUpper:60, liquidityDelta:1, salt:bytes32(0) });
         vm.expectRevert(Errors.PoolMatured.selector);
-        ArthHook(hookAddr).beforeAddLiquidity(address(this), key, ap, abi.encode(alice));
+        hook.beforeAddLiquidity(router, key, ap, abi.encode(alice));
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Multi-pool isolation (single hook)
+    // ──────────────────────────────────────────────────────────────────────────
+
+    function test_MultiPool_IsolatedFundingGrowth() public {
+        // Pool A
+        Currency a0 = Currency.wrap(address(0xAAA0));
+        Currency a1 = Currency.wrap(address(0xAAA9));
+        (PoolKey memory keyA, PoolId idA, ArthHook hook) = _registerPool(a0, a1, 3000, 60, 2**96, uint64(block.timestamp + 90 days));
+
+        // Pool B
+        Currency b0 = Currency.wrap(address(0xBBB0));
+        Currency b1 = Currency.wrap(address(0xBBB9));
+        (PoolKey memory keyB, PoolId idB,) = _registerPool(b0, b1, 3000, 60, 2**96, uint64(block.timestamp + 120 days));
+
+        // Add L only to pool A and accrue
+        vm.startPrank(address(manager), address(this));
+        hook.beforeAddLiquidity(router, keyA, ModifyLiquidityParams({tickLower:-60,tickUpper:60,liquidityDelta:int256(5_000_000),salt:bytes32(0)}), abi.encode(alice));
+        hook.afterAddLiquidity(router, keyA, ModifyLiquidityParams({tickLower:-60,tickUpper:60,liquidityDelta:int256(5_000_000),salt:bytes32(0)}), BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+
+        vm.warp(block.timestamp + 10_000);
+        hook.beforeSwap(router, keyA, SwapParams({zeroForOne:true, amountSpecified:1, sqrtPriceLimitX96:0}), abi.encode(alice));
+        vm.stopPrank();
+
+        // A: has growth & L
+        (,, , uint256 growthA, uint128 LA,) = hook.poolMeta(idA);
+        assertGt(growthA, 0); assertEq(LA, 5_000_000);
+        // B: zero
+        (,, , uint256 growthB, uint128 LB,) = hook.poolMeta(idB);
+        assertEq(growthB, 0); assertEq(LB, 0);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Comprehensive Multi-Pool LP & Trader Operations
+    // ──────────────────────────────────────────────────────────────────────────
+
+    function test_MultiPool_LPAndTraderOperations() public {
+        // Create 3 pools with different token pairs and maturities
+        
+        // Pool 1: Token A/Token B - 30 day maturity
+        Currency tokenA1 = Currency.wrap(address(0x1001));
+        Currency tokenB1 = Currency.wrap(address(0x1002));
+        (PoolKey memory poolKey1, PoolId poolId1, ArthHook hook) = _registerPool(
+            tokenA1, tokenB1, 3000, 60, 2**96, uint64(block.timestamp + 30 days)
+        );
+
+        // Pool 2: Token C/Token D - 60 day maturity  
+        Currency tokenC2 = Currency.wrap(address(0x2001));
+        Currency tokenD2 = Currency.wrap(address(0x2002));
+        (PoolKey memory poolKey2, PoolId poolId2,) = _registerPool(
+            tokenC2, tokenD2, 500, 10, 2**96, uint64(block.timestamp + 60 days)
+        );
+
+        // Pool 3: Token E/Token F - 90 day maturity
+        Currency tokenE3 = Currency.wrap(address(0x3001));
+        Currency tokenF3 = Currency.wrap(address(0x3002));
+        (PoolKey memory poolKey3, PoolId poolId3,) = _registerPool(
+            tokenE3, tokenF3, 3000, 60, 2**96, uint64(block.timestamp + 90 days)
+        );
+
+        // Verify all pools use the same singleton hook
+        assertEq(address(poolKey1.hooks), factory.HOOK(), "Pool 1 hook mismatch");
+        assertEq(address(poolKey2.hooks), factory.HOOK(), "Pool 2 hook mismatch");
+        assertEq(address(poolKey3.hooks), factory.HOOK(), "Pool 3 hook mismatch");
+
+        // === LP OPERATIONS ===
+        vm.startPrank(address(manager), address(this));
+
+        // Alice provides liquidity to Pool 1 (WETH/USDC)
+        ModifyLiquidityParams memory aliceLP1 = ModifyLiquidityParams({
+            tickLower: -240,  // Wide range
+            tickUpper: 240,
+            liquidityDelta: int256(1_000_000),
+            salt: bytes32(uint256(1))
+        });
+        
+        hook.beforeAddLiquidity(router, poolKey1, aliceLP1, abi.encode(alice));
+        hook.afterAddLiquidity(router, poolKey1, aliceLP1, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+
+        // Bob provides liquidity to Pool 2 (DAI/USDC) - concentrated position
+        ModifyLiquidityParams memory bobLP2 = ModifyLiquidityParams({
+            tickLower: -60,   // Narrow range
+            tickUpper: 60,
+            liquidityDelta: int256(2_500_000),
+            salt: bytes32(uint256(2))
+        });
+        
+        hook.beforeAddLiquidity(router, poolKey2, bobLP2, abi.encode(bob));
+        hook.afterAddLiquidity(router, poolKey2, bobLP2, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(bob));
+
+        // Alice also provides liquidity to Pool 3 (WBTC/WETH)
+        ModifyLiquidityParams memory aliceLP3 = ModifyLiquidityParams({
+            tickLower: -120,
+            tickUpper: 120,
+            liquidityDelta: int256(750_000),
+            salt: bytes32(uint256(3))
+        });
+        
+        hook.beforeAddLiquidity(router, poolKey3, aliceLP3, abi.encode(alice));
+        hook.afterAddLiquidity(router, poolKey3, aliceLP3, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+
+        vm.stopPrank();
+
+        // Verify pool states after LP operations
+        (,,,, uint128 totalL1,) = hook.poolMeta(poolId1);
+        (,,,, uint128 totalL2,) = hook.poolMeta(poolId2);
+        (,,,, uint128 totalL3,) = hook.poolMeta(poolId3);
+        
+        assertEq(totalL1, 1_000_000, "Pool 1 liquidity");
+        assertEq(totalL2, 2_500_000, "Pool 2 liquidity");
+        assertEq(totalL3, 750_000, "Pool 3 liquidity");
+
+        // Verify position enumeration
+        bytes32[] memory alicePositions = hook.getUserPositionKeys(alice);
+        bytes32[] memory bobPositions = hook.getUserPositionKeys(bob);
+        
+        assertEq(alicePositions.length, 2, "Alice should have 2 positions");
+        assertEq(bobPositions.length, 1, "Bob should have 1 position");
+
+        // === TRADER OPERATIONS ===
+        vm.startPrank(address(manager), address(this));
+
+        // Advance time to accrue some funding
+        vm.warp(block.timestamp + 5000);
+
+        // Trade 1: Alice swaps in Pool 1 (WETH -> USDC)
+        SwapParams memory trade1 = SwapParams({
+            zeroForOne: true,
+            amountSpecified: 1000,
+            sqrtPriceLimitX96: 0
+        });
+        
+        (bytes4 sel1, BeforeSwapDelta delta1, uint24 fee1) = hook.beforeSwap(
+            router, poolKey1, trade1, abi.encode(alice)
+        );
+        
+        assertEq(sel1, IHooks.beforeSwap.selector, "Trade 1 selector");
+        assertEq(BeforeSwapDelta.unwrap(delta1), 0, "Trade 1 delta");
+
+        // Trade 2: Bob swaps in Pool 2 (DAI -> USDC) 
+        SwapParams memory trade2 = SwapParams({
+            zeroForOne: false,  // Reverse direction
+            amountSpecified: 500,
+            sqrtPriceLimitX96: 0
+        });
+        
+        (bytes4 sel2, BeforeSwapDelta delta2, uint24 fee2) = hook.beforeSwap(
+            router, poolKey2, trade2, abi.encode(bob)
+        );
+        
+        assertEq(sel2, IHooks.beforeSwap.selector, "Trade 2 selector");
+
+        // Trade 3: Alice swaps in Pool 3 (WBTC -> WETH)
+        vm.warp(block.timestamp + 3000); // More time passes
+        
+        SwapParams memory trade3 = SwapParams({
+            zeroForOne: true,
+            amountSpecified: 100,
+            sqrtPriceLimitX96: 0
+        });
+        
+        hook.beforeSwap(router, poolKey3, trade3, abi.encode(alice));
+
+        vm.stopPrank();
+
+        // === VERIFY ISOLATED POOL STATES ===
+        
+        // Each pool should maintain independent state
+        (,,,, uint128 activeL1,) = hook.poolMeta(poolId1);
+        (,,,, uint128 activeL2,) = hook.poolMeta(poolId2);
+        (,,,, uint128 activeL3,) = hook.poolMeta(poolId3);
+        
+        // Verify liquidity is still correct after trading
+        assertEq(activeL1, 1_000_000, "Pool 1 liquidity after trading");
+        assertEq(activeL2, 2_500_000, "Pool 2 liquidity after trading");
+        assertEq(activeL3, 750_000, "Pool 3 liquidity after trading");
+
+        // === LP ADJUSTMENTS ===
+        vm.startPrank(address(manager), address(this));
+
+        // Alice reduces her position in Pool 1
+        ModifyLiquidityParams memory aliceReduce = ModifyLiquidityParams({
+            tickLower: -240,
+            tickUpper: 240,
+            liquidityDelta: -int256(500_000), // Remove half
+            salt: bytes32(uint256(1))
+        });
+        
+        hook.beforeRemoveLiquidity(router, poolKey1, aliceReduce, abi.encode(alice));
+        hook.afterRemoveLiquidity(router, poolKey1, aliceReduce, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(alice));
+
+        // Bob adds more liquidity to Pool 2 with different range
+        ModifyLiquidityParams memory bobAdd = ModifyLiquidityParams({
+            tickLower: -180,  // Different range
+            tickUpper: 180,
+            liquidityDelta: int256(1_000_000),
+            salt: bytes32(uint256(4)) // Different salt = new position
+        });
+        
+        hook.beforeAddLiquidity(router, poolKey2, bobAdd, abi.encode(bob));
+        hook.afterAddLiquidity(router, poolKey2, bobAdd, BalanceDelta.wrap(0), BalanceDelta.wrap(0), abi.encode(bob));
+
+        vm.stopPrank();
+
+        // === FINAL VERIFICATION ===
+        
+        // Check final liquidity states
+        (,,,, uint128 finalL1,) = hook.poolMeta(poolId1);
+        (,,,, uint128 finalL2,) = hook.poolMeta(poolId2);
+        (,,,, uint128 finalL3,) = hook.poolMeta(poolId3);
+        
+        assertEq(finalL1, 500_000, "Pool 1 final liquidity");  // Alice reduced by 500k
+        assertEq(finalL2, 3_500_000, "Pool 2 final liquidity"); // Bob added 1M to existing 2.5M
+        assertEq(finalL3, 750_000, "Pool 3 final liquidity");   // No changes
+
+        // Check final position counts
+        bytes32[] memory finalAlicePositions = hook.getUserPositionKeys(alice);
+        bytes32[] memory finalBobPositions = hook.getUserPositionKeys(bob);
+        
+        assertEq(finalAlicePositions.length, 2, "Alice final positions"); // Still 2 (Pool 1 + Pool 3)
+        assertEq(finalBobPositions.length, 2, "Bob final positions");    // Now 2 (2 positions in Pool 2)
+
+        // Verify that positions can be queried individually
+        int256 aliceOwed1 = hook.fundingOwedToken1(alice, poolKey1, -240, 240, bytes32(uint256(1)));
+        
+        // Funding owed should be 0 or positive (depends on rate movement)
+        assertTrue(aliceOwed1 >= 0, "Alice Pool 1 funding owed should be non-negative");
+
+        // === TEST MATURITY HANDLING ===
+        
+        // Check current pool states before maturity
+        (,,,, , bool preFrozen1) = hook.poolMeta(poolId1);
+        assertFalse(preFrozen1, "Pool 1 should not be frozen before maturity");
+        
+        // Fast forward past Pool 1's maturity (30 days + 1 day buffer)
+        vm.warp(block.timestamp + 31 days);
+        
+        // Pool 1 should be mature now and operations should revert
+        vm.startPrank(address(manager), address(this));
+        
+        // Attempting to swap on mature pool should revert immediately
+        vm.expectRevert(abi.encodeWithSignature("PoolMatured()"));
+        hook.beforeSwap(router, poolKey1, trade1, abi.encode(alice));
+        
+        // Attempting to add liquidity to mature pool should also revert
+        vm.expectRevert(abi.encodeWithSignature("PoolMatured()"));
+        hook.beforeAddLiquidity(router, poolKey1, aliceLP1, abi.encode(alice));
+        
+        // But Pool 2 and Pool 3 should still work (they have longer maturities)
+        // Test that Pool 2 still accepts operations
+        hook.beforeSwap(router, poolKey2, SwapParams({
+            zeroForOne: false,
+            amountSpecified: 200,
+            sqrtPriceLimitX96: 0
+        }), abi.encode(bob));
+        
+        // Test that Pool 3 still accepts operations  
+        hook.beforeSwap(router, poolKey3, SwapParams({
+            zeroForOne: true,
+            amountSpecified: 50,
+            sqrtPriceLimitX96: 0
+        }), abi.encode(alice));
+        
+        vm.stopPrank();
+        
+        // Verify pool maturity timestamps (maturity checking is done dynamically, not persisted)
+        (uint64 maturity1,,,,,) = hook.poolMeta(poolId1);
+        (uint64 maturity2,,,,,) = hook.poolMeta(poolId2);
+        (uint64 maturity3,,,,,) = hook.poolMeta(poolId3);
+        
+        // Pool 1's maturity (30 days) should be less than current time (31 days)
+        assertTrue(maturity1 < block.timestamp, "Pool 1 should be past maturity");
+        assertTrue(maturity2 > block.timestamp, "Pool 2 should not be mature yet");
+        assertTrue(maturity3 > block.timestamp, "Pool 3 should not be mature yet");
     }
 }

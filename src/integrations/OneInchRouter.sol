@@ -52,19 +52,20 @@ contract OneInchRouter is IUnlockCallback, ReentrancyGuard, Ownable {
 
     constructor(
         IPoolManager _manager,
-        OneInchLOPAdapter _lopAdapter,
+        address _lop,
+        address _weth,
         address _hook,
         IERC20 _tokenIn
     ) Ownable(msg.sender) {
         if (address(_manager) == address(0) || 
-            address(_lopAdapter) == address(0) || 
+            _lop == address(0) || 
             _hook == address(0) || 
             address(_tokenIn) == address(0)) {
             revert InvalidParameters();
         }
         
         manager = _manager;
-        lopAdapter = _lopAdapter;
+        lopAdapter = new OneInchLOPAdapter(_lop, _weth, address(this));
         hook = _hook;
         tokenIn = _tokenIn;
     }
@@ -94,6 +95,11 @@ contract OneInchRouter is IUnlockCallback, ReentrancyGuard, Ownable {
         bytes calldata hookData,
         uint256 minMakerAmount
     ) external payable nonReentrant {
+        // Approve adapter to pull tokens if needed
+        if (pullFromCaller > 0) {
+            takerAsset.forceApprove(address(lopAdapter), pullFromCaller);
+        }
+        
         // 1) Fill the 1inch order → adapter sweeps makerAsset to this router
         (uint256 making,,bytes32 orderHash) = lopAdapter.fillContractOrderArgs{value: msg.value}(
             order, signature, amount, takerTraits, takerArgs,
