@@ -1,5 +1,6 @@
 import { useReadContract, useReadContracts, useChainId } from "wagmi";
 import { useCallback } from "react";
+import { keccak256 } from 'viem';
 import {
   DEPLOYED_ADDRESSES,
   POOLS,
@@ -410,6 +411,8 @@ export function useProtocolStats() {
 export function useUserLPPositions(userAddress?: `0x${string}`) {
   const { pools } = useAllPools();
   
+  console.log('useUserLPPositions called with:', { userAddress, poolsCount: pools.length });
+  
   interface LPPosition {
     id: string;
     poolId: string;
@@ -438,29 +441,76 @@ export function useUserLPPositions(userAddress?: `0x${string}`) {
     { lower: -120, upper: 120 },
   ];
 
-  // Generate position keys for contract queries
+  // Common salt values to check
+  const commonSalts = [
+    '0x0000000000000000000000000000000000000000000000000000000000000000', // Default salt
+    '0x0000000000000000000000000000000000000000000000000000000000000001', // Salt 1
+    '0x0000000000000000000000000000000000000000000000000000000000000002', // Salt 2
+    '0x1111111111111111111111111111111111111111111111111111111111111111', // Common pattern
+  ];
+
+  // Generate position keys exactly matching ArthHook contract assembly implementation
   const generatePositionKey = (owner: string, poolId: string, tickLower: number, tickUpper: number, salt = '0x0000000000000000000000000000000000000000000000000000000000000000') => {
-    // This mimics the contract's position key generation
-    // In practice, you'd use keccak256 hash of the packed parameters
-    const encoder = new TextEncoder();
-    const data = encoder.encode(`${owner}${poolId}${tickLower}${tickUpper}${salt}`);
-    const hashArray = Array.from(data);
-    const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return `0x${hex.slice(0, 64).padEnd(64, '0')}` as `0x${string}`;
+    try {
+      // Match the contract's assembly implementation exactly:
+      // Assembly stores: owner(32), poolId(32), tickLower_as_uint256(32), tickUpper_as_uint256(32), salt(32)
+      // Total: 160 bytes (0xa0)
+      
+      // Owner address is stored as 32 bytes (left-padded with zeros)
+      const ownerBytes32 = owner.toLowerCase().slice(2).padStart(64, '0'); // Remove 0x and pad to 64 chars (32 bytes)
+      
+      // Pool ID as bytes32
+      const poolIdBytes32 = poolId.startsWith('0x') ? poolId.slice(2) : poolId;
+      
+      // Convert int24 to uint256 (exactly as contract does: uint256 tl = uint256(int256(tickLower)))
+      const tickLowerUint256 = tickLower < 0 
+        ? (BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') + BigInt(tickLower) + 1n).toString(16).padStart(64, '0')
+        : tickLower.toString(16).padStart(64, '0');
+      
+      const tickUpperUint256 = tickUpper < 0
+        ? (BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') + BigInt(tickUpper) + 1n).toString(16).padStart(64, '0')
+        : tickUpper.toString(16).padStart(64, '0');
+      
+      // Salt as bytes32
+      const saltBytes32 = salt.startsWith('0x') ? salt.slice(2) : salt;
+      
+      // Concatenate exactly as assembly does: 160 bytes total
+      const concatenated = `${ownerBytes32}${poolIdBytes32}${tickLowerUint256}${tickUpperUint256}${saltBytes32}`;
+      const hash = keccak256(`0x${concatenated}` as `0x${string}`);
+      
+      console.log(`Generated position key for ${owner}:`);
+      console.log(`  Pool: ${poolId}, Ticks: [${tickLower}, ${tickUpper}], Salt: ${salt.slice(0, 10)}...`);
+      console.log(`  Key: ${hash}`);
+      return hash;
+    } catch (error) {
+      console.error('Error generating position key:', error);
+      // Simple fallback
+      const simple = keccak256(`0x${owner.slice(2).padStart(64, '0')}${poolId.slice(2)}${tickLower.toString(16).padStart(64, '0')}${tickUpper.toString(16).padStart(64, '0')}${salt.slice(2)}` as `0x${string}`);
+      return simple;
+    }
   };
 
   // Create contracts array for batch reading positions
   const positionContracts = userAddress && pools.length > 0 ? 
     pools.flatMap(pool =>
-      commonTickRanges.map(ticks => ({
-        address: pool.hook as `0x${string}`,
-        abi: ArthHookABI,
-        functionName: 'positions' as const,
-        args: [generatePositionKey(userAddress, pool.poolId, ticks.lower, ticks.upper)],
-      }))
+      commonTickRanges.flatMap(ticks =>
+        commonSalts.map(salt => ({
+          address: pool.hook as `0x${string}`,
+          abi: ArthHookABI,
+          functionName: 'positions' as const,
+          args: [generatePositionKey(userAddress, pool.poolId, ticks.lower, ticks.upper, salt)],
+        }))
+      )
     ) : [];
 
-  const { data: positionsData, isLoading } = useReadContracts({
+  console.log('Position contracts to query:', { 
+    contractsCount: positionContracts.length, 
+    userAddress, 
+    poolsCount: pools.length,
+    sampleContract: positionContracts[0] 
+  });
+
+  const { data: positionsData, isLoading, error } = useReadContracts({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     contracts: positionContracts as readonly any[],
     query: { 
@@ -469,6 +519,35 @@ export function useUserLPPositions(userAddress?: `0x${string}`) {
       staleTime: 10000, // Consider data stale after 10 seconds
     },
   });
+
+  console.log('Contract query results:', { 
+    positionsDataLength: positionsData?.length, 
+    isLoading, 
+    error,
+    enabled: !!userAddress && positionContracts.length > 0,
+  });
+  
+  // Log individual contract responses
+  if (positionsData) {
+    positionsData.forEach((result, index) => {
+      const contractsPerPool = commonTickRanges.length * commonSalts.length;
+      const poolIndex = Math.floor(index / contractsPerPool);
+      const remainder = index % contractsPerPool;
+      const tickRangeIndex = Math.floor(remainder / commonSalts.length);
+      const saltIndex = remainder % commonSalts.length;
+      
+      const pool = pools[poolIndex];
+      const tickRange = commonTickRanges[tickRangeIndex];
+      const salt = commonSalts[saltIndex];
+      
+      if (result?.result) {
+        const [liquidity, , fundingOwed] = result.result as [bigint, bigint, bigint];
+        console.log(`Contract response ${index} - Pool: ${pool?.name}, Ticks: [${tickRange?.lower}, ${tickRange?.upper}], Salt: ${salt.slice(0, 10)}..., Liquidity: ${liquidity}, FundingOwed: ${fundingOwed}`);
+      } else {
+        console.log(`Contract response ${index} - Pool: ${pool?.name}, Ticks: [${tickRange?.lower}, ${tickRange?.upper}], Salt: ${salt?.slice(0, 10)}... - NO RESULT:`, result);
+      }
+    });
+  }
 
   // Parse contract results into positions
   const positions: LPPosition[] = [];
@@ -480,14 +559,19 @@ export function useUserLPPositions(userAddress?: `0x${string}`) {
         
         // Only include positions with actual liquidity
         if (liquidity > 0n) {
-          const poolIndex = Math.floor(index / commonTickRanges.length);
-          const tickRangeIndex = index % commonTickRanges.length;
+          const contractsPerPool = commonTickRanges.length * commonSalts.length;
+          const poolIndex = Math.floor(index / contractsPerPool);
+          const remainder = index % contractsPerPool;
+          const tickRangeIndex = Math.floor(remainder / commonSalts.length);
+          const saltIndex = remainder % commonSalts.length;
+          
           const pool = pools[poolIndex];
           const tickRange = commonTickRanges[tickRangeIndex];
+          // const salt = commonSalts[saltIndex]; // Used for debugging
           
           if (pool) {
             positions.push({
-              id: `${pool.poolId}_${tickRange.lower}_${tickRange.upper}`,
+              id: `${pool.poolId}_${tickRange.lower}_${tickRange.upper}_${saltIndex}`,
               poolId: pool.poolId,
               poolName: pool.name,
               liquidity,
@@ -510,7 +594,37 @@ export function useUserLPPositions(userAddress?: `0x${string}`) {
     });
   }
 
-    console.log(`Found ${positions.length} real LP positions for user:`, userAddress);
+  
+
+  console.log(`Found ${positions.length} LP positions for user:`, userAddress, positions.length > 0 ? 'with positions' : 'no positions found');
+
+  // Debug: Test specific position for the user
+  if (userAddress?.toLowerCase() === '0x46a70eac801FCBd6F6C336dE1F0fBb9E570f17aa'.toLowerCase() && pools.length > 0) {
+    const testPool = pools[0]; // First pool
+    const testKey = generatePositionKey(userAddress, testPool.poolId, -23040, 23040, '0x0000000000000000000000000000000000000000000000000000000000000000');
+    console.log('🔍 DEBUG: Testing specific position for user address');
+    console.log(`Pool: ${testPool.name} (${testPool.poolId})`);
+    console.log(`Hook: ${testPool.hook}`);
+    console.log(`Test position key: ${testKey}`);
+    console.log(`Tick range: [-23040, 23040]`);
+    
+    // Find this specific test in the results
+    if (positionsData) {
+      const found = positionsData.find(result => {
+        if (result?.result) {
+          const [liquidity] = result.result as [bigint, bigint, bigint];
+          return liquidity > 0n;
+        }
+        return false;
+      });
+      
+      if (found) {
+        console.log('✅ Found a position with liquidity > 0!', found);
+      } else {
+        console.log('❌ No positions found with liquidity > 0 in any of the queries');
+      }
+    }
+  }
 
   // Calculate aggregated stats
   const totalLiquidityValue = positions.reduce((sum: number, pos) => 
