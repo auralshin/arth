@@ -16,8 +16,9 @@ import {IRiskEngine} from "../interfaces/IRiskEngine.sol";
 import {IBaseIndex} from "../interfaces/IBaseIndex.sol";
 import {PythOracleAdapter} from "../oracles/PythOracleAdapter.sol";
 import {Errors} from "../libraries/Errors.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-contract ArthHook is IHooks {
+contract ArthHook is IHooks, ReentrancyGuard {
     event FundingAccrued(PoolId indexed id, int256 growthX128Delta, uint32 dt);
 
     event FundingOwedCleared(
@@ -30,7 +31,7 @@ contract ArthHook is IHooks {
 
     address public ROUTER;
 
-    function setRouter(address r) external onlyFactory {
+    function setRouter(address r) external nonReentrant onlyFactory {
         ROUTER = r;
     }
 
@@ -84,7 +85,7 @@ contract ArthHook is IHooks {
         int24 lower,
         int24 upper,
         bytes32 salt
-    ) external returns (int256 amt) {
+    ) external nonReentrant returns (int256 amt) {
         if (msg.sender != ROUTER) revert Errors.NotRouter();
         bytes32 pkey = _positionKey(owner, key.toId(), lower, upper, salt);
         amt = positions[pkey].fundingOwedToken1;
@@ -129,7 +130,7 @@ contract ArthHook is IHooks {
         if (msg.sender != FACTORY) revert Errors.NotFactory();
     }
 
-    function setMaturity(PoolId id, uint64 maturityTs) external onlyFactory {
+    function setMaturity(PoolId id, uint64 maturityTs) external nonReentrant onlyFactory {
         (uint256 cum, uint64 ts) = BASE_INDEX.cumulativeIndex();
         PoolMeta storage pm = poolMeta[id];
         pm.maturity = maturityTs;
@@ -300,7 +301,7 @@ contract ArthHook is IHooks {
         PoolKey calldata key,
         ModifyLiquidityParams calldata params,
         bytes calldata hookData
-    ) external override returns (bytes4) {
+    ) external override nonReentrant returns (bytes4) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
         if (sender != ROUTER) revert Errors.UseRouter();
         address trader = abi.decode(hookData, (address));
@@ -328,7 +329,7 @@ contract ArthHook is IHooks {
         BalanceDelta,
         BalanceDelta,
         bytes calldata hookData
-    ) external override returns (bytes4, BalanceDelta) {
+    ) external override nonReentrant returns (bytes4, BalanceDelta) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
         if (sender != ROUTER) revert Errors.UseRouter();
         address trader = abi.decode(hookData, (address));
@@ -353,7 +354,7 @@ contract ArthHook is IHooks {
         PoolKey calldata key,
         ModifyLiquidityParams calldata params,
         bytes calldata hookData
-    ) external override returns (bytes4) {
+    ) external override nonReentrant returns (bytes4) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
         if (sender != ROUTER) revert Errors.UseRouter();
         address trader = abi.decode(hookData, (address));
@@ -377,7 +378,7 @@ contract ArthHook is IHooks {
         BalanceDelta,
         BalanceDelta,
         bytes calldata hookData
-    ) external override returns (bytes4, BalanceDelta) {
+    ) external override nonReentrant returns (bytes4, BalanceDelta) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
         if (sender != ROUTER) revert Errors.UseRouter();
         address trader = abi.decode(hookData, (address));
@@ -402,7 +403,7 @@ contract ArthHook is IHooks {
         PoolKey calldata key,
         SwapParams calldata,
         bytes calldata hookData
-    ) external override returns (bytes4, BeforeSwapDelta, uint24) {
+    ) external override nonReentrant returns (bytes4, BeforeSwapDelta, uint24) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
         if (sender != ROUTER) revert Errors.UseRouter();
         address trader = abi.decode(hookData, (address));

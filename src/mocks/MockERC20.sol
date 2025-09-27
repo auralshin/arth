@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
+import {Errors} from "../libraries/Errors.sol";
 
 contract MockERC20 {
     string public name;
@@ -17,9 +18,13 @@ contract MockERC20 {
     event Minted(address indexed to, uint256 amount);
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "not owner");
+        _onlyOwner();
         _;
     }
+
+        function _onlyOwner() internal view {
+            if (msg.sender != owner) revert Errors.NotOwner();
+        }
 
     constructor(string memory _name, string memory _symbol) {
         name = _name;
