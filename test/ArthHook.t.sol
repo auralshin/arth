@@ -104,7 +104,7 @@ contract ArthHookTest is Test {
         mockPyth = new MockPyth(60, 1); 
         pythAdapter = new PythOracleAdapter(address(mockPyth), 60); 
 
-        factory = new ArthPoolFactory(manager);
+        factory = new ArthPoolFactory(manager, owner);
     }
 
     function _createPool() internal returns (PoolKey memory key, PoolId id, address hook) {

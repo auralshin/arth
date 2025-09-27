@@ -169,26 +169,34 @@ contract ArthHook is IHooks {
 
     function _accrue(PoolId id) internal {
         PoolMeta storage pm = poolMeta[id];
-        (uint256 cum, uint64 ts) = BASE_INDEX.cumulativeIndex();
-        if (ts == pm.lastTs) return;
+        (uint256 cumNow, uint64 tsNow) = BASE_INDEX.cumulativeIndex();
+
+        uint64 tsCap = pm.maturity != 0 && tsNow > pm.maturity ? pm.maturity : tsNow;
+        if (tsCap == pm.lastTs) {
+            if (!pm.frozen && pm.maturity != 0 && block.timestamp >= pm.maturity) pm.frozen = true;
+            return;
+        }
 
         if (pm.totalLiquidity > 0) {
-            uint256 idxDelta = cum - pm.lastCumIdx;
-            int256 growthDelta = int256((idxDelta * FP) / pm.totalLiquidity);
-            if (growthDelta >= 0) {
-                pm.fundingGrowthGlobalX128 += uint256(growthDelta);
+            
+            uint256 cumCap;
+            if (tsCap == tsNow) {
+                cumCap = cumNow;
             } else {
-                pm.fundingGrowthGlobalX128 -= uint256(-growthDelta);
+                cumCap = cumNow - (BASE_INDEX.ratePerSecond() * (tsNow - tsCap));
             }
-            emit FundingAccrued(id, growthDelta, uint32(ts - pm.lastTs));
+
+            uint256 idxDelta = cumCap - pm.lastCumIdx;
+            int256 growthDelta = int256((idxDelta * FP) / pm.totalLiquidity);
+            if (growthDelta >= 0) pm.fundingGrowthGlobalX128 += uint256(growthDelta);
+            else pm.fundingGrowthGlobalX128 -= uint256(-growthDelta);
+
+            pm.lastCumIdx = cumCap;
         }
 
-        pm.lastCumIdx = cum;
-        pm.lastTs = ts;
+        pm.lastTs = tsCap;
 
-        if (!pm.frozen && pm.maturity != 0 && block.timestamp >= pm.maturity) {
-            pm.frozen = true;
-        }
+        if (!pm.frozen && pm.maturity != 0 && block.timestamp >= pm.maturity) pm.frozen = true;
     }
 
     function _updatePositionOwed(
@@ -283,7 +291,6 @@ contract ArthHook is IHooks {
         int24
     ) external view override returns (bytes4) {
         if (msg.sender != address(MANAGER)) revert Errors.NotManager();
-
 
         return IHooks.afterInitialize.selector;
     }

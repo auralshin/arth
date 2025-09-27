@@ -16,13 +16,21 @@ contract MockStETH {
     address public owner;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
     event Rebased(uint256 newPooledEthPerShare);
     event Minted(address indexed to, uint256 tokenAmount, uint256 sharesMinted);
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "not owner");
+        _onlyOwner();
         _;
+    }
+
+    function _onlyOwner() internal view {
+        require(msg.sender == owner, "not owner");
     }
 
     constructor() {
@@ -43,12 +51,19 @@ contract MockStETH {
         return true;
     }
 
-    function transfer(address to, uint256 amountTokens) external returns (bool) {
+    function transfer(
+        address to,
+        uint256 amountTokens
+    ) external returns (bool) {
         _transfer(msg.sender, to, amountTokens);
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 amountTokens) external returns (bool) {
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amountTokens
+    ) external returns (bool) {
         uint256 a = allowance[from][msg.sender];
         if (a != type(uint256).max) {
             require(a >= amountTokens, "allowance");
@@ -59,7 +74,11 @@ contract MockStETH {
         return true;
     }
 
-    function _transfer(address from, address to, uint256 amountTokens) internal {
+    function _transfer(
+        address from,
+        address to,
+        uint256 amountTokens
+    ) internal {
         require(to != address(0), "to=0");
         uint256 shares = _toShares(amountTokens);
         require(_shares[from] >= shares, "balance");
@@ -68,7 +87,10 @@ contract MockStETH {
         emit Transfer(from, to, amountTokens);
     }
 
-    function mintPooledEth(address to, uint256 tokenAmount) external onlyOwner returns (uint256 sharesMinted) {
+    function mintPooledEth(
+        address to,
+        uint256 tokenAmount
+    ) external onlyOwner returns (uint256 sharesMinted) {
         require(to != address(0), "to=0");
         sharesMinted = _toShares(tokenAmount);
         _shares[to] += sharesMinted;
@@ -83,11 +105,15 @@ contract MockStETH {
         emit Rebased(newPooledEthPerShare);
     }
 
-    function getPooledEthByShares(uint256 sharesAmount) public view returns (uint256) {
+    function getPooledEthByShares(
+        uint256 sharesAmount
+    ) public view returns (uint256) {
         return _toTokens(sharesAmount);
     }
 
-    function getSharesByPooledEth(uint256 tokenAmount) public view returns (uint256) {
+    function getSharesByPooledEth(
+        uint256 tokenAmount
+    ) public view returns (uint256) {
         return _toShares(tokenAmount);
     }
 
