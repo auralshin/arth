@@ -1,6 +1,8 @@
 @uniswap/v4-core/=lib/v4-core/
 @uniswap/v4-periphery/=lib/v4-periphery/
 @openzeppelin/=lib/openzeppelin-contracts/
-@pythnetwork/pyth-sdk-solidity/=lib/pyth-sdk-solidity/
 solmate/=lib/solmate/
 forge-std/=lib/forge-std/src/
+@pythnetwork/pyth-sdk-solidity/=node_modules/@pythnetwork/pyth-sdk-solidity
+@1inch/limit-order-protocol-contract/=lib/limit-order-protocol/contracts/
+@1inch/solidity-utils/=lib/solidity-utils/

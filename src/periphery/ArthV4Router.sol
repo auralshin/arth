@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity =0.8.26;
+pragma solidity ^0.8.26;
 
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
@@ -303,7 +303,7 @@ contract ArthV4Router is Ownable, Pausable, ReentrancyGuard, IUnlockCallback {
             ( /*op*/ , sender, a) = abi.decode(data, (bytes32, address, AddLiq));
 
             (BalanceDelta cd, BalanceDelta fa) =
-                MANAGER.modifyLiquidity(a.key, a.params, a.hookData);
+                MANAGER.modifyLiquidity(a.key, a.params, abi.encode(sender));
 
             BalanceDelta sum = cd + fa;
             int128 a0 = sum.amount0();
@@ -333,7 +333,7 @@ contract ArthV4Router is Ownable, Pausable, ReentrancyGuard, IUnlockCallback {
             ( /*op*/ , sender, r) = abi.decode(data, (bytes32, address, RemoveLiq));
 
             (BalanceDelta cd, BalanceDelta fa) =
-                MANAGER.modifyLiquidity(r.key, r.params, r.hookData);
+                MANAGER.modifyLiquidity(r.key, r.params, abi.encode(sender));
 
             BalanceDelta sumRem = cd + fa;
             int128 ra0 = sumRem.amount0();
@@ -349,7 +349,7 @@ contract ArthV4Router is Ownable, Pausable, ReentrancyGuard, IUnlockCallback {
             SwapEx memory s;
             ( /*op*/ , sender, s) = abi.decode(data, (bytes32, address, SwapEx));
 
-            BalanceDelta sd = MANAGER.swap(s.key, s.params, s.hookData);
+            BalanceDelta sd = MANAGER.swap(s.key, s.params, abi.encode(sender));
 
             int128 s0 = sd.amount0();
             int128 s1 = sd.amount1();

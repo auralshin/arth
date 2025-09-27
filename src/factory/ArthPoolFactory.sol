@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.26;
 
 import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
 import {IBaseIndex} from "../interfaces/IBaseIndex.sol";
@@ -18,12 +18,32 @@ contract ArthPoolFactory is Ownable {
 
     IPoolManager public immutable MANAGER;
 
-    address public immutable THIS_FACTORY = address(this);
+    /// @notice singleton hook used for all pools (set once, then reused)
+    address public HOOK;
 
+    event HookSet(address hook);
     event PoolCreated(PoolId poolId, address hook, uint64 maturity);
 
     constructor(IPoolManager _manager, address owner) Ownable(owner) {
         MANAGER = _manager;
+    }
+
+    /// @notice Owner wires the singleton hook once (must be deployed already).
+    function setHook(address hook) external onlyOwner {
+        // verify flags match what ArthHook.getHookPermissions() returns
+        uint160 EXPECTED = uint160(
+              Hooks.AFTER_INITIALIZE_FLAG
+            | Hooks.BEFORE_SWAP_FLAG
+            | Hooks.BEFORE_ADD_LIQUIDITY_FLAG
+            | Hooks.AFTER_ADD_LIQUIDITY_FLAG
+            | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG
+            | Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
+        );
+        require((uint160(hook) & Hooks.ALL_HOOK_MASK) == EXPECTED, "HookFlagsMismatch");
+        // verify hook bound to this factory for onlyFactory()
+        require(ArthHook(hook).FACTORY() == address(this), "WrongFactory");
+        HOOK = hook;
+        emit HookSet(hook);
     }
 
     function createPool(
@@ -35,47 +55,30 @@ contract ArthPoolFactory is Ownable {
         uint64 maturityTs,
         IBaseIndex baseIndex,
         IRiskEngine riskEngine,
-        PythOracleAdapter pythAdapter,
-        bytes32 salt
-    ) external returns (PoolId id, address hookAddr) {
-        require(salt != bytes32(0), "SaltRequired");
-        hookAddr = address(
-            new ArthHook{salt: salt}(
-                MANAGER,
-                baseIndex,
-                riskEngine,
-                address(this),
-                pythAdapter
-            )
-        );
-
-        uint160 EXPECTED_FLAGS = Hooks.AFTER_INITIALIZE_FLAG |
-            Hooks.BEFORE_SWAP_FLAG |
-            Hooks.BEFORE_ADD_LIQUIDITY_FLAG |
-            Hooks.AFTER_ADD_LIQUIDITY_FLAG |
-            Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG |
-            Hooks.AFTER_REMOVE_LIQUIDITY_FLAG;
-
-        uint160 MASK = uint160((1 << 16) - 1);
-        require((uint160(hookAddr) & MASK) == EXPECTED_FLAGS, "HookFlagsMismatch");
+        PythOracleAdapter pythAdapter
+    ) external returns (PoolId id, address hook) {
+        require(HOOK != address(0), "HookNotSet");
 
         PoolKey memory key = PoolKey({
             currency0: currency0,
             currency1: currency1,
             fee: fee,
             tickSpacing: tickSpacing,
-            hooks: IHooks(hookAddr)
+            hooks: IHooks(HOOK)
         });
 
         MANAGER.initialize(key, sqrtPriceX96);
 
         id = key.toId();
-        ArthHook(hookAddr).setMaturity(id, maturityTs);
-
-        emit PoolCreated(id, hookAddr, maturityTs);
+        // Register per-pool modules and maturity on the singleton hook
+        ArthHook(HOOK).registerPool(key, baseIndex, riskEngine, pythAdapter, maturityTs);
+        emit PoolCreated(id, HOOK, maturityTs);
+        hook = HOOK;
     }
 
     function setRouter(address hookAddr, address router) external onlyOwner {
+        // for convenience, keep setter signature—but it should be the singleton HOOK
+        require(hookAddr == HOOK, "NotSingletonHook");
         ArthHook(hookAddr).setRouter(router);
     }
 }
