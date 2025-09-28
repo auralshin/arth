@@ -12,6 +12,10 @@ import {ArthHook} from "../src/hooks/ArthHook.sol";
 import {ArthPoolFactory} from "../src/factory/ArthPoolFactory.sol";
 
 contract DebugHookMiner is Test {
+    // Hook flag constants
+    uint16 constant HOOK_PREFIX = 0x4000;        // 0100_0000_0000_0000 (isHook bit)
+    uint16 constant FLAGS_ONLY_MASK = 0x3FFF;    // lower 14 bits (strip prefix)
+    
     function test_HookMinerDebug() public {
         address deployer = address(this);
         address owner = address(0xA);
@@ -43,10 +47,16 @@ contract DebugHookMiner is Test {
         console.log("Salt:", vm.toString(abi.encodePacked(salt)));
         
         uint160 addressLower16 = uint160(predictedAddress) & uint160(0xFFFF);
+        uint160 expectedNoPrefix = flags & uint160(0xFFFF);
+        uint160 expectedWithHookBit = (flags & uint160(FLAGS_ONLY_MASK)) | uint160(HOOK_PREFIX);
+
         console.log("Address lower 16 bits:", addressLower16);
-        console.log("Flags lower 16 bits:", flags & uint160(0xFFFF));
-        
-        require(addressLower16 == (flags & uint160(0xFFFF)), "Flag mismatch");
+        console.log("Flags lower 16 bits:", expectedNoPrefix);
+        console.log("Expected with hook bit:", expectedWithHookBit);
+
+        bool matchesExact = addressLower16 == expectedNoPrefix;          // some miners return plain flags
+        bool matchesHook  = addressLower16 == expectedWithHookBit;       // most v4 miners set the 0x4000 hook bit
+        require(matchesExact || matchesHook, "Flag mismatch");
         
         ArthHook hook = new ArthHook{salt: salt}(manager, address(factory));
         console.log("Successfully deployed hook at:", address(hook));

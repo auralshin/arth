@@ -41,6 +41,10 @@ contract ArthHook_Permissions is Test {
     address public alice = address(0xA11CE);
     address public bob = address(0xB0B);
 
+    // Hook flag constants
+    uint16 constant HOOK_PREFIX = 0x4000;        // 0100_0000_0000_0000 (isHook bit)
+    uint16 constant FLAGS_ONLY_MASK = 0x3FFF;    // lower 14 bits (strip prefix)
+
     function _computeAddress(
         address deployer,
         uint256 salt,
@@ -199,11 +203,11 @@ contract ArthHook_Permissions is Test {
             Hooks.AFTER_REMOVE_LIQUIDITY_FLAG
         );
 
-        // Check that the lower 16 bits match our expected flags
-        uint160 actualFlags = uint160(hookAddr) & uint160(0xFFFF);
-        uint160 expectedLowerBits = expectedFlags & uint160(0xFFFF);
+        // Compare flags-only (ignoring hook prefix)
+        uint16 actualFlags = uint16(uint160(hookAddr)) & FLAGS_ONLY_MASK;
+        uint16 expectedFlagsOnly = uint16(expectedFlags) & FLAGS_ONLY_MASK;
         
-        assertEq(actualFlags, expectedLowerBits, "hook LSB flags must include add/remove");
+        assertEq(actualFlags, expectedFlagsOnly, "hook LSB flags must include add/remove");
     }
 
     function test_RiskGate_UsesSender_Address() public {

@@ -441,35 +441,34 @@ contract ArthHook is BaseHook, ReentrancyGuard {
         PoolMeta storage pm = poolMeta[id];
         IBaseIndex base = poolConfig[id].base;
         if (address(base) == address(0)) return; // not registered yet
+        
         (uint256 cumNow, uint64 tsNow) = base.cumulativeIndex();
-
-        uint64 tsCap = pm.maturity != 0 && tsNow > pm.maturity
-            ? pm.maturity
-            : tsNow;
-        if (tsCap == pm.lastTs) {
-            if (
-                !pm.frozen && pm.maturity != 0 && block.timestamp >= pm.maturity
-            ) pm.frozen = true;
-            return;
-        }
-
-        if (pm.totalLiquidity > 0) {
-            // When a pool is past maturity, clamp cumulative to maturity time
-            uint256 cumCap = tsCap == tsNow
-                ? cumNow
-                : cumNow - (base.ratePerSecond() * (tsNow - tsCap));
-            uint256 idxDelta = cumCap - pm.lastCumIdx;
-            // growth per unit L, X128
-            int256 growthDelta = int256((idxDelta * FP) / pm.totalLiquidity);
-            if (growthDelta >= 0)
-                pm.fundingGrowthGlobalX128 += uint256(growthDelta);
-            else pm.fundingGrowthGlobalX128 -= uint256(-growthDelta);
-            pm.lastCumIdx = cumCap;
-        }
-
-        pm.lastTs = tsCap;
-        if (!pm.frozen && pm.maturity != 0 && block.timestamp >= pm.maturity)
+        
+        // Check for maturity freeze
+        if (!pm.frozen && pm.maturity != 0 && block.timestamp >= pm.maturity) {
             pm.frozen = true;
+        }
+        if (pm.frozen) return;
+
+        // Apply maturity cap to cumulative index if needed
+        uint256 cumCap = cumNow;
+        if (pm.maturity != 0 && block.timestamp >= pm.maturity) {
+            // Clamp cumulative to maturity time 
+            uint64 maturityDelta = uint64(block.timestamp) - pm.maturity;
+            cumCap = cumNow - (base.ratePerSecond() * maturityDelta);
+        }
+        
+        // Calculate and apply funding growth if there's a cumulative delta
+        uint256 idxDelta = cumCap - pm.lastCumIdx;
+        if (idxDelta > 0 && pm.totalLiquidity > 0) {
+            // growth per unit L, X128
+            uint256 growthDelta = (idxDelta * FP) / pm.totalLiquidity;
+            pm.fundingGrowthGlobalX128 += growthDelta;
+        }
+        
+        // Always update the last cumulative index and timestamp
+        pm.lastCumIdx = cumCap;
+        pm.lastTs = tsNow;
     }
 
     function _updatePositionOwed(
