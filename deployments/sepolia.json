@@ -1,0 +1,135 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "deploymentDate": "2025-09-28",
+  "deployer": "0x46a70eac801FCBd6F6C336dE1F0fBb9E570f17aa",
+  
+  "core": {
+    "poolManager": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+    "arthPoolFactory": "0x2802Aa8957ac34d08301C3FB24Ef3F8775d0238f",
+    "riskEngine": "0x842aaf44557488eeF8908b12C15f620Cc18Db499",
+    "baseIndex": "0xE9a869469f455453cf39DA50139729de227547bE",
+    "pythOracleAdapter": "0xC60470e5C3B751B1C39949F617E8AAD398Fa1fB7"
+  },
+  
+  "oracles": {
+    "wstETHRateSource": "0xD9bdd73A4fF4B206B434D5648BF29F71009eF796"
+  },
+  
+  "hooks": {
+    "arthHook": {
+      "address": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
+      "salt": "0x00000000000000000000000000000000000000000000000000000000000023bb",
+      "flags": {
+        "afterInitialize": true,
+        "beforeSwap": true,
+        "beforeAddLiquidity": true,
+        "afterAddLiquidity": true,
+        "beforeRemoveLiquidity": true,
+        "afterRemoveLiquidity": true
+      },
+      "flagsValue": 8064,
+      "variant": "p8",
+      "lower16": 40832
+    }
+  },
+  
+  "tokens": {
+    "wstETH": "0xB03e218A95bd1a74F2A909E29036D459cD54FdD6",
+    "usdc": "0x10bb9fEaE70b0644275dB3609457F1FB4bEa2F58"
+  },
+  
+  "pools": {
+    "1M": {
+      "poolId": "0x259919ab62885fdca1dcc6529b20d93c31f90a83c663ac1cd269b4257fb8452d",
+      "hook": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
+      "currency0": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+      "currency1": "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+      "fee": 3000,
+      "feePercent": "0.30%",
+      "tickSpacing": 60,
+      "maturity": 1761615180,
+      "maturityDays": 30,
+      "label": "wstETH/USDC 1M (0.30% fee)"
+    },
+    "3M": {
+      "poolId": "0x458762ae582b8e14cf64804c063354846506ea55ed56d3db8c7e7b605e109e37",
+      "hook": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
+      "currency0": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+      "currency1": "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+      "fee": 500,
+      "feePercent": "0.05%",
+      "tickSpacing": 10,
+      "maturity": 1766799180,
+      "maturityDays": 90,
+      "label": "wstETH/USDC 3M (0.05% fee)"
+    },
+    "9M": {
+      "poolId": "0x0683a4106d1e7d6f95c06b419e07dc5ae31fbf94f7c463e9dcd2871966f33540",
+      "hook": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
+      "currency0": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+      "currency1": "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+      "fee": 10000,
+      "feePercent": "1.00%",
+      "tickSpacing": 200,
+      "maturity": 1782351180,
+      "maturityDays": 270,
+      "label": "wstETH/USDC 9M (1.00% fee)"
+    }
+  },
+  
+  "external": {
+    "pythContract": "0x2880aB155794e7179c9eE2e38200202908C17B43",
+    "create2Deployer": "0x4e59b44847b379578588920cA78FbF26c0B4956C"
+  },
+  
+  "config": {
+    "sqrtPriceX96_1to1": "79228162514264337593543950336",
+    "wstETH": {
+      "minUpdateInterval": 900,
+      "maxRatePerSecond": "100000000000000"
+    },
+    "baseIndex": {
+      "alphaPPM": 500000,
+      "maxDeviationPPM": 100000,
+      "maxStale": 3600
+    },
+    "pyth": {
+      "maxAge": 300
+    }
+  },
+  
+  "abi": {
+    "note": "Contract ABIs should be imported from your build artifacts",
+    "contracts": [
+      "ArthPoolFactory",
+      "ArthHook", 
+      "RiskEngine",
+      "BaseIndex",
+      "WstETHRateSource",
+      "PythOracleAdapter"
+    ]
+  },
+  
+  "ui": {
+    "displayNames": {
+      "1M": "1 Month IRS",
+      "3M": "3 Month IRS", 
+      "9M": "9 Month IRS"
+    },
+    "tokenSymbols": {
+      "0xB03e218A95bd1a74F2A909E29036D459cD54FdD6": "wstETH",
+      "0x10bb9fEaE70b0644275dB3609457F1FB4bEa2F58": "USDC"
+    },
+    "rpcUrl": "https://sepolia.infura.io/v3/f63507be5dc84ff8951ed0be5e9c687b",
+    "explorerUrl": "https://sepolia.etherscan.io"
+  },
+  
+  "deployment": {
+    "status": "simulated_success",
+    "note": "Deployment simulation successful - transactions dropped from mempool due to network congestion",
+    "gasEstimate": 12699563,
+    "gasPrice": "0.00100002 gwei",
+    "estimatedCost": "0.00001269981699126 ETH"
+  }
+}
