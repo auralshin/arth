@@ -13,7 +13,6 @@ import { Currency, CurrencyLibrary } from "@uniswap/v4-core/src/types/Currency.s
 import { PoolId, PoolIdLibrary } from "@uniswap/v4-core/src/types/PoolId.sol";
 import { SwapParams } from "@uniswap/v4-core/src/types/PoolOperation.sol";
 import { ModifyLiquidityParams } from "@uniswap/v4-core/src/types/PoolOperation.sol";
-import { BalanceDelta } from "@uniswap/v4-core/src/types/BalanceDelta.sol";
 import { Hooks } from "@uniswap/v4-core/src/libraries/Hooks.sol";
 import { HookMiner } from "@uniswap/v4-periphery/src/utils/HookMiner.sol";
 import { IUnlockCallback } from "@uniswap/v4-core/src/interfaces/callback/IUnlockCallback.sol";
@@ -27,9 +26,9 @@ import { IBaseIndex } from "../src/interfaces/IBaseIndex.sol";
 import { OneInchLOPAdapter } from "../src/integrations/OneInchLOPAdapter.sol";
 import { OneInchRouter } from "../src/integrations/OneInchRouter.sol";
 import { IOrderMixin } from "@1inch/limit-order-protocol-contract/interfaces/IOrderMixin.sol";
-import { TakerTraits, TakerTraitsLib } from "@1inch/limit-order-protocol-contract/libraries/TakerTraitsLib.sol";
+import { TakerTraits } from "@1inch/limit-order-protocol-contract/libraries/TakerTraitsLib.sol";
 import { Address, AddressLib } from "@1inch/solidity-utils/contracts/libraries/AddressLib.sol";
-import { MakerTraits, MakerTraitsLib } from "@1inch/limit-order-protocol-contract/libraries/MakerTraitsLib.sol";
+import { MakerTraits } from "@1inch/limit-order-protocol-contract/libraries/MakerTraitsLib.sol";
 import { PythOracleAdapter } from "../src/oracles/PythOracleAdapter.sol";
 
 /// @title Mock PythOracleAdapter for testing
@@ -732,7 +731,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
         bytes memory hookData = abi.encode(trader, uint256(block.timestamp + 1 hours));
 
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        bool success = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        require(success, "USDC transfer failed");
 
         vm.prank(trader);
         oneInchRouter.lopFillThenSwap(
@@ -767,7 +767,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
         });
 
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        bool success = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        require(success, "USDC transfer failed");
 
         vm.prank(trader);
         oneInchRouter.lopFillThenSwap(
