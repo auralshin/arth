@@ -41,46 +41,60 @@
   
   "pools": {
     "1M": {
-      "poolId": "0x259919ab62885fdca1dcc6529b20d93c31f90a83c663ac1cd269b4257fb8452d",
+      "poolId": "0x8fdef3fc43b18ced4ebb2b0b96f4458c0a9381d534ffabdd619d8c64737afc87",
       "hook": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
-      "currency0": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
-      "currency1": "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+      "currency0": "0x10bb9fEaE70b0644275dB3609457F1FB4bEa2F58",
+      "currency1": "0xB03e218A95bd1a74F2A909E29036D459cD54FdD6",
       "fee": 3000,
       "feePercent": "0.30%",
       "tickSpacing": 60,
       "maturity": 1761615180,
       "maturityDays": 30,
-      "label": "wstETH/USDC 1M (0.30% fee)"
+      "label": "USDC/wstETH 1M (0.30% fee)",
+      "transactionHash": "0xd85a36442bd0e3958b906d038152275a8d3b819dc3e8350ab78d2859cc59c814"
     },
     "3M": {
-      "poolId": "0x458762ae582b8e14cf64804c063354846506ea55ed56d3db8c7e7b605e109e37",
+      "poolId": "0x1c2a67776bef76a8dc10f0d8c0a7e559e0cca82eb6523c08053268fbf7d232f6",
       "hook": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
-      "currency0": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
-      "currency1": "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+      "currency0": "0x10bb9fEaE70b0644275dB3609457F1FB4bEa2F58",
+      "currency1": "0xB03e218A95bd1a74F2A909E29036D459cD54FdD6",
       "fee": 500,
       "feePercent": "0.05%",
       "tickSpacing": 10,
       "maturity": 1766799180,
       "maturityDays": 90,
-      "label": "wstETH/USDC 3M (0.05% fee)"
+      "label": "USDC/wstETH 3M (0.05% fee)",
+      "transactionHash": "0x908ed27bd1710f8b942779ee0f1caccebcba625a48f80f9c6a06f760503e617d"
     },
     "9M": {
-      "poolId": "0x0683a4106d1e7d6f95c06b419e07dc5ae31fbf94f7c463e9dcd2871966f33540",
+      "poolId": "0xfceaa2ff578ef06f495d6022a266441b97c9e887c822474b9556c9fbe0f10e04",
       "hook": "0x3a9923A9579A0cD9638FDf8b67e20bC71F9B9f80",
-      "currency0": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
-      "currency1": "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+      "currency0": "0x10bb9fEaE70b0644275dB3609457F1FB4bEa2F58",
+      "currency1": "0xB03e218A95bd1a74F2A909E29036D459cD54FdD6",
       "fee": 10000,
       "feePercent": "1.00%",
       "tickSpacing": 200,
       "maturity": 1782351180,
       "maturityDays": 270,
-      "label": "wstETH/USDC 9M (1.00% fee)"
+      "label": "USDC/wstETH 9M (1.00% fee)",
+      "transactionHash": "0xc09afebf6e1332a24af72a93bd12abd1df4c0a3275e26991256201fcb5abc250"
     }
   },
   
   "external": {
     "pythContract": "0x2880aB155794e7179c9eE2e38200202908C17B43",
     "create2Deployer": "0x4e59b44847b379578588920cA78FbF26c0B4956C"
+  },
+  
+  "uniswap": {
+    "poolManager": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+    "universalRouter": "0x3A9D48AB9751398BbFa63ad67599Bb04e4BdF98b",
+    "positionManager": "0x429ba70129df741B2Ca2a85BC3A2a3328e5c09b4",
+    "stateView": "0xe1dd9c3fa50edb962e442f60dfbc432e24537e4c",
+    "quoter": "0x61b3f2011a92d183c7dbadbda940a7555ccf9227",
+    "poolSwapTest": "0x9b6b46e2c869aa39918db7f52f5557fe577b6eee",
+    "poolModifyLiquidityTest": "0x0c478023803a644c94c4ce1c1e7b9a087e411b0a",
+    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3"
   },
   
   "config": {
@@ -126,10 +140,17 @@
   },
   
   "deployment": {
-    "status": "simulated_success",
-    "note": "Deployment simulation successful - transactions dropped from mempool due to network congestion",
-    "gasEstimate": 12699563,
-    "gasPrice": "0.00100002 gwei",
-    "estimatedCost": "0.00001269981699126 ETH"
+    "status": "complete",
+    "note": "All pools successfully deployed on Sepolia",
+    "poolsDeployed": "2025-09-28",
+    "transactions": {
+      "1M_pool": "0xd85a36442bd0e3958b906d038152275a8d3b819dc3e8350ab78d2859cc59c814",
+      "3M_pool": "0x908ed27bd1710f8b942779ee0f1caccebcba625a48f80f9c6a06f760503e617d",
+      "9M_pool": "0xc09afebf6e1332a24af72a93bd12abd1df4c0a3275e26991256201fcb5abc250"
+    },
+    "gasUsed": {
+      "total": "0x29734",
+      "perPool": "0xd9bc"
+    }
   }
 }
