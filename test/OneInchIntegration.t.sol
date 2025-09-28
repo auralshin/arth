@@ -473,7 +473,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
         console.log("Maker USDC:", usdc.balanceOf(maker));
 
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 500 * 1e6); // Only fill 500 USDC worth
+        bool successTransfer = usdc.transfer(address(oneInchRouter), 500 * 1e6); // Only fill 500 USDC worth
+        require(successTransfer, "USDC transfer failed");
 
         // Execute partial fill
         vm.prank(trader);
@@ -548,7 +549,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
 
         // Execute first order
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        bool successTransfer = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        require(successTransfer, "USDC transfer failed");
 
         vm.prank(trader);
         oneInchRouter.lopFillThenSwap(
@@ -569,7 +571,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
 
         // Execute second order
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 800 * 1e6);
+        bool successTransferNew = usdc.transfer(address(oneInchRouter), 800 * 1e6);
+        require(successTransferNew, "USDC transfer failed");
 
         vm.prank(trader);
         oneInchRouter.lopFillThenSwap(
@@ -620,7 +623,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
         bytes memory hookData = abi.encode(trader, uint256(block.timestamp + 1 hours));
 
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        bool successTransfer = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        require(successTransfer, "USDC transfer failed");
 
         // Test with amount = 0 (should fail in adapter)
         vm.prank(trader);
@@ -684,7 +688,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
         bytes memory hookData = abi.encode(trader, uint256(block.timestamp + 1 hours));
 
         vm.prank(trader);
-        usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        bool successTransfer = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        require(successTransfer, "USDC transfer failed");
 
         uint256 gasBefore = gasleft();
         
@@ -731,8 +736,8 @@ contract OneInchIntegrationTest is Test, IUnlockCallback {
         bytes memory hookData = abi.encode(trader, uint256(block.timestamp + 1 hours));
 
         vm.prank(trader);
-        bool success = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
-        require(success, "USDC transfer failed");
+        bool successTransfer = usdc.transfer(address(oneInchRouter), 1000 * 1e6);
+        require(successTransfer, "USDC transfer failed");
 
         vm.prank(trader);
         oneInchRouter.lopFillThenSwap(
