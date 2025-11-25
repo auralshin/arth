@@ -1,0 +1,170 @@
+<div class="playground-wrapper">
+  <!-- Top Header -->
+  <header class="playground-top-header">
+    <div class="header-left">
+      <a routerLink="/" class="logo">
+        <img src="assets/logos/arth_emerald_blue_favicon_64.png" alt="Arth Logo" class="logo-img"/>
+        <span class="divider">|</span>
+        <span class="logo-text">DeFi Playground</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <a routerLink="/reading-list" class="header-btn" title="Reading List">
+        <i class="fa fa-book"></i> Reading List
+      </a>
+      <app-theme-mode-toggle></app-theme-mode-toggle>
+    </div>
+  </header>
+  <!-- Main Playground Section -->
+  <section class="playground">
+    <header class="pg-header">
+      <div class="chips" role="tablist" aria-label="Playground modes">
+        <button role="tab" [class.active]="mode==='amm'" (click)="setMode('amm')">AMM</button>
+        <button role="tab" [class.active]="mode==='interest'" (click)="setMode('interest')">Interest Rate</button>
+        <button role="tab" [class.active]="mode==='marketmaking'" (click)="setMode('marketmaking')">Market Making</button>
+        <button role="tab" [class.active]="mode==='options'" (click)="setMode('options')">Options</button>
+        <button role="tab" [class.active]="mode==='il'" (click)="setMode('il')">Impermanent Loss</button>
+      </div>
+      <div class="actions">
+        <button (click)="start()" [disabled]="running">Run</button>
+        <button (click)="stop()"  [disabled]="!running">Pause</button>
+        <button (click)="stepOnce()">Step</button>
+        <button class="ghost" (click)="reset()">Reset</button>
+        <button class="ghost" (click)="toggleBus()">Event Bus</button>
+        <button class="ghost" (click)="toggleHelp()">Explain</button>
+      </div>
+    </header>
+  <div class="pg-grid">
+    <!-- LEFT: Controls -->
+    <aside class="controls">
+      <!-- AMM controls -->
+      <div *ngIf="mode === 'amm'" class="group">
+        <div class="group-title">
+          <h4>AMM Controls</h4>
+          <div class="pill">x·y=k · Weighted · Stable-like</div>
+        </div>
+        <div class="row2">
+          <label>Curve
+            <select [(ngModel)]="amm.type" (ngModelChange)="recompute()">
+              <option value="cpmm">Constant Product (x·y=k)</option>
+              <option value="clamm">CLAMM (v3: ticks/liquidity)</option>
+              <option value="weighted">Weighted (x^wx · y^wy = k)</option>
+              <option value="stable">Stable-like (illustrative)</option>
+            </select>
+          </label>
+          <label>Fee (bps)
+            <input type="number" [(ngModel)]="amm.feeBps" (input)="recompute()" min="0" max="200"/>
+          </label>
+        </div>
+        <div class="row2">
+          <label>Reserve X
+            <input type="number" [(ngModel)]="amm.x" (input)="syncAmmReserves()" min="1"/>
+          </label>
+          <label>Reserve Y
+            <input type="number" [(ngModel)]="amm.y" (input)="syncAmmReserves()" min="1"/>
+          </label>
+        </div>
+        <div class="row2" *ngIf="amm.type==='weighted'">
+          <label>wx
+            <input type="number" [(ngModel)]="amm.wx" (input)="recompute()" step="0.05" min="0.05" max="3"/>
+          </label>
+          <label>wy
+            <input type="number" [(ngModel)]="amm.wy" (input)="recompute()" step="0.05" min="0.05" max="3"/>
+          </label>
+        </div>
+        <label *ngIf="amm.type==='stable'">A (amp)
+          <input type="number" [(ngModel)]="amm.A" (input)="recompute()" step="10" min="10" max="10000"/>
+        </label>
+        <label>Per-tick trade size
+          <input type="range" [(ngModel)]="tradeSize" min="1" max="200"/>
+        </label>
+        <!-- CLAMM (v3) controls -->
+        <div class="row2" *ngIf="amm.type==='clamm'">
+          <label>Tick spacing
+            <input type="number" [(ngModel)]="v3.tickSpacing" (input)="recompute()" min="1" step="1"/>
+          </label>
+          <label>Current tick
+            <input type="number" [(ngModel)]="v3.currentTick" (input)="recompute()" step="1"/>
+          </label>
+        </div>
+        <div class="row2" *ngIf="amm.type==='clamm'">
+          <label>Lower tick
+            <input type="number" [(ngModel)]="v3.tickLower" (input)="recompute()" step="1"/>
+          </label>
+          <label>Upper tick
+            <input type="number" [(ngModel)]="v3.tickUpper" (input)="recompute()" step="1"/>
+          </label>
+        </div>
+        <label *ngIf="amm.type==='clamm'">Liquidity L
+          <input type="number" [(ngModel)]="v3.L" (input)="recompute()" min="1" step="100"/>
+        </label>
+        <div class="stats">
+          <div class="stat"><span>K</span><b>{{ invariants.k | number:'1.0-4' }}</b></div>
+          <div class="stat"><span>Price (Y/X)</span><b>{{ ammPrice | number:'1.4-6' }}</b></div>
+          <div class="stat"><span>Pool X</span><b>{{ ammX | number:'1.0-0' }}</b></div>
+          <div class="stat"><span>Pool Y</span><b>{{ ammY | number:'1.0-0' }}</b></div>
+          <div *ngIf="amm.type==='clamm'" class="stat"><span>v3 amount0</span><b>{{ metrics.v3Amount0 | number:'1.2-2' }}</b></div>
+          <div *ngIf="amm.type==='clamm'" class="stat"><span>v3 amount1</span><b>{{ metrics.v3Amount1 | number:'1.2-2' }}</b></div>
+        </div>
+      </div>
+      <!-- Interest controls -->
+      <div *ngIf="mode === 'interest'" class="group">
+        <div class="group-title">
+          <h4>Interest Accrual</h4>
+          <div class="pill">Simple vs Compound</div>
+        </div>
+        <div class="row2">
+          <label>Principal
+            <input type="number" [(ngModel)]="principal" (input)="recompute()" min="0"/>
+          </label>
+          <label>APR (%)
+            <input type="range" [(ngModel)]="aprPct" (input)="recompute()" min="0" max="50" step="0.5"/>
+            <span>{{ aprPct }}%</span>
+          </label>
+        </div>
+        <div class="row2">
+          <label>Accrual
+            <select [(ngModel)]="interestMode" (ngModelChange)="recompute()">
+              <option value="simple">Simple</option>
+              <option value="compound">Compound (daily)</option>
+            </select>
+          </label>
+          <label>Horizon (days)
+            <input type="range" [(ngModel)]="horizonDays" (input)="recompute()" min="1" max="365" step="1"/>
+            <span>{{ horizonDays }} days</span>
+          </label>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>Accrued</span><b>{{ accrued | number:'1.2-2' }}</b></div>
+          <div class="stat"><span>Total</span><b>{{ (principal + accrued) | number:'1.2-2' }}</b></div>
+          <div class="stat"><span>Gain %</span><b>{{ ((accrued/principal)*100) | number:'1.2-2' }}%</b></div>
+        </div>
+        <div class="divider"></div>
+        <!-- Lending/Borrowing Pool Controls -->
+        <div class="group-title">
+          <h4>Lending Pool (Utilization)</h4>
+          <div class="pill">Borrow & Supply APR</div>
+        </div>
+        <div class="row2">
+          <label>Cash
+            <input type="number" [(ngModel)]="pool.cash" (input)="recompute()" min="0"/>
+          </label>
+          <label>Borrows
+            <input type="number" [(ngModel)]="pool.borrows" (input)="recompute()" min="0"/>
+          </label>
+        </div>
+        <div class="row2">
+          <label>Reserves
+            <input type="number" [(ngModel)]="pool.reserves" (input)"recompute()" min="0"/>
+          </label>
+          <label>Reserve Factor
+            <input type="number" [(ngModel)]="pool.reserveFactor" (input)="recompute()" min="0" max="1" step="0.01"/>
+          </label>
+        </div>
+        <div class="row2">
+          <label>IR Model
+            <select [(ngModel)]="ir.type" (ngModelChange)="recompute()">
+              <option value="jump">Jump (Kink)</option>
+              <option value="linear">Linear</option>
+              <option value="sigmoid">Sigmoid</option>
+            </select>

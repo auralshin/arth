@@ -1,0 +1,31 @@
+/* Lightweight fallback styles for the Pagefind search UI. */
+
+.pagefind-ui {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  box-shadow: 0 8px 24px rgba(40, 40, 40, 0.16);
+  padding: 1rem;
+  color: #151515;
+}
+
+.pagefind-ui__search-input {
+  width: 100%;
+  border: 1px solid rgba(21, 21, 21, 0.12);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.pagefind-ui__results {
+  margin-top: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.pagefind-ui__offline {
+  font-size: 0.9rem;
+  color: rgba(21, 21, 21, 0.7);
+}

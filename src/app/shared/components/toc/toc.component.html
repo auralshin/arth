@@ -1,5 +1,10 @@
-<div class="toc-wrapper" #tocWrapper perfectScrollbar>
-  <ul>
+<div
+  class="toc-wrapper"
+  #tocWrapper
+  perfectScrollbar
+  [class.empty]="!headings.length"
+>
+  <ul *ngIf="headings.length">
     <li
       *ngFor="let item of headings; trackBy: trackById; let index = index"
       [attr.id]="item.id"

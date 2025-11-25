@@ -1,29 +1,29 @@
 # Transforms overview
 
-All the content that is rendered by the docs.nestjs.com application, and some of its
+All the content that is rendered by the docs.arth.com application, and some of its
 configuration files, are generated from source files by [Dgeni](https://github.com/angular/dgeni).
 Dgeni is a general purpose documentation generation tool.
 
 Markdown files in `content` are processed and transformed
-into files that are consumed by the `docs.nestjs.com` web frontend.
+into files that are consumed by the `docs.arth.com` web frontend.
 
 ## Packages
 
-The documentation tool of NestJS is split into multiple Dgeni packages.
+The documentation tool of Arth is split into multiple Dgeni packages.
 
-**nestjs-package**
+**arth-package**
 
 The main package. Orchestrates all the following packages and sets
 final configuration. It is responsible for cleaning up the file system.
 
-**nestjs-base-package**
+**arth-base-package**
 
 The base package for common configurations, services and processors for
 each package. It handles the general input / output / template path resolution.
 
-**nestjs-content-package**
+**arth-content-package**
 
-Orchestrates all hand-written contents for the NestJS documentation.
+Orchestrates all hand-written contents for the Arth documentation.
 It makes use of the `content`-folders markdown. On top of that
 it takes care of the `content/**/*.json` files such as `content/discover/who-uses.json`.
 
@@ -31,9 +31,9 @@ it takes care of the `content/**/*.json` files such as `content/discover/who-use
 
 A package to handle the markdown content files. It creates a new DocType `content`
 which include a `content` and `title` of each markdown file.
-The **nestjs-content-package** manages this content further.
+The **arth-content-package** manages this content further.
 
 ## Templates
 
-All the templates for the docs.nestjs.com dgeni transformations are stored in the `tools/transforms/templates`
+All the templates for the docs.arth.com dgeni transformations are stored in the `tools/transforms/templates`
 folder. See the [README](./templates/README.md).

@@ -1,7 +1,7 @@
-# docs.nestjs.com project tooling
+# Arth Documentation Tooling
 
 This document gives an overview of the tools we use to generate the content for the
-docs.nestjs.com website.
+Arth documentation website.
 
 # Transforms
 
@@ -10,7 +10,7 @@ configuration files, are generated from source files by [Dgeni](https://github.c
 Dgeni is a general purpose documentation generation tool.
 
 Markdown files in `content` are processed and transformed
-into files that are consumed by the `docs.nestjs.com` web frontend.
+into files that are consumed by the Arth documentation web frontend.
 
 # dgeni-cli
 

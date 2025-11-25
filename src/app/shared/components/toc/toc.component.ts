@@ -80,18 +80,39 @@ export class TocComponent implements OnInit, OnDestroy, OnChanges {
 
   lookupHeadings() {
     if (!this.contentReference) {
+      if (this.headings.length) {
+        this.headings = [];
+        this.activeId = undefined;
+        this.cd.markForCheck();
+      }
       return;
     }
-    const headings = this.contentReference.querySelectorAll('h3, h4');
+    if (this.contentReference.hasAttribute('data-no-toc')) {
+      if (this.headings.length) {
+        this.headings = [];
+        this.activeId = undefined;
+        this.cd.markForCheck();
+      }
+      return;
+    }
+    const headingNodes = Array.from(
+      this.contentReference.querySelectorAll('h3, h4'),
+    ) as HTMLElement[];
     const removeAnchor = (text: string) => {
       const anchorId = text && text.indexOf('#');
       return anchorId >= 0 ? text.slice(0, anchorId) : text;
     };
-    this.headings = Array.from(headings).map((item: any) => ({
+    this.headings = headingNodes.map((item) => ({
       offsetTop: item.offsetTop,
       textContent: removeAnchor(item.textContent),
-      elementRef: item as HTMLElement,
+      elementRef: item,
     }));
+
+    if (!this.headings.length) {
+      this.activeId = undefined;
+    }
+
+    this.cd.markForCheck();
   }
 
   updateOffsetTop() {
@@ -109,6 +130,13 @@ export class TocComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   findCurrentHeading() {
+    if (!this.headings.length) {
+      if (this.activeId !== undefined) {
+        this.activeId = undefined;
+        this.cd.markForCheck();
+      }
+      return;
+    }
     const marginOffset = 15;
     const selectHeading = (i: number) => {
       const performChangeDetection = this.activeId !== i;
@@ -132,6 +160,12 @@ export class TocComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
     const { nativeElement } = this.tocWrapper;
+    if (!this.headings.length) {
+      this.maxTopOffset = 0;
+      this.renderer.removeStyle(nativeElement, 'top');
+      this.renderer.removeStyle(nativeElement, 'position');
+      return;
+    }
     const pageWrapperRef = document.querySelector('.page-wrapper');
     if (!pageWrapperRef || !nativeElement) {
       return;
@@ -147,8 +181,17 @@ export class TocComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   checkViewportBoundaries() {
+    if (!this.tocWrapper) {
+      return;
+    }
     this.isPositionFixed = this.maxTopOffset > window.pageYOffset;
     const { nativeElement } = this.tocWrapper;
+
+    if (!this.headings.length) {
+      this.renderer.removeStyle(nativeElement, 'top');
+      this.renderer.removeStyle(nativeElement, 'position');
+      return;
+    }
 
     if (!this.isPositionFixed) {
       const initialTopOffset = 150;

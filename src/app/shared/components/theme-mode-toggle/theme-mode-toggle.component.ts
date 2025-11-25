@@ -1,9 +1,29 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { StorageService } from '../../services/storage.service';
 
-type Theme = 'light' | 'dark';
+type Theme =
+  | 'light'
+  | 'dark'
+  | 'sunset'
+  | 'ocean'
+  | 'light-contrast'
+  | 'dark-contrast'
+  | 'neon';
+
+interface ThemeOption {
+  id: Theme;
+  label: string;
+  icon: string;
+}
 
 @Component({
   selector: 'app-theme-mode-toggle',
@@ -11,14 +31,24 @@ type Theme = 'light' | 'dark';
   styleUrls: ['./theme-mode-toggle.component.scss'],
 })
 export class ThemeModeToggleComponent implements OnInit {
+  readonly themes: ThemeOption[] = [
+    { id: 'light', label: 'Daybreak', icon: 'light_mode' },
+    { id: 'dark', label: 'Midnight', icon: 'dark_mode' },
+    { id: 'sunset', label: 'Sunset', icon: 'auto_awesome' },
+    { id: 'ocean', label: 'Oceanic', icon: 'waves' },
+    { id: 'light-contrast', label: 'High Light', icon: 'hdr_weak' },
+    { id: 'dark-contrast', label: 'High Dark', icon: 'hdr_strong' },
+    { id: 'neon', label: 'Neon Pulse', icon: 'bolt' },
+  ];
   theme: Theme;
-
+  menuOpen = false;
   constructor(
     @Inject(DOCUMENT)
     private readonly document: Document,
     private readonly mediaMatcher: MediaMatcher,
     private readonly storageService: StorageService,
     private readonly changeDetector: ChangeDetectorRef,
+    private readonly elementRef: ElementRef<HTMLElement>,
   ) {}
 
   ngOnInit() {
@@ -36,13 +66,27 @@ export class ThemeModeToggleComponent implements OnInit {
     this.setTheme(storedTheme ?? preferredScheme);
   }
 
-  toggleTheme(skipStorage = false) {
-    const newTheme = this.theme === 'dark' ? 'light' : 'dark';
-    // NOTE: We should skip saving theme in storage when toggle is caused by matchMedia change event
-    // Otherwise, once saved, it'll no longer correspond to the system preferences,
-    // despite the user not touching the toggle button themselves
-    if (!skipStorage) this.storageService.set('theme', newTheme);
-    this.setTheme(newTheme);
+  get currentTheme(): ThemeOption {
+    return this.themes.find((theme) => theme.id === this.theme) ?? this.themes[0];
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  private selectTheme(theme: Theme) {
+    this.storageService.set('theme', theme);
+    this.setTheme(theme);
+    this.menuOpen = false;
+  }
+
+  onOptionKeydown(event: KeyboardEvent, theme: Theme) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.selectTheme(theme);
+    } else if (event.key === 'Tab') {
+      this.menuOpen = false;
+    }
   }
 
   private getStoredTheme() {
@@ -52,6 +96,36 @@ export class ThemeModeToggleComponent implements OnInit {
   private setTheme(theme: Theme) {
     this.theme = theme;
     this.document.documentElement.setAttribute('mode', theme);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent<Theme>('arth-theme-change', { detail: theme }),
+      );
+    }
     this.changeDetector.detectChanges();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    if (
+      this.menuOpen &&
+      !this.elementRef.nativeElement.contains(event.target as Node)
+    ) {
+      this.menuOpen = false;
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.menuOpen = false;
+  }
+
+  onTriggerClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.toggleMenu();
+  }
+
+  onOptionSelect(event: MouseEvent, theme: Theme) {
+    event.stopPropagation();
+    this.selectTheme(theme);
   }
 }

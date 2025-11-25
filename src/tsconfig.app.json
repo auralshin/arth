@@ -3,7 +3,49 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "types": []
+    "types": [],
+    "paths": {
+      "@base-page": ["app/homepage/pages/page/page.component"]
+    }
   },
-  "files": ["main.ts"]
+  "files": ["main.ts"],
+  "include": ["**/*.d.ts"],
+  "exclude": [
+    "app/**/*.spec.ts",
+    "app/homepage/pages/application-context/**/*",
+    "app/homepage/pages/cli/**/*",
+    "app/homepage/pages/components/**/*",
+    "app/homepage/pages/controllers/**/*",
+    "app/homepage/pages/custom-decorators/**/*",
+    "app/homepage/pages/devtools/**/*",
+    "app/homepage/pages/discover/**/*",
+    "app/homepage/pages/exception-filters/**/*",
+    "app/homepage/pages/faq/**/*",
+    "app/homepage/pages/first-steps/**/*",
+    "app/homepage/pages/fundamentals/**/*",
+    "app/homepage/pages/graphql/**/*",
+    "app/homepage/pages/guards/**/*",
+    "app/homepage/pages/interceptors/**/*",
+    "app/homepage/pages/microservices/**/*",
+    "app/homepage/pages/middlewares/**/*",
+    "app/homepage/pages/modules/**/*",
+    "app/homepage/pages/openapi/**/*",
+    "app/homepage/pages/pipes/**/*",
+    "app/homepage/pages/recipes/**/*",
+    "app/homepage/pages/security/**/*",
+    "app/homepage/pages/techniques/**/*",
+    "app/homepage/pages/websockets/**/*",
+    "app/homepage/pages/advanced-topics/**/*",
+    "app/homepage/pages/blockchain-execution-environments/**/*",
+    "app/homepage/pages/defi-landscape/**/*",
+    "app/homepage/pages/defi-vs-traditional-finance/**/*",
+    "app/homepage/pages/lending-borrowing/**/*",
+    "app/homepage/pages/math-primer/**/*",
+    "app/homepage/pages/quantitative-defi-modeling/**/*",
+    "app/homepage/pages/staking-restaking-yield/**/*",
+    "app/homepage/pages/tooling-simulation-ecosystem/**/*",
+    "app/homepage/pages/trading-foundations/**/*",
+    "app/homepage/pages/transaction-ordering-mev/**/*",
+    "app/playground/**/*"
+  ]
 }

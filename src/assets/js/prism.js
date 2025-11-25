@@ -289,7 +289,7 @@ var _ = _self.Prism = {
 
 				pattern = pattern.pattern || pattern;
 
-				// Don’t cache length as it changes during the loop
+				// Don't cache length as it changes during the loop
 				for (var i=0, pos = 0; i<strarr.length; pos += strarr[i].length, ++i) {
 
 					var str = strarr[i];
@@ -589,7 +589,7 @@ if (Prism.languages.markup) {
 			alias: 'language-css'
 		}
 	});
-	
+
 	Prism.languages.insertBefore('inside', 'attr-value', {
 		'style-attr': {
 			pattern: /\s*style=("|').*?\1/i,
@@ -934,7 +934,7 @@ Prism.hooks.add('before-highlight', function(env) {
 
 		pre.parentNode.insertBefore(div, pre);
 	}
-	
+
 	div2.innerHTML = language;
 });
 

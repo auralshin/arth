@@ -1,12 +1,37 @@
-<button class="theme-mode-toggle">
-  <span class="material-icons" *ngIf="theme === 'dark'" (click)="toggleTheme()">
-    light_mode
-  </span>
-  <span
-    class="material-icons"
-    *ngIf="theme === 'light'"
-    (click)="toggleTheme()"
+<div
+  class="theme-mode-toggle"
+  [class.open]="menuOpen"
+  [attr.data-theme]="theme"
+>
+  <button
+    class="trigger"
+    type="button"
+    (click)="onTriggerClick($event)"
+    [attr.aria-expanded]="menuOpen"
+    aria-haspopup="listbox"
+    [attr.aria-label]="'Current theme: ' + currentTheme.label"
   >
-    dark_mode
-  </span>
-</button>
+    <span class="material-icons">{{ currentTheme.icon }}</span>
+  </button>
+  <div
+    class="radial-menu"
+    role="listbox"
+    [attr.aria-hidden]="!menuOpen"
+    [class.visible]="menuOpen"
+  >
+    <button
+      *ngFor="let option of themes"
+      type="button"
+      class="radial-option"
+      [class.selected]="option.id === theme"
+      [attr.aria-selected]="option.id === theme"
+      [attr.aria-label]="option.label"
+      (click)="onOptionSelect($event, option.id)"
+      (keydown)="onOptionKeydown($event, option.id)"
+      [attr.tabindex]="menuOpen ? 0 : -1"
+    >
+      <span class="material-icons">{{ option.icon }}</span>
+      <span class="label">{{ option.label }}</span>
+    </button>
+  </div>
+</div>

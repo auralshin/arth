@@ -26,6 +26,9 @@
       "ES2022",
       "dom"
     ],
+    "paths": {
+      "@base-page": ["src/app/homepage/pages/page/page.component"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

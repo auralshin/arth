@@ -4,14 +4,8 @@
 @use './scss/theme.scss';
 
 :root {
-  --docsearch-primary-color: #ed2945;
-  --docsearch-highlight-color: #ed2945;
-  --docsearch-logo-color: #ed2945;
-  --docsearch-modal-background: #fafafa;
-  --docsearch-searchbox-focus-background: transparent;
-  --docsearch-searchbox-shadow: none;
-  --primary-color: #ea2845;
-  --primary-accent-color: #ea2868;
+  --primary-color: #FFAA00;
+  --primary-accent-color: #FF7828;
 }
 
 html[mode='dark'] {
@@ -59,15 +53,66 @@ html[mode='dark'] {
   }
 }
 
-html:not([mode='dark']):not([mode='light']),
 html[mode='light'] {
   @extend .light-mode;
+}
+
+html[mode='sunset'] {
+  @extend .sunset-mode;
+}
+
+html[mode='ocean'] {
+  @extend .ocean-mode;
+}
+
+html[mode='light-contrast'] {
+  @extend .light-contrast-mode;
+}
+
+html[mode='dark-contrast'] {
+  @extend .dark-contrast-mode;
+}
+
+html[mode='neon'] {
+  @extend .neon-mode;
+}
+
+html:not([mode]) {
+  @extend .light-mode;
+}
+
+/* Global page transition keyframes - using only opacity to avoid breaking fixed positioning */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 body {
   font-size: 16px;
   font-weight: 400;
-  // letter-spacing: 0.2px;
+  letter-spacing: 0.2px;
   font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
   font-display: swap;
   background-color: var(--background);
@@ -79,6 +124,55 @@ body {
   -ms-transition: background 200ms cubic-bezier(0.7, 0, 0.3, 1);
   -o-transition: background 200ms cubic-bezier(0.7, 0, 0.3, 1);
   transition: background 200ms cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+/* Apply page transition to router outlet content */
+router-outlet ~ * {
+  animation: pageEnter 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page transition container styling */
+.page-transition-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add stagger animations for page content */
+app-homepage,
+app-base-page,
+app-playground-page {
+  display: block;
+  animation: pageEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a {
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+/* Add smooth transitions to buttons globally */
+button {
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:active {
+      opacity: 0.85;
+    }
+  }
 }
 
 a {
@@ -408,16 +502,6 @@ tr td span.table-code-asterisk {
       z-index: 2;
     }
   }
-}
-
-.DocSearch-Modal {
-  margin-top: 120px;
-  border-radius: 3px;
-}
-
-.DocSearch-Container {
-  z-index: 20000;
-  background: rgba(0, 0, 0, 0.6);
 }
 
 // Scrollbar sidebar

@@ -1,86 +1,157 @@
 @use '../../../../scss/utils';
 
 :host {
-  @extend .center-top;
-  position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  float: right;
-  padding-right: 40px;
+  margin-left: 24px;
+  position: relative;
 
-  @include utils.media(medium) {
-    padding-right: 20px;
-  }
-
-  @include utils.media(small) {
-    position: absolute;
-    right: 20px;
-    padding-right: 0;
+  @include utils.media(large) {
+    margin-left: 16px;
   }
 }
 
 .theme-mode-toggle {
-  // Button reset
-  border: none;
-  margin: 0;
-  padding: 0;
-  width: auto;
-  overflow: visible;
-  background: transparent;
-  font: inherit;
-  line-height: normal;
-  -webkit-font-smoothing: inherit;
-  -moz-osx-font-smoothing: inherit;
-  -webkit-appearance: none;
-
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 15px;
-  color: #fff;
-  padding-left: 15px;
   position: relative;
+  color: var(--primary, #fff);
+  transition: color 200ms ease;
 
-  @include utils.media(small) {
-    padding: 0;
-    margin: 0;
+  &.open .trigger {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.trigger {
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 120ms ease-in-out;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    outline: none;
   }
 
   .material-icons {
+    color: currentColor;
+    font-size: 22px;
+    transition: color 200ms ease;
+  }
+}
+
+.radial-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.05)
+    ),
+    rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(24px) saturate(180%) contrast(110%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(110%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.15),
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 0 10px rgba(255, 255, 255, 0.08);
+
+  /* subtle glass depth animation */
+  animation: liquidGlow 4s ease-in-out infinite alternate;
+
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-8px);
+  transform-origin: top right;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease,
+    background 600ms ease;
+  z-index: 20000;
+
+  &.visible {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes liquidGlow {
+  0% {
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.15),
+      0 12px 32px rgba(0, 0, 0, 0.45),
+      0 0 10px rgba(255, 255, 255, 0.08);
+  }
+  100% {
+    box-shadow:
+      inset 0 2px 4px rgba(255, 255, 255, 0.2),
+      0 16px 40px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(255, 255, 255, 0.12);
+  }
+}
+
+
+.radial-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color);
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+  outline: none;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--background-3dp);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  &.selected {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .material-icons {
+    color: currentColor;
     font-size: 20px;
-    cursor: pointer;
-    @include utils.text-gradient();
+    pointer-events: none;
+  }
 
-    @include utils.media(small) {
-      background: #fff;
-    }
-
-    &::before {
-      content: '';
-      position: absolute;
-      background: #fff;
-      opacity: 0.2;
-      left: 0px;
-      top: 2px;
-      bottom: 2px;
-      width: 2px;
-    }
-
-    &:hover {
-      background: #fff;
-
-      @include utils.media(small) {
-        @include utils.text-gradient();
-      }
-    }  
-
-    @include utils.media(small) {
-      font-size: 24px;
-
-      &::before {
-        display: none;
-      }
-    }
+  .label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: inherit;
+    white-space: nowrap;
   }
 }

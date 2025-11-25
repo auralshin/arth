@@ -1,11 +1,11 @@
 .light-mode {
-  --primary: #ea2845;
-  --primary-accent: #ea2868;
-  --primary-1dp: #d71e38;
-  --primary-2dp: #da2640;
-  --primary-3dp:#db2840;
-  --primary-4dp: #e40020;
-  --primary-5dp: #ff0023;
+  --primary: #FFAA00;
+  --primary-accent: #FF7828;
+  --primary-1dp: #E69900;
+  --primary-2dp: #CC8800;
+  --primary-3dp: #B37700;
+  --primary-4dp: #996600;
+  --primary-5dp: #805500;
   --primary-gradient: linear-gradient(90deg, var(--primary) 0%, var(--primary-accent) 100%);
 
   --color: #404040;
@@ -19,9 +19,24 @@
   --background-5dp: #cccccc;
 
   --header-background: #151515;
-
+  --header-icon-color: #ffffff;
   --menu-color: #151515;
   --menu-background: #f5f5f5;
+
+  --header-search-background: rgba(255, 255, 255, 0.14);
+  --header-search-background-focus: rgba(255, 255, 255, 0.22);
+  --header-search-border: rgba(255, 255, 255, 0.3);
+  --header-search-icon: rgba(255, 255, 255, 0.7);
+  --header-search-placeholder: rgba(255, 255, 255, 0.7);
+  --header-search-text: #ffffff;
+  --header-search-clear: var(--primary);
+  --header-search-results-background: var(--background-1dp);
+  --header-search-results-border: rgba(21, 21, 21, 0.08);
+  --header-search-result-hover: var(--background-2dp);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary);
+  --header-search-result-highlight-text: #101010;
 
   --inline-code-color: #2876d2;
 
@@ -49,13 +64,13 @@
 }
 
 .dark-mode {
-  --primary: #f23551;
-  --primary-accent: #e23770;
-  --primary-1dp: #f45f75;
-  --primary-2dp: #f4526a;
-  --primary-3dp: #f1455f;
-  --primary-4dp: #f23c57;
-  --primary-5dp: #f23551;
+  --primary: #FFBB11;
+  --primary-accent: #FF8833;
+  --primary-1dp: #FFCC22;
+  --primary-2dp: #FFAA00;
+  --primary-3dp: #FF9900;
+  --primary-4dp: #FF8800;
+  --primary-5dp: #FF7700;
   --primary-gradient: linear-gradient(90deg, var(--primary) 0%, var(--primary-accent) 100%);
 
   --color: #dfdfe3;
@@ -69,6 +84,22 @@
   --background-5dp: #39393e;
 
   --header-background: #1b1b1d;
+  --header-icon-color: #ffffff;
+
+  --header-search-background: rgba(255, 255, 255, 0.08);
+  --header-search-background-focus: rgba(255, 255, 255, 0.14);
+  --header-search-border: rgba(255, 255, 255, 0.2);
+  --header-search-icon: rgba(255, 255, 255, 0.65);
+  --header-search-placeholder: rgba(255, 255, 255, 0.6);
+  --header-search-text: #f7f7f9;
+  --header-search-clear: var(--primary);
+  --header-search-results-background: var(--background-1dp);
+  --header-search-results-border: rgba(255, 255, 255, 0.1);
+  --header-search-result-hover: var(--background-2dp);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary);
+  --header-search-result-highlight-text: #0d0d0d;
 
   --menu-color: #dfdfe3;
   --menu-background: #242427;
@@ -96,4 +127,331 @@
 
   --images-filter: invert(1) contrast(0.85);
   --images-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.08);
+}
+
+.sunset-mode {
+  --primary: #ff7e47;
+  --primary-accent: #ffb347;
+  --primary-1dp: #ff915f;
+  --primary-2dp: #ff7230;
+  --primary-3dp: #ff641c;
+  --primary-4dp: #f0540d;
+  --primary-5dp: #d24600;
+  --primary-gradient: linear-gradient(120deg, var(--primary) 0%, var(--primary-accent) 100%);
+
+  --color: #3c2c23;
+  --color-1dp: #2a1c15;
+
+  --background: #fff6ef;
+  --background-1dp: #ffe7d7;
+  --background-2dp: #ffd9c0;
+  --background-3dp: #ffccb0;
+  --background-4dp: #ffc4a6;
+  --background-5dp: #ffb894;
+
+  --header-background: #2f2622;
+  --header-icon-color: #ffd9c0;
+
+  --header-search-background: rgba(255, 223, 197, 0.24);
+  --header-search-background-focus: rgba(255, 223, 197, 0.34);
+  --header-search-border: rgba(255, 226, 206, 0.48);
+  --header-search-icon: rgba(255, 231, 213, 0.85);
+  --header-search-placeholder: rgba(255, 235, 219, 0.85);
+  --header-search-text: #ffe7d7;
+  --header-search-clear: var(--primary);
+  --header-search-results-background: var(--background-1dp);
+  --header-search-results-border: rgba(47, 38, 34, 0.16);
+  --header-search-result-hover: var(--background-2dp);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary);
+  --header-search-result-highlight-text: #2f2622;
+
+  --menu-color: #2f2622;
+  --menu-background: #ffe7d7;
+
+  --inline-code-color: #d56023;
+
+  --code-background: #2f2622;
+
+  --warning: #fbc15f;
+  --warning-color: #d88322;
+  --warning-background: #fff0da;
+
+  --info: #f06f58;
+  --info-color: #f06f58;
+  --info-background: rgba(240, 111, 88, 0.12);
+
+  --error: #ce3e4d;
+  --error-background: #ffe8ed;
+
+  --company-filter: grayscale(100%);
+  --company-filter-hover: grayscale(0%);
+  --company-logo-filter: grayscale(1);
+
+  --company-logo-opacity: 0.55;
+
+  --images-filter: hue-rotate(-10deg) saturate(1.05);
+  --images-box-shadow: 0 0 50px 0 rgba(112, 57, 33, 0.15);
+}
+
+.ocean-mode {
+  --primary: #2ea2ff;
+  --primary-accent: #19d6c5;
+  --primary-1dp: #3eb4ff;
+  --primary-2dp: #2690e6;
+  --primary-3dp: #1f7fcc;
+  --primary-4dp: #1a70b3;
+  --primary-5dp: #155f99;
+  --primary-gradient: linear-gradient(120deg, var(--primary) 0%, var(--primary-accent) 100%);
+
+  --color: #d9f3ff;
+  --color-1dp: #e7fbff;
+
+  --background: #0f1b2b;
+  --background-1dp: #132235;
+  --background-2dp: #16283f;
+  --background-3dp: #193047;
+  --background-4dp: #1d3a55;
+  --background-5dp: #22425f;
+
+  --header-background: #0c1622;
+  --header-icon-color: #2dffbe;
+
+  --header-search-background: rgba(46, 162, 255, 0.16);
+  --header-search-background-focus: rgba(46, 162, 255, 0.24);
+  --header-search-border: rgba(46, 162, 255, 0.38);
+  --header-search-icon: rgba(197, 231, 255, 0.8);
+  --header-search-placeholder: rgba(197, 231, 255, 0.8);
+  --header-search-text: #e7fbff;
+  --header-search-clear: var(--primary);
+  --header-search-results-background: var(--background-1dp);
+  --header-search-results-border: rgba(46, 162, 255, 0.18);
+  --header-search-result-hover: var(--background-2dp);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary);
+  --header-search-result-highlight-text: #042032;
+
+  --menu-color: #d9f3ff;
+  --menu-background: #15263a;
+
+  --inline-code-color: #4fd1ff;
+
+  --code-background: #0b131f;
+
+  --warning: #ffd460;
+  --warning-color: #ffb347;
+  --warning-background: rgba(255, 194, 104, 0.12);
+
+  --info: #2ea2ff;
+  --info-color: #2ea2ff;
+  --info-background: rgba(46, 162, 255, 0.14);
+
+  --error: #ff7088;
+  --error-background: rgba(255, 112, 136, 0.16);
+
+  --company-filter: opacity(0.75);
+  --company-filter-hover: opacity(1);
+  --company-logo-filter: grayscale(90%);
+
+  --company-logo-opacity: unset;
+
+  --images-filter: saturate(1.1) contrast(0.9);
+  --images-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.05);
+}
+
+.light-contrast-mode {
+  --primary: #000000;
+  --primary-accent: #ffbf00;
+  --primary-1dp: #1a1a1a;
+  --primary-2dp: #333333;
+  --primary-3dp: #4d4d4d;
+  --primary-4dp: #666666;
+  --primary-5dp: #808080;
+  --primary-gradient: linear-gradient(120deg, #000 0%, #ffbf00 100%);
+
+  --color: #000000;
+  --color-1dp: #000000;
+
+  --background: #ffffff;
+  --background-1dp: #f4f4f4;
+  --background-2dp: #e9e9e9;
+  --background-3dp: #dedede;
+  --background-4dp: #d3d3d3;
+  --background-5dp: #c8c8c8;
+
+  --header-background: #ffffff;
+  --header-icon-color: #000000;
+  --header-search-background: rgba(0, 0, 0, 0.05);
+  --header-search-background-focus: rgba(0, 0, 0, 0.12);
+  --header-search-border: rgba(0, 0, 0, 0.16);
+  --header-search-icon: rgba(0, 0, 0, 0.46);
+  --header-search-placeholder: rgba(0, 0, 0, 0.46);
+  --header-search-text: #000000;
+  --header-search-clear: var(--primary-accent);
+  --header-search-results-background: var(--background-1dp);
+  --header-search-results-border: rgba(0, 0, 0, 0.14);
+  --header-search-result-hover: var(--background-2dp);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary-accent);
+  --header-search-result-highlight-text: #000000;
+
+  --menu-color: #000000;
+  --menu-background: #ffffff;
+
+  --inline-code-color: #000000;
+
+  --code-background: #ffffff;
+
+  --warning: #ffbf00;
+  --warning-color: #000000;
+  --warning-background: #fff1b3;
+
+  --info: #0059ff;
+  --info-color: #002982;
+  --info-background: #d6e5ff;
+
+  --error: #c40000;
+  --error-background: #ffd6d6;
+
+  --company-filter: grayscale(0%);
+  --company-filter-hover: grayscale(0%);
+  --company-logo-filter: none;
+
+  --company-logo-opacity: 1;
+
+  --images-filter: none;
+  --images-box-shadow: 0 0 0 2px #000000;
+}
+
+.dark-contrast-mode {
+  --primary: #ffffff;
+  --primary-accent: #66b2ff;
+  --primary-1dp: #f5f5f5;
+  --primary-2dp: #d9d9d9;
+  --primary-3dp: #bfbfbf;
+  --primary-4dp: #a6a6a6;
+  --primary-5dp: #8c8c8c;
+  --primary-gradient: linear-gradient(120deg, #ffffff 0%, #66b2ff 100%);
+
+  --color: #ffffff;
+  --color-1dp: #ffffff;
+
+  --background: #000000;
+  --background-1dp: #0d0d0d;
+  --background-2dp: #1a1a1a;
+  --background-3dp: #262626;
+  --background-4dp: #333333;
+  --background-5dp: #404040;
+
+  --header-background: #000000;
+  --header-icon-color: #66b2ff;
+  --header-search-background: rgba(255, 255, 255, 0.12);
+  --header-search-background-focus: rgba(255, 255, 255, 0.2);
+  --header-search-border: rgba(255, 255, 255, 0.32);
+  --header-search-icon: rgba(255, 255, 255, 0.78);
+  --header-search-placeholder: rgba(255, 255, 255, 0.76);
+  --header-search-text: #ffffff;
+  --header-search-clear: var(--primary-accent);
+  --header-search-results-background: var(--background-1dp);
+  --header-search-results-border: rgba(255, 255, 255, 0.22);
+  --header-search-result-hover: var(--background-2dp);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary-accent);
+  --header-search-result-highlight-text: #001026;
+
+  --menu-color: #ffffff;
+  --menu-background: #0d0d0d;
+
+  --inline-code-color: #ffffff;
+
+  --code-background: #000000;
+
+  --warning: #ffd633;
+  --warning-color: #000000;
+  --warning-background: #4d3c00;
+
+  --info: #66b2ff;
+  --info-color: #ffffff;
+  --info-background: rgba(102, 178, 255, 0.2);
+
+  --error: #ff8080;
+  --error-background: rgba(255, 128, 128, 0.35);
+
+  --company-filter: opacity(1);
+  --company-filter-hover: opacity(1);
+  --company-logo-filter: none;
+
+  --company-logo-opacity: 1;
+
+  --images-filter: contrast(1.3) brightness(1.1);
+  --images-box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+}
+
+.neon-mode {
+  --primary: #ff38d1;
+  --primary-accent: #2dffbe;
+  --primary-1dp: #ff5ee0;
+  --primary-2dp: #ff82e8;
+  --primary-3dp: #ff9df0;
+  --primary-4dp: #5dffd8;
+  --primary-5dp: #33ffca;
+  --primary-gradient: linear-gradient(130deg, var(--primary) 0%, var(--primary-accent) 100%);
+
+  --color: #f1f5ff;
+  --color-1dp: #ffffff;
+
+  --background: #050213;
+  --background-1dp: #09041d;
+  --background-2dp: #0c0624;
+  --background-3dp: #110831;
+  --background-4dp: #180d45;
+  --background-5dp: #1f1259;
+
+  --header-background: rgba(8, 3, 20, 0.92);
+  --header-icon-color: #2dffbe;
+  --header-search-background: rgba(45, 255, 190, 0.14);
+  --header-search-background-focus: rgba(45, 255, 190, 0.22);
+  --header-search-border: rgba(45, 255, 190, 0.32);
+  --header-search-icon: rgba(210, 255, 242, 0.85);
+  --header-search-placeholder: rgba(210, 255, 242, 0.82);
+  --header-search-text: #f1f5ff;
+  --header-search-clear: var(--primary-accent);
+  --header-search-results-background: rgba(10, 6, 28, 0.95);
+  --header-search-results-border: rgba(45, 255, 190, 0.24);
+  --header-search-result-hover: rgba(19, 12, 54, 0.92);
+  --header-search-result-title: var(--color-1dp);
+  --header-search-result-excerpt: var(--color);
+  --header-search-result-highlight: var(--primary);
+  --header-search-result-highlight-text: #14042c;
+
+  --menu-color: #f1f5ff;
+  --menu-background: rgba(10, 6, 28, 0.95);
+
+  --inline-code-color: #2dffbe;
+
+  --code-background: rgba(2, 0, 10, 0.95);
+
+  --warning: #ffbf33;
+  --warning-color: #260d00;
+  --warning-background: rgba(255, 191, 51, 0.16);
+
+  --info: #38b6ff;
+  --info-color: #38b6ff;
+  --info-background: rgba(56, 182, 255, 0.18);
+
+  --error: #ff5c8d;
+  --error-background: rgba(255, 92, 141, 0.24);
+
+  --company-filter: drop-shadow(0 0 6px rgba(255, 56, 209, 0.5));
+  --company-filter-hover: drop-shadow(0 0 10px rgba(45, 255, 190, 0.7));
+  --company-logo-filter: saturate(1.4) contrast(1.1);
+
+  --company-logo-opacity: 1;
+
+  --images-filter: hue-rotate(12deg) saturate(1.2) contrast(1.05);
+  --images-box-shadow: 0 25px 70px rgba(45, 255, 190, 0.22);
 }
