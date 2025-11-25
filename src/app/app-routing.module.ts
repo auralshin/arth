@@ -1,230 +1,421 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './homepage/homepage.component';
-import { ApplicationContextComponent } from './homepage/pages/application-context/application-context.component';
-import { ComponentsComponent } from './homepage/pages/components/components.component';
-import { ControllersComponent } from './homepage/pages/controllers/controllers.component';
-import { CustomDecoratorsComponent } from './homepage/pages/custom-decorators/custom-decorators.component';
-import { WhoUsesComponent } from './homepage/pages/discover/who-uses/who-uses.component';
-import { EnterpriseComponent } from './homepage/pages/enterprise/enterprise.component';
-import { ExceptionFiltersComponent } from './homepage/pages/exception-filters/exception-filters.component';
-import { FirstStepsComponent } from './homepage/pages/first-steps/first-steps.component';
-import { GuardsComponent } from './homepage/pages/guards/guards.component';
-import { InterceptorsComponent } from './homepage/pages/interceptors/interceptors.component';
+
 import { IntroductionComponent } from './homepage/pages/introduction/introduction.component';
-import { MiddlewaresComponent } from './homepage/pages/middlewares/middlewares.component';
-import { MigrationComponent } from './homepage/pages/migration/migration.component';
-import { ModulesComponent } from './homepage/pages/modules/modules.component';
-import { PipesComponent } from './homepage/pages/pipes/pipes.component';
-import { SupportComponent } from './homepage/pages/support/support.component';
-import { RedirectGuard } from './shared/guards/redirect.guard';
-import { DeploymentComponent } from './homepage/pages/deployment/deployment.component';
+import { HowToNavigateComponent } from './homepage/pages/welcome/how-to-navigate/how-to-navigate.component';
+import { ReadingPathsComponent } from './homepage/pages/welcome/reading-paths/reading-paths.component';
+import { NotationConventionsComponent } from './homepage/pages/welcome/notation-conventions/notation-conventions.component';
+import { RiskRealityCheckComponent } from './homepage/pages/welcome/risk-reality-check/risk-reality-check.component';
+import { PrerequisitesComponent } from './homepage/pages/welcome/prerequisites/prerequisites.component';
+import { WhatIsDefiComponent } from './homepage/pages/welcome/what-is-defi/what-is-defi.component';
+import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matters/why-this-matters.component';
+import { DayInLifeComponent } from './homepage/pages/start-here/day-in-life/day-in-life.component';
+import { TradfiToDeFiComponent } from './homepage/pages/start-here/tradfi-to-defi/tradfi-to-defi.component';
+import { OnChainMeaningComponent } from './homepage/pages/start-here/on-chain-meaning/on-chain-meaning.component';
+import { TokensAddressesComponent } from './homepage/pages/start-here/tokens-addresses/tokens-addresses.component';
+import { UseCasesComponent } from './homepage/pages/start-here/use-cases/use-cases.component';
+import { LosingMoneyComponent } from './homepage/pages/start-here/losing-money/losing-money.component';
+import { HowToReadComponent as StartHereHowToReadComponent } from './homepage/pages/start-here/how-to-read/how-to-read.component';
+import { FirstTxComponent } from './homepage/pages/start-here/first-tx/first-tx.component';
+import { SafetyChecklistComponent } from './homepage/pages/start-here/safety-checklist/safety-checklist.component';
+import { SetUpAnalyticsComponent } from './homepage/pages/start-here/set-up-analytics/set-up-analytics.component';
+import { SetUpWalletComponent } from './homepage/pages/start-here/set-up-wallet/set-up-wallet.component';
+import { Web3GlossaryComponent } from './homepage/pages/start-here/web3-glossary/web3-glossary.component';
+import { TradingFoundationsComponent } from './homepage/pages/trading-foundations/trading-foundations.component';
+import { Tokens101Component } from './homepage/pages/building-blocks/tokens-101/tokens-101.component';
+import { TokenStandardsComponent } from './homepage/pages/building-blocks/token-standards/token-standards.component';
+import { Erc20Component } from './homepage/pages/building-blocks/erc20/erc20.component';
+import { SwapsDexsComponent } from './homepage/pages/building-blocks/swaps-dexs/swaps-dexs.component';
+import { Amms101Component } from './homepage/pages/building-blocks/amms-101/amms-101.component';
+import { ImpermanentLossComponent } from './homepage/pages/building-blocks/impermanent-loss/impermanent-loss.component';
+import { LendingBorrowingComponent } from './homepage/pages/building-blocks/lending-borrowing/lending-borrowing.component';
+import { StablecoinsComponent } from './homepage/pages/building-blocks/stablecoins/stablecoins.component';
+import { OraclesComponent } from './homepage/pages/building-blocks/oracles/oracles.component';
+import { PerpetualFuturesComponent } from './homepage/pages/building-blocks/perpetual-futures/perpetual-futures.component';
+import { LiquidationsComponent as BuildingBlocksLiquidationsComponent } from './homepage/pages/building-blocks/liquidations/liquidations.component';
+import { GovernanceComponent } from './homepage/pages/building-blocks/governance/governance.component';
+import { MevOverviewComponent } from './homepage/pages/building-blocks/mev-overview/mev-overview.component';
+import { BridgesComponent as BuildingBlocksBridgesComponent } from './homepage/pages/building-blocks/bridges/bridges.component';
+import { DerivativesComponent } from './homepage/pages/building-blocks/derivatives/derivatives.component';
+import { LiquidityPoolsComponent } from './homepage/pages/building-blocks/liquidity-pools/liquidity-pools.component';
+import { TokenomicsComponent } from './homepage/pages/building-blocks/tokenomics/tokenomics.component';
+import { YieldFarmingComponent as BuildingBlocksYieldFarmingComponent } from './homepage/pages/building-blocks/yield-farming/yield-farming.component';
+import { AmmsDepthComponent } from './homepage/pages/protocols/amms-depth/amms-depth.component';
+import { ConcentratedLiquidityComponent } from './homepage/pages/protocols/concentrated-liquidity/concentrated-liquidity.component';
+import { LendingArchitectureComponent } from './homepage/pages/protocols/lending-architecture/lending-architecture.component';
+import { StablecoinDesignsComponent } from './homepage/pages/protocols/stablecoin-designs/stablecoin-designs.component';
+import { StakingRestakingComponent } from './homepage/pages/protocols/staking-restaking/staking-restaking.component';
+import { PerpDexComponent } from './homepage/pages/protocols/perp-dex/perp-dex.component';
+import { BridgesComponent as ProtocolsBridgesComponent } from './homepage/pages/protocols/bridges/bridges.component';
+import { OracleDesignsComponent } from './homepage/pages/protocols/oracle-designs/oracle-designs.component';
+import { RandomVariablesComponent } from './homepage/pages/quant-math/random-variables/random-variables.component';
+import { ExpectationVarianceComponent } from './homepage/pages/quant-math/expectation-variance/expectation-variance.component';
+import { CovarianceComponent } from './homepage/pages/quant-math/covariance/covariance.component';
+import { LlnCltComponent } from './homepage/pages/quant-math/lln-clt/lln-clt.component';
+import { SamplingComponent } from './homepage/pages/quant-math/sampling/sampling.component';
+import { ReturnsComponent } from './homepage/pages/quant-math/returns/returns.component';
+import { VolatilityComponent } from './homepage/pages/quant-math/volatility/volatility.component';
+import { AutocorrelationComponent } from './homepage/pages/quant-math/autocorrelation/autocorrelation.component';
+import { StationarityComponent } from './homepage/pages/quant-math/stationarity/stationarity.component';
+import { RollingWindowsComponent } from './homepage/pages/quant-math/rolling-windows/rolling-windows.component';
+import { SharpeComponent } from './homepage/pages/quant-math/sharpe/sharpe.component';
+import { SortinoComponent } from './homepage/pages/quant-math/sortino/sortino.component';
+import { DrawdownComponent } from './homepage/pages/quant-math/drawdown/drawdown.component';
+import { VarCvarComponent } from './homepage/pages/quant-math/var-cvar/var-cvar.component';
+import { KellyComponent } from './homepage/pages/quant-math/kelly/kelly.component';
+import { OptimizationComponent } from './homepage/pages/quant-math/optimization/optimization.component';
+import { MeanVarianceComponent } from './homepage/pages/quant-math/mean-variance/mean-variance.component';
+import { PositionSizingComponent } from './homepage/pages/quant-math/position-sizing/position-sizing.component';
+import { RebalancingComponent } from './homepage/pages/quant-math/rebalancing/rebalancing.component';
+import { RandomWalksComponent } from './homepage/pages/quant-math/random-walks/random-walks.component';
+import { GbmComponent } from './homepage/pages/quant-math/gbm/gbm.component';
+import { MeanReversionComponent } from './homepage/pages/quant-math/mean-reversion/mean-reversion.component';
+import { JumpsComponent } from './homepage/pages/quant-math/jumps/jumps.component';
+import { OrderbooksVsAmmsComponent } from './homepage/pages/microstructure/orderbooks-vs-amms/orderbooks-vs-amms.component';
+import { SlippageComponent } from './homepage/pages/microstructure/slippage/slippage.component';
+import { FeesRoutingComponent } from './homepage/pages/microstructure/fees-routing/fees-routing.component';
+import { GasMempoolComponent } from './homepage/pages/microstructure/gas-mempool/gas-mempool.component';
+import { MevFormalComponent } from './homepage/pages/microstructure/mev-formal/mev-formal.component';
+import { OnchainOffchainComponent } from './homepage/pages/microstructure/onchain-offchain/onchain-offchain.component';
+import { LatencyRiskComponent } from './homepage/pages/microstructure/latency-risk/latency-risk.component';
+import { TransactionOrderingMevComponent } from './homepage/pages/transaction-ordering-mev/transaction-ordering-mev.component';
+import { HowBlocksFormComponent } from './homepage/pages/transaction-ordering-mev/how-blocks-form/how-blocks-form.component';
+import { MevBeyondEvmsComponent } from './homepage/pages/transaction-ordering-mev/mev-beyond-evms/mev-beyond-evms.component';
+import { MevTaxonomyComponent } from './homepage/pages/transaction-ordering-mev/mev-taxonomy/mev-taxonomy.component';
+import { MitigationAndDefensesComponent } from './homepage/pages/transaction-ordering-mev/mitigation-and-defenses/mitigation-and-defenses.component';
+import { QuantitativeImpactsComponent } from './homepage/pages/transaction-ordering-mev/quantitative-impacts/quantitative-impacts.component';
+import { StatisticalModelingComponent } from './homepage/pages/transaction-ordering-mev/statistical-modeling/statistical-modeling.component';
+import { DataSourcesComponent } from './homepage/pages/data-tooling/data-sources/data-sources.component';
+import { TimeSeriesComponent } from './homepage/pages/data-tooling/time-series/time-series.component';
+import { CleaningComponent } from './homepage/pages/data-tooling/cleaning/cleaning.component';
+import { EventLogsComponent } from './homepage/pages/data-tooling/event-logs/event-logs.component';
+import { PipelineComponent as DataToolingPipelineComponent } from './homepage/pages/data-tooling/pipeline/pipeline.component';
+import { PythonComponent as DataToolingPythonComponent } from './homepage/pages/data-tooling/python/python.component';
+import { TypescriptComponent as DataToolingTypescriptComponent } from './homepage/pages/data-tooling/typescript/typescript.component';
+import { ReproducibleComponent } from './homepage/pages/data-tooling/reproducible/reproducible.component';
+import { DashboardsComponent } from './homepage/pages/data-tooling/dashboards/dashboards.component';
+import { DuneAnalyticsComponent } from './homepage/pages/data-tooling/dune-analytics/dune-analytics.component';
+import { NotebooksComponent } from './homepage/pages/data-tooling/notebooks/notebooks.component';
+import { PythonSetupComponent } from './homepage/pages/data-tooling/python-setup/python-setup.component';
+import { RpcNodesComponent } from './homepage/pages/data-tooling/rpc-nodes/rpc-nodes.component';
+import { TheGraphComponent } from './homepage/pages/data-tooling/the-graph/the-graph.component';
+import { WalletAnalyticsComponent } from './homepage/pages/data-tooling/wallet-analytics/wallet-analytics.component';
+import { ToolingSimulationEcosystemComponent } from './homepage/pages/tooling-simulation-ecosystem/tooling-simulation-ecosystem.component';
+import { WhyBacktestComponent } from './homepage/pages/simulation/why-backtest/why-backtest.component';
+import { EventDrivenComponent } from './homepage/pages/simulation/event-driven/event-driven.component';
+import { BuildingBacktesterComponent } from './homepage/pages/simulation/building-backtester/building-backtester.component';
+import { DataPrepComponent } from './homepage/pages/simulation/data-prep/data-prep.component';
+import { MetricsComponent } from './homepage/pages/simulation/metrics/metrics.component';
+import { ScenariosComponent } from './homepage/pages/simulation/scenarios/scenarios.component';
+import { AgentBasedComponent } from './homepage/pages/simulation/agent-based/agent-based.component';
+import { OrderbookComponent } from './homepage/pages/simulation/orderbook/orderbook.component';
+import { LpReturnsComponent } from './homepage/pages/simulation/lp-returns/lp-returns.component';
+import { LiquidationsComponent as SimulationLiquidationsComponent } from './homepage/pages/simulation/liquidations/liquidations.component';
+import { ParamSweepsComponent } from './homepage/pages/simulation/param-sweeps/param-sweeps.component';
+import { PythonComponent as SimulationPythonComponent } from './homepage/pages/simulation/python/python.component';
+import { TypescriptComponent as SimulationTypescriptComponent } from './homepage/pages/simulation/typescript/typescript.component';
+import { OnchainDataComponent } from './homepage/pages/simulation/onchain-data/onchain-data.component';
+import { BuildingSimulationsComponent } from './homepage/pages/building-simulations/building-simulations.component';
+import { AgentBasedSimulationComponent } from './homepage/pages/building-simulations/agent-based-simulation/agent-based-simulation.component';
+import { BacktestingFrameworkComponent } from './homepage/pages/building-simulations/backtesting-framework/backtesting-framework.component';
+import { DataPipelineReplayComponent } from './homepage/pages/building-simulations/data-pipeline-replay/data-pipeline-replay.component';
+import { EventDrivenArchitectureComponent } from './homepage/pages/building-simulations/event-driven-architecture/event-driven-architecture.component';
+import { PerformanceOptimizationComponent } from './homepage/pages/building-simulations/performance-optimization/performance-optimization.component';
+import { WhatIsSignalComponent } from './homepage/pages/signals/what-is-signal/what-is-signal.component';
+import { MomentumVsMeanReversionComponent } from './homepage/pages/signals/momentum-vs-mean-reversion/momentum-vs-mean-reversion.component';
+import { MovingAveragesComponent } from './homepage/pages/signals/moving-averages/moving-averages.component';
+import { MaCrossoversComponent } from './homepage/pages/signals/ma-crossovers/ma-crossovers.component';
+import { RsiComponent } from './homepage/pages/signals/rsi/rsi.component';
+import { MacdComponent } from './homepage/pages/signals/macd/macd.component';
+import { BollingerComponent } from './homepage/pages/signals/bollinger/bollinger.component';
+import { AtrComponent } from './homepage/pages/signals/atr/atr.component';
+import { ObvComponent } from './homepage/pages/signals/obv/obv.component';
+import { StochasticComponent } from './homepage/pages/signals/stochastic/stochastic.component';
+import { VolumeComponent } from './homepage/pages/signals/volume/volume.component';
+import { FundingRateComponent as SignalsFundingRateComponent } from './homepage/pages/signals/funding-rate/funding-rate.component';
+import { OpenInterestComponent } from './homepage/pages/signals/open-interest/open-interest.component';
+import { LiquidityComponent } from './homepage/pages/signals/liquidity/liquidity.component';
+import { BasisComponent } from './homepage/pages/signals/basis/basis.component';
+import { OnchainActivityComponent } from './homepage/pages/signals/onchain-activity/onchain-activity.component';
+import { HowToReadComponent as StrategiesHowToReadComponent } from './homepage/pages/strategies/how-to-read/how-to-read.component';
+import { BuyHoldComponent } from './homepage/pages/strategies/buy-hold/buy-hold.component';
+import { LpBusinessComponent } from './homepage/pages/strategies/lp-business/lp-business.component';
+import { YieldFarmingComponent as StrategiesYieldFarmingComponent } from './homepage/pages/strategies/yield-farming/yield-farming.component';
+import { ConcentratedLpComponent } from './homepage/pages/strategies/concentrated-lp/concentrated-lp.component';
+import { DeltaHedgedLpComponent } from './homepage/pages/strategies/delta-hedged-lp/delta-hedged-lp.component';
+import { MomentumComponent } from './homepage/pages/strategies/momentum/momentum.component';
+import { RsiStrategyComponent } from './homepage/pages/strategies/rsi-strategy/rsi-strategy.component';
+import { MacdStrategyComponent } from './homepage/pages/strategies/macd-strategy/macd-strategy.component';
+import { FundingTrendsComponent } from './homepage/pages/strategies/funding-trends/funding-trends.component';
+import { CashCarryComponent } from './homepage/pages/strategies/cash-carry/cash-carry.component';
+import { DeltaNeutralComponent } from './homepage/pages/strategies/delta-neutral/delta-neutral.component';
+import { PairsComponent } from './homepage/pages/strategies/pairs/pairs.component';
+import { MmLiteComponent } from './homepage/pages/strategies/mm-lite/mm-lite.component';
+import { StopLossComponent } from './homepage/pages/strategies/stop-loss/stop-loss.component';
+import { DynamicSizingComponent } from './homepage/pages/strategies/dynamic-sizing/dynamic-sizing.component';
+import { HedgingLpComponent } from './homepage/pages/strategies/hedging-lp/hedging-lp.component';
+import { TypesComponent } from './homepage/pages/risk/types/types.component';
+import { SmartContractComponent } from './homepage/pages/risk/smart-contract/smart-contract.component';
+import { OracleManipulationComponent } from './homepage/pages/risk/oracle-manipulation/oracle-manipulation.component';
+import { LeverageLiquidationComponent } from './homepage/pages/risk/leverage-liquidation/leverage-liquidation.component';
+import { SlippageFrontrunningComponent } from './homepage/pages/risk/slippage-frontrunning/slippage-frontrunning.component';
+import { BacktestVsLiveComponent } from './homepage/pages/risk/backtest-vs-live/backtest-vs-live.component';
+import { OperationalComponent } from './homepage/pages/risk/operational/operational.component';
+import { ChecklistsComponent } from './homepage/pages/risk/checklists/checklists.component';
+import { RsiWalkthroughComponent } from './homepage/pages/case-studies/rsi-walkthrough/rsi-walkthrough.component';
+import { LpVolatilityComponent } from './homepage/pages/case-studies/lp-volatility/lp-volatility.component';
+import { FailedStrategyComponent } from './homepage/pages/case-studies/failed-strategy/failed-strategy.component';
+import { OracleIncidentComponent } from './homepage/pages/case-studies/oracle-incident/oracle-incident.component';
+import { BasisUnwindComponent } from './homepage/pages/case-studies/basis-unwind/basis-unwind.component';
+import { CurveArbComponent } from './homepage/pages/case-studies/curve-arb/curve-arb.component';
+import { FlashLoanComponent } from './homepage/pages/case-studies/flash-loan/flash-loan.component';
+import { FundingRateComponent as CaseStudiesFundingRateComponent } from './homepage/pages/case-studies/funding-rate/funding-rate.component';
+import { PostMortemComponent } from './homepage/pages/case-studies/post-mortem/post-mortem.component';
+import { UniswapV3LpComponent } from './homepage/pages/case-studies/uniswap-v3-lp/uniswap-v3-lp.component';
+import { BlockchainExecutionEnvironmentsComponent } from './homepage/pages/blockchain-execution-environments/blockchain-execution-environments.component';
+import { ComparativeBenchmarksComponent } from './homepage/pages/blockchain-execution-environments/comparative-benchmarks/comparative-benchmarks.component';
+import { EvmComponent } from './homepage/pages/blockchain-execution-environments/evm/evm.component';
+import { MoveVmComponent } from './homepage/pages/blockchain-execution-environments/move-vm/move-vm.component';
+import { QuantEngineeringComponent } from './homepage/pages/blockchain-execution-environments/quant-engineering/quant-engineering.component';
+import { SolanaSvmComponent } from './homepage/pages/blockchain-execution-environments/solana-svm/solana-svm.component';
+import { AdvancedTopicsComponent } from './homepage/pages/advanced-topics/advanced-topics.component';
+import { GlossaryComponent } from './homepage/pages/reference/glossary/glossary.component';
+import { IndicatorsComponent } from './homepage/pages/reference/indicators/indicators.component';
+import { FormulasComponent } from './homepage/pages/reference/formulas/formulas.component';
+import { ProtocolsComponent } from './homepage/pages/reference/protocols/protocols.component';
+import { NotationComponent } from './homepage/pages/reference/notation/notation.component';
+import { CodeSnippetsComponent } from './homepage/pages/reference/code-snippets/code-snippets.component';
+import { FormulaCheatsheetComponent } from './homepage/pages/reference/formula-cheatsheet/formula-cheatsheet.component';
+import { MetricIndexComponent } from './homepage/pages/reference/metric-index/metric-index.component';
+import { ProtocolIndexComponent } from './homepage/pages/reference/protocol-index/protocol-index.component';
+import { ResourcesComponent } from './homepage/pages/reference/resources/resources.component';
+import { StyleComponent } from './homepage/pages/contributing/style/style.component';
+import { PipelineComponent as ContributingPipelineComponent } from './homepage/pages/contributing/pipeline/pipeline.component';
+import { NewPageComponent } from './homepage/pages/contributing/new-page/new-page.component';
+import { ChecklistComponent } from './homepage/pages/contributing/checklist/checklist.component';
+import { RoadmapComponent } from './homepage/pages/contributing/roadmap/roadmap.component';
+import { CodeExamplesComponent } from './homepage/pages/contributing/code-examples/code-examples.component';
+import { CommunityComponent } from './homepage/pages/contributing/community/community.component';
+import { ContentGuidelinesComponent } from './homepage/pages/contributing/content-guidelines/content-guidelines.component';
+import { HowToContributeComponent } from './homepage/pages/contributing/how-to-contribute/how-to-contribute.component';
+import { NotebookStandardsComponent } from './homepage/pages/contributing/notebook-standards/notebook-standards.component';
+import { ReviewProcessComponent } from './homepage/pages/contributing/review-process/review-process.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomepageComponent,
     children: [
-      {
-        path: '',
-        component: IntroductionComponent,
-      },
-      {
-        path: 'first-steps',
-        component: FirstStepsComponent,
-        data: { title: 'First steps' },
-      },
-      {
-        path: 'controllers',
-        component: ControllersComponent,
-        data: { title: 'Controllers' },
-      },
-      {
-        path: 'components',
-        redirectTo: 'providers',
-      },
-      {
-        path: 'providers',
-        component: ComponentsComponent,
-        data: { title: 'Providers' },
-      },
-      {
-        path: 'modules',
-        component: ModulesComponent,
-        data: { title: 'Modules' },
-      },
-      {
-        path: 'middleware',
-        component: MiddlewaresComponent,
-        data: { title: 'Middleware' },
-      },
-      {
-        path: 'pipes',
-        component: PipesComponent,
-        data: { title: 'Pipes' },
-      },
-      {
-        path: 'guards',
-        component: GuardsComponent,
-        data: { title: 'Guards' },
-      },
-      {
-        path: 'exception-filters',
-        component: ExceptionFiltersComponent,
-        data: { title: 'Exception filters' },
-      },
-      {
-        path: 'interceptors',
-        component: InterceptorsComponent,
-        data: { title: 'Interceptors' },
-      },
-      {
-        path: 'custom-decorators',
-        component: CustomDecoratorsComponent,
-        data: { title: 'Custom decorators' },
-      },
-      {
-        path: 'standalone-applications',
-        component: ApplicationContextComponent,
-        data: { title: 'Standalone applications' },
-      },
-      {
-        path: 'application-context',
-        redirectTo: 'standalone-applications',
-      },
-      {
-        path: 'discover/companies',
-        component: WhoUsesComponent,
-        data: { title: 'Discover - Who is using Nest?' },
-      },
-      {
-        path: 'migration-guide',
-        component: MigrationComponent,
-        data: { title: 'Migration guide - FAQ' },
-      },
-      {
-        path: 'deployment',
-        component: DeploymentComponent,
-        data: { title: 'Deployment' },
-      },
-      {
-        path: 'support',
-        component: SupportComponent,
-        data: { title: 'Support' },
-      },
-      {
-        path: 'consulting',
-        component: EnterpriseComponent,
-        resolve: {
-          url: 'externalUrlRedirectResolver',
-        },
-        canActivate: [RedirectGuard],
-        data: {
-          externalUrl: 'https://enterprise.nestjs.com',
-        },
-      },
-      {
-        path: 'enterprise',
-        redirectTo: 'consulting',
-      },
-      {
-        path: 'enterprise',
-        component: EnterpriseComponent,
-        data: { title: 'Official Support' },
-      },
-      {
-        path: 'fundamentals',
-        loadChildren: () =>
-          import('./homepage/pages/fundamentals/fundamentals.module').then(
-            (m) => m.FundamentalsModule,
-          ),
-      },
-      {
-        path: 'techniques',
-        loadChildren: () =>
-          import('./homepage/pages/techniques/techniques.module').then(
-            (m) => m.TechniquesModule,
-          ),
-      },
-      {
-        path: 'security',
-        loadChildren: () =>
-          import('./homepage/pages/security/security.module').then(
-            (m) => m.SecurityModule,
-          ),
-      },
-      {
-        path: 'graphql',
-        loadChildren: () =>
-          import('./homepage/pages/graphql/graphql.module').then(
-            (m) => m.GraphqlModule,
-          ),
-      },
-      {
-        path: 'websockets',
-        loadChildren: () =>
-          import('./homepage/pages/websockets/websockets.module').then(
-            (m) => m.WebsocketsModule,
-          ),
-      },
-      {
-        path: 'microservices',
-        loadChildren: () =>
-          import('./homepage/pages/microservices/microservices.module').then(
-            (m) => m.MicroservicesModule,
-          ),
-      },
-      {
-        path: 'recipes',
-        loadChildren: () =>
-          import('./homepage/pages/recipes/recipes.module').then(
-            (m) => m.RecipesModule,
-          ),
-      },
-      {
-        path: 'faq',
-        loadChildren: () =>
-          import('./homepage/pages/faq/faq.module').then((m) => m.FaqModule),
-      },
-      {
-        path: 'cli',
-        loadChildren: () =>
-          import('./homepage/pages/cli/cli.module').then((m) => m.CliModule),
-      },
-      {
-        path: 'openapi',
-        loadChildren: () =>
-          import('./homepage/pages/openapi/openapi.module').then(
-            (m) => m.OpenApiModule,
-          ),
-      },
-      {
-        path: 'devtools',
-        loadChildren: () =>
-          import('./homepage/pages/devtools/devtools.module').then(
-            (m) => m.DevtoolsModule,
-          ),
-      },
-    ],
-  },
-  {
-    path: '**',
-    redirectTo: '',
-    pathMatch: 'full',
-  },
+      { path: '', component: IntroductionComponent },
+        { path: 'welcome/how-to-navigate', component: HowToNavigateComponent },
+        { path: 'welcome/reading-paths', component: ReadingPathsComponent },
+        { path: 'welcome/notation-conventions', component: NotationConventionsComponent },
+        { path: 'welcome/risk-reality-check', component: RiskRealityCheckComponent },
+        { path: 'welcome/prerequisites', component: PrerequisitesComponent },
+        { path: 'welcome/what-is-defi', component: WhatIsDefiComponent },
+        { path: 'welcome/why-this-matters', component: WhyThisMattersComponent },
+        { path: 'start-here/day-in-life', component: DayInLifeComponent },
+        { path: 'start-here/tradfi-to-defi', component: TradfiToDeFiComponent },
+        { path: 'start-here/on-chain-meaning', component: OnChainMeaningComponent },
+        { path: 'start-here/tokens-addresses', component: TokensAddressesComponent },
+        { path: 'start-here/use-cases', component: UseCasesComponent },
+        { path: 'start-here/losing-money', component: LosingMoneyComponent },
+        { path: 'start-here/how-to-read', component: StartHereHowToReadComponent },
+        { path: 'start-here/first-tx', component: FirstTxComponent },
+        { path: 'start-here/safety-checklist', component: SafetyChecklistComponent },
+        { path: 'start-here/set-up-analytics', component: SetUpAnalyticsComponent },
+        { path: 'start-here/set-up-wallet', component: SetUpWalletComponent },
+        { path: 'start-here/web3-glossary', component: Web3GlossaryComponent },
+        { path: 'trading-foundations', component: TradingFoundationsComponent },
+        { path: 'building-blocks/tokens-101', component: Tokens101Component },
+        { path: 'building-blocks/token-standards', component: TokenStandardsComponent },
+        { path: 'building-blocks/erc20', component: Erc20Component },
+        { path: 'building-blocks/swaps-dexs', component: SwapsDexsComponent },
+        { path: 'building-blocks/amms-101', component: Amms101Component },
+        { path: 'building-blocks/impermanent-loss', component: ImpermanentLossComponent },
+        { path: 'building-blocks/lending-borrowing', component: LendingBorrowingComponent },
+        { path: 'building-blocks/stablecoins', component: StablecoinsComponent },
+        { path: 'building-blocks/oracles', component: OraclesComponent },
+        { path: 'building-blocks/perpetual-futures', component: PerpetualFuturesComponent },
+        { path: 'building-blocks/liquidations', component: BuildingBlocksLiquidationsComponent },
+        { path: 'building-blocks/governance', component: GovernanceComponent },
+        { path: 'building-blocks/mev-overview', component: MevOverviewComponent },
+        { path: 'building-blocks/bridges', component: BuildingBlocksBridgesComponent },
+        { path: 'building-blocks/derivatives', component: DerivativesComponent },
+        { path: 'building-blocks/liquidity-pools', component: LiquidityPoolsComponent },
+        { path: 'building-blocks/tokenomics', component: TokenomicsComponent },
+        { path: 'building-blocks/yield-farming', component: BuildingBlocksYieldFarmingComponent },
+        { path: 'protocols/amms-depth', component: AmmsDepthComponent },
+        { path: 'protocols/concentrated-liquidity', component: ConcentratedLiquidityComponent },
+        { path: 'protocols/lending-architecture', component: LendingArchitectureComponent },
+        { path: 'protocols/stablecoin-designs', component: StablecoinDesignsComponent },
+        { path: 'protocols/staking-restaking', component: StakingRestakingComponent },
+        { path: 'protocols/perp-dex', component: PerpDexComponent },
+        { path: 'protocols/bridges', component: ProtocolsBridgesComponent },
+        { path: 'protocols/oracle-designs', component: OracleDesignsComponent },
+        { path: 'quant-math/random-variables', component: RandomVariablesComponent },
+        { path: 'quant-math/expectation-variance', component: ExpectationVarianceComponent },
+        { path: 'quant-math/covariance', component: CovarianceComponent },
+        { path: 'quant-math/lln-clt', component: LlnCltComponent },
+        { path: 'quant-math/sampling', component: SamplingComponent },
+        { path: 'quant-math/returns', component: ReturnsComponent },
+        { path: 'quant-math/volatility', component: VolatilityComponent },
+        { path: 'quant-math/autocorrelation', component: AutocorrelationComponent },
+        { path: 'quant-math/stationarity', component: StationarityComponent },
+        { path: 'quant-math/rolling-windows', component: RollingWindowsComponent },
+        { path: 'quant-math/sharpe', component: SharpeComponent },
+        { path: 'quant-math/sortino', component: SortinoComponent },
+        { path: 'quant-math/drawdown', component: DrawdownComponent },
+        { path: 'quant-math/var-cvar', component: VarCvarComponent },
+        { path: 'quant-math/kelly', component: KellyComponent },
+        { path: 'quant-math/optimization', component: OptimizationComponent },
+        { path: 'quant-math/mean-variance', component: MeanVarianceComponent },
+        { path: 'quant-math/position-sizing', component: PositionSizingComponent },
+        { path: 'quant-math/rebalancing', component: RebalancingComponent },
+        { path: 'quant-math/random-walks', component: RandomWalksComponent },
+        { path: 'quant-math/gbm', component: GbmComponent },
+        { path: 'quant-math/mean-reversion', component: MeanReversionComponent },
+        { path: 'quant-math/jumps', component: JumpsComponent },
+        { path: 'microstructure/orderbooks-vs-amms', component: OrderbooksVsAmmsComponent },
+        { path: 'microstructure/slippage', component: SlippageComponent },
+        { path: 'microstructure/fees-routing', component: FeesRoutingComponent },
+        { path: 'microstructure/gas-mempool', component: GasMempoolComponent },
+        { path: 'microstructure/mev-formal', component: MevFormalComponent },
+        { path: 'microstructure/onchain-offchain', component: OnchainOffchainComponent },
+        { path: 'microstructure/latency-risk', component: LatencyRiskComponent },
+        { path: 'transaction-ordering-mev', component: TransactionOrderingMevComponent },
+        { path: 'transaction-ordering-mev/how-blocks-form', component: HowBlocksFormComponent },
+        { path: 'transaction-ordering-mev/mev-beyond-evms', component: MevBeyondEvmsComponent },
+        { path: 'transaction-ordering-mev/mev-taxonomy', component: MevTaxonomyComponent },
+        { path: 'transaction-ordering-mev/mitigation-and-defenses', component: MitigationAndDefensesComponent },
+        { path: 'transaction-ordering-mev/quantitative-impacts', component: QuantitativeImpactsComponent },
+        { path: 'transaction-ordering-mev/statistical-modeling', component: StatisticalModelingComponent },
+        { path: 'data-tooling/data-sources', component: DataSourcesComponent },
+        { path: 'data-tooling/time-series', component: TimeSeriesComponent },
+        { path: 'data-tooling/cleaning', component: CleaningComponent },
+        { path: 'data-tooling/event-logs', component: EventLogsComponent },
+        { path: 'data-tooling/pipeline', component: DataToolingPipelineComponent },
+        { path: 'data-tooling/python', component: DataToolingPythonComponent },
+        { path: 'data-tooling/typescript', component: DataToolingTypescriptComponent },
+        { path: 'data-tooling/reproducible', component: ReproducibleComponent },
+        { path: 'data-tooling/dashboards', component: DashboardsComponent },
+        { path: 'data-tooling/dune-analytics', component: DuneAnalyticsComponent },
+        { path: 'data-tooling/notebooks', component: NotebooksComponent },
+        { path: 'data-tooling/python-setup', component: PythonSetupComponent },
+        { path: 'data-tooling/rpc-nodes', component: RpcNodesComponent },
+        { path: 'data-tooling/the-graph', component: TheGraphComponent },
+        { path: 'data-tooling/wallet-analytics', component: WalletAnalyticsComponent },
+        { path: 'tooling-simulation-ecosystem', component: ToolingSimulationEcosystemComponent },
+        { path: 'simulation/why-backtest', component: WhyBacktestComponent },
+        { path: 'simulation/event-driven', component: EventDrivenComponent },
+        { path: 'simulation/building-backtester', component: BuildingBacktesterComponent },
+        { path: 'simulation/data-prep', component: DataPrepComponent },
+        { path: 'simulation/metrics', component: MetricsComponent },
+        { path: 'simulation/scenarios', component: ScenariosComponent },
+        { path: 'simulation/agent-based', component: AgentBasedComponent },
+        { path: 'simulation/orderbook', component: OrderbookComponent },
+        { path: 'simulation/lp-returns', component: LpReturnsComponent },
+        { path: 'simulation/liquidations', component: SimulationLiquidationsComponent },
+        { path: 'simulation/param-sweeps', component: ParamSweepsComponent },
+        { path: 'simulation/python', component: SimulationPythonComponent },
+        { path: 'simulation/typescript', component: SimulationTypescriptComponent },
+        { path: 'simulation/onchain-data', component: OnchainDataComponent },
+        { path: 'building-simulations', component: BuildingSimulationsComponent },
+        { path: 'building-simulations/agent-based-simulation', component: AgentBasedSimulationComponent },
+        { path: 'building-simulations/backtesting-framework', component: BacktestingFrameworkComponent },
+        { path: 'building-simulations/data-pipeline-replay', component: DataPipelineReplayComponent },
+        { path: 'building-simulations/event-driven-architecture', component: EventDrivenArchitectureComponent },
+        { path: 'building-simulations/performance-optimization', component: PerformanceOptimizationComponent },
+        { path: 'signals/what-is-signal', component: WhatIsSignalComponent },
+        { path: 'signals/momentum-vs-mean-reversion', component: MomentumVsMeanReversionComponent },
+        { path: 'signals/moving-averages', component: MovingAveragesComponent },
+        { path: 'signals/ma-crossovers', component: MaCrossoversComponent },
+        { path: 'signals/rsi', component: RsiComponent },
+        { path: 'signals/macd', component: MacdComponent },
+        { path: 'signals/bollinger', component: BollingerComponent },
+        { path: 'signals/atr', component: AtrComponent },
+        { path: 'signals/obv', component: ObvComponent },
+        { path: 'signals/stochastic', component: StochasticComponent },
+        { path: 'signals/volume', component: VolumeComponent },
+        { path: 'signals/funding-rate', component: SignalsFundingRateComponent },
+        { path: 'signals/open-interest', component: OpenInterestComponent },
+        { path: 'signals/liquidity', component: LiquidityComponent },
+        { path: 'signals/basis', component: BasisComponent },
+        { path: 'signals/onchain-activity', component: OnchainActivityComponent },
+        { path: 'strategies/how-to-read', component: StrategiesHowToReadComponent },
+        { path: 'strategies/buy-hold', component: BuyHoldComponent },
+        { path: 'strategies/lp-business', component: LpBusinessComponent },
+        { path: 'strategies/yield-farming', component: StrategiesYieldFarmingComponent },
+        { path: 'strategies/concentrated-lp', component: ConcentratedLpComponent },
+        { path: 'strategies/delta-hedged-lp', component: DeltaHedgedLpComponent },
+        { path: 'strategies/momentum', component: MomentumComponent },
+        { path: 'strategies/rsi-strategy', component: RsiStrategyComponent },
+        { path: 'strategies/macd-strategy', component: MacdStrategyComponent },
+        { path: 'strategies/funding-trends', component: FundingTrendsComponent },
+        { path: 'strategies/cash-carry', component: CashCarryComponent },
+        { path: 'strategies/delta-neutral', component: DeltaNeutralComponent },
+        { path: 'strategies/pairs', component: PairsComponent },
+        { path: 'strategies/mm-lite', component: MmLiteComponent },
+        { path: 'strategies/stop-loss', component: StopLossComponent },
+        { path: 'strategies/dynamic-sizing', component: DynamicSizingComponent },
+        { path: 'strategies/hedging-lp', component: HedgingLpComponent },
+        { path: 'risk/types', component: TypesComponent },
+        { path: 'risk/smart-contract', component: SmartContractComponent },
+        { path: 'risk/oracle-manipulation', component: OracleManipulationComponent },
+        { path: 'risk/leverage-liquidation', component: LeverageLiquidationComponent },
+        { path: 'risk/slippage-frontrunning', component: SlippageFrontrunningComponent },
+        { path: 'risk/backtest-vs-live', component: BacktestVsLiveComponent },
+        { path: 'risk/operational', component: OperationalComponent },
+        { path: 'risk/checklists', component: ChecklistsComponent },
+        { path: 'case-studies/rsi-walkthrough', component: RsiWalkthroughComponent },
+        { path: 'case-studies/lp-volatility', component: LpVolatilityComponent },
+        { path: 'case-studies/failed-strategy', component: FailedStrategyComponent },
+        { path: 'case-studies/oracle-incident', component: OracleIncidentComponent },
+        { path: 'case-studies/basis-unwind', component: BasisUnwindComponent },
+        { path: 'case-studies/curve-arb', component: CurveArbComponent },
+        { path: 'case-studies/flash-loan', component: FlashLoanComponent },
+        { path: 'case-studies/funding-rate', component: CaseStudiesFundingRateComponent },
+        { path: 'case-studies/post-mortem', component: PostMortemComponent },
+        { path: 'case-studies/uniswap-v3-lp', component: UniswapV3LpComponent },
+        { path: 'blockchain-execution-environments', component: BlockchainExecutionEnvironmentsComponent },
+        { path: 'blockchain-execution-environments/comparative-benchmarks', component: ComparativeBenchmarksComponent },
+        { path: 'blockchain-execution-environments/evm', component: EvmComponent },
+        { path: 'blockchain-execution-environments/move-vm', component: MoveVmComponent },
+        { path: 'blockchain-execution-environments/quant-engineering', component: QuantEngineeringComponent },
+        { path: 'blockchain-execution-environments/solana-svm', component: SolanaSvmComponent },
+        { path: 'advanced-topics', component: AdvancedTopicsComponent },
+        { path: 'reference/glossary', component: GlossaryComponent },
+        { path: 'reference/indicators', component: IndicatorsComponent },
+        { path: 'reference/formulas', component: FormulasComponent },
+        { path: 'reference/protocols', component: ProtocolsComponent },
+        { path: 'reference/notation', component: NotationComponent },
+        { path: 'reference/code-snippets', component: CodeSnippetsComponent },
+        { path: 'reference/formula-cheatsheet', component: FormulaCheatsheetComponent },
+        { path: 'reference/metric-index', component: MetricIndexComponent },
+        { path: 'reference/protocol-index', component: ProtocolIndexComponent },
+        { path: 'reference/resources', component: ResourcesComponent },
+        { path: 'contributing/style', component: StyleComponent },
+        { path: 'contributing/pipeline', component: ContributingPipelineComponent },
+        { path: 'contributing/new-page', component: NewPageComponent },
+        { path: 'contributing/checklist', component: ChecklistComponent },
+        { path: 'contributing/roadmap', component: RoadmapComponent },
+        { path: 'contributing/code-examples', component: CodeExamplesComponent },
+        { path: 'contributing/community', component: CommunityComponent },
+        { path: 'contributing/content-guidelines', component: ContentGuidelinesComponent },
+        { path: 'contributing/how-to-contribute', component: HowToContributeComponent },
+        { path: 'contributing/notebook-standards', component: NotebookStandardsComponent },
+        { path: 'contributing/review-process', component: ReviewProcessComponent },
+      { path: '**', redirectTo: '', pathMatch: 'full' }
+    ]
+  }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      // enableTracing: !environment.production,
-      scrollPositionRestoration: 'enabled',
-      anchorScrolling: 'enabled',
-      preloadingStrategy: PreloadAllModules,
-      onSameUrlNavigation: 'reload',
-    }),
-  ],
-  providers: [],
-  exports: [RouterModule],
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'enabled',
+    anchorScrolling: 'enabled'
+  })],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

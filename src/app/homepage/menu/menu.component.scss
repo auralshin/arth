@@ -5,85 +5,175 @@
   @extend .transition;
   @extend .box-sizing;
   @include utils.transform(translateX(-100%));
-  
-  padding: 90px 17px 40px 24px;
-  width: 250px;
-  background: var(--menu-background);
-  position: fixed !important;
-  bottom: 0;
-  top: 0;
-  z-index: 1000;
-  overflow: overlay;
 
-  &.opened {
-    @include utils.transform(translateX(0));
-  }
-  @include  utils.media(large) {
-    width: 250px;
-  }
+  /* keep the slide-in behavior */
+  &.opened { @include utils.transform(translateX(0)); }
+
+  /* Sidebar sizing & layout */
+  position: fixed !important;
+  inset: 0 auto 0 0;         /* top:0; bottom:0; left:0; right:auto */
+  width: 250px;
+  z-index: 1000;
+
+  /* internal padding stays, but the scroller will be on .menu-content, not :host */
+  padding: 90px 17px 40px 24px;
+
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;          /* was overlay: causes odd scroll/stacking */
+
+  background: var(--menu-background);
+
+  @include utils.media(large) { width: 250px; }
   @include utils.media(normal) {
     &.opened {
       z-index: 1000;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
   }
-  @include utils.media(medium) {
-    padding: 85px 25px 20px 25px;
-  }
-  @include utils.media(small) {
-    width: 100%;
-  }
+  @include utils.media(medium) { padding: 85px 25px 20px 25px; }
+  @include utils.media(small)  { width: 100%; }
 
-  @media print {
-    display: none;
-  }
+  @media print { display: none; }
 }
 
+/* NAV CONTAINER fills the sidebar and hosts the scroller + footer */
+.nav-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;  /* allow flex children to shrink */
+  height: 100%;
+}
+
+/* MENU is the ONLY scroller */
+.menu-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  margin-bottom: 0;         /* no need for spacing now */
+  padding-bottom: 12px;     /* small cushion above the footer */
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable both-edges;
+
+  /* Webkit/Blink custom scrollbar */
+  &::-webkit-scrollbar { width: 11px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  }
+  &::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.11); }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.06) transparent;
+}
+
+/* Keep your item styles */
 .nav-item {
   margin: 0 -10px;
   padding: 0 10px;
-  // border-bottom: 1px solid #efefef;
-  &:last-of-type {
-    border: 0;
-  }
-
-  h3 {
-    margin: 20px 0;
-  }
+  &:last-of-type { border: 0; }
+  h3 { margin: 20px 0; }
 }
 
+/* ---  Footer/buttons: full width, bottom anchored INSIDE the sidebar  --- */
+.fixed-buttons {
+  /* integrated footer area that spans the sidebar width */
+  position: sticky;
+  bottom: 0;
+  inset-inline: 0;
+  width: 100%;
+  /* make it visually flush with the sidebar: no floating card */
+  background: transparent;
+  padding: 12px 0 12px 0;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 0;
+  box-shadow: none;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
+/* Buttons: keep your look, stretch to full width */
 .btn-version,
 .btn-support {
   @extend .transition;
   @include utils.radius(2px);
-
-  padding: 10px;
   box-sizing: border-box;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 14px;
   text-transform: uppercase;
-  text-align: left;
-  width: calc(100% - 10px);
-  display: block;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 14px;
 }
 
 .btn-version {
   background: var(--background-3dp);
   margin-top: 5px;
   color: var(--color-1dp);
+  text-align: center;
 
-  &:hover {
-    background: var(--background-5dp);
+  &:hover { background: var(--background-5dp); }
+
+  &.btn-github {
+    margin-bottom: 8px;
+    background: #000;
+    color: #fff;
+    border: none;
+    justify-content: center;
+    border-radius: 12px;
+    i { margin-right: 10px; font-size: 18px; line-height: 1; }
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  }
+
+  &.btn-reachout {
+    background: var(--main-color, variables.$red-gradient);
+    color: #fff;
+    border-radius: 12px;
+    /* Use the same interactive treatment as the playground CTA */
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    transition: background 140ms ease, box-shadow 160ms ease, transform 120ms ease, filter 120ms ease, opacity 120ms ease;
+
+    &:hover {
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.36);
+      opacity: 0.98;
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+      filter: brightness(0.98);
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+    }
   }
 }
 
 .btn-support {
   margin-top: 20px;
   background: variables.$red-gradient;
-  transition: none;
   color: #fff;
-
-  &:hover {
-    background: #151515;
-  }
+  transition: none;
+  &:hover { background: #151515; }
 }
+
+*, *::before, *::after { box-sizing: border-box; }

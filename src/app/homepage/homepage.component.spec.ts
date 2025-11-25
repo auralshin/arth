@@ -7,7 +7,6 @@ import { MenuComponent } from './menu/menu.component';
 import { MenuItemComponent } from './menu/menu-item/menu-item.component';
 import { SocialWrapperComponent } from '../common/social-wrapper/social-wrapper.component';
 import { TocComponent } from '../shared/components/toc/toc.component';
-import { NewsletterComponent } from './newsletter/newsletter.component';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -22,7 +21,6 @@ describe('HomepageComponent', () => {
         MenuComponent,
         MenuItemComponent,
         TocComponent,
-        NewsletterComponent,
         HomepageComponent,
       ],
       providers: [HttpClient, HttpHandler],

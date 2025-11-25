@@ -1,27 +1,21 @@
 @import '../../../scss/utils.scss';
 
 :host {
-  @include media(small) {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-  }
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
 }
 
 .social-wrapper {
-  @extend .center-top;
-  float: right;
-  position: relative;
   display: flex;
+  align-items: center;
+  gap: 15px;
 
   a {
     @extend .transition-fast;
     display: inline-flex;
-    vertical-align: middle;
     color: #fff;
     font-size: 18px;
-    margin-left: 15px;
     cursor: pointer;
 
     .discord-icon {
@@ -42,9 +36,6 @@
   }
 
   @include media(small) {
-    top: 0;
-    transform: none;
-
     a {
       display: none;
     }

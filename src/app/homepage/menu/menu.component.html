@@ -1,21 +1,28 @@
-<nav class="nav-container" (click)="$event.stopPropagation()">
-  <app-menu-item
-    *ngFor="let item of items"
-    [isOpen]="item.isOpened"
-    [title]="item.title"
-    [externalUrl]="item?.externalUrl"
-    [isNew]="item.isNew"
-    [icon]="item?.icon"
-    [path]="item?.path"
-    [children]="item.children"
-    class="nav-item"
-  ></app-menu-item>
-  <a
-    href="https://enterprise.nestjs.com"
-    target="_blank"
-    title="Enterprise | NestJS - A node.js framework built on top of TypeScript"
-    class="btn btn-support"
-    >Get enterprise support</a
-  >
-  <a href="https://docs.nestjs.com/v10" class="btn btn-version">Version 10</a>
+<nav class="nav-container"
+  tabindex="0"
+  (click)="$event.stopPropagation()"
+  (keydown.enter)="$event.stopPropagation()"
+  (keydown.space)="$event.stopPropagation()"
+  aria-label="Main navigation">
+  <div class="menu-content">
+    <app-menu-item
+      *ngFor="let item of items; trackBy: trackByTitle"
+      [isOpen]="item.isOpened"
+      [title]="item.title"
+      [externalUrl]="item?.externalUrl"
+      [isNew]="item.isNew"
+      [icon]="item?.icon"
+      [path]="item?.path"
+      [children]="item.children"
+      class="nav-item"
+    ></app-menu-item>
+  </div>
+  <div class="fixed-buttons">
+    <a href="https://github.com/auralshin/arth" target="_blank" rel="noopener noreferrer" title="Star on GitHub" class="btn-version btn-github">
+      <i class="fa-brands fa-github" aria-hidden="true"></i> <span>Star on GitHub</span>
+    </a>
+    <a href="mailto:anshul@example.com" title="Reach Out" class="btn-version btn-reachout">
+      Reach Out
+    </a>
+  </div>
 </nav>

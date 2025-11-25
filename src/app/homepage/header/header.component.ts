@@ -13,6 +13,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  @Output() toggle = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
   @Input() isSidebarOpened = true;
 }

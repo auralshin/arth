@@ -25,7 +25,8 @@
               "src/apple-touch-icon-precomposed.png",
               "src/browserconfig.xml",
               "src/mstile-150x150.png",
-              "src/_redirects"
+              "src/_redirects",
+              "src/sw.js"
             ],
             "styles": ["src/styles.scss"]
           },
@@ -43,7 +44,9 @@
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": true
+                "fonts": {
+                  "inline": false
+                }
               },
               "outputHashing": "all",
               "sourceMap": false,

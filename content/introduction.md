@@ -1,45 +1,142 @@
-### Introduction
+### Arth: A DeFi Knowledge Hub
 
-Nest (NestJS) is a framework for building efficient, scalable [Node.js](https://nodejs.org/) server-side applications. It uses progressive JavaScript, is built with and fully supports [TypeScript](http://www.typescriptlang.org/) (yet still enables developers to code in pure JavaScript) and combines elements of OOP (Object Oriented Programming), FP (Functional Programming), and FRP (Functional Reactive Programming).
+Arth is a focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners. It brings together clear, practical explanations of decentralized finance protocols, trading and yield strategies, and the quantitative modeling techniques that support them. Content ranges from approachable primers to deep-dive technical explainers.
 
-Under the hood, Nest makes use of robust HTTP Server frameworks like [Express](https://expressjs.com/) (the default) and optionally can be configured to use [Fastify](https://github.com/fastify/fastify) as well!
+Arth is built for people who like to connect theory with code. As you move through the docs, you'll see:
 
-Nest provides a level of abstraction above these common Node.js frameworks (Express/Fastify), but also exposes their APIs directly to the developer. This gives developers the freedom to use the myriad of third-party modules which are available for the underlying platform.
+* **DeFi primers** that explain how protocols and primitives work.
+* **Strategy write-ups** that show how traders and builders capture value or design automated strategies.
+* **Mathematical explainers** with worked examples in probability, statistics, optimization, and numerical methods.
 
-#### Philosophy
+Many articles include code snippets, math notation, diagrams, and small, reproducible examples. Where it helps, we link to runnable examples or notebooks in
+[JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript),
+[TypeScript](https://www.typescriptlang.org/), or
+[Python](https://www.python.org/)
+so you can reproduce results, tweak parameters, and see how ideas behave in practice.
 
-In recent years, thanks to Node.js, JavaScript has become the “lingua franca” of the web for both front and backend applications. This has given rise to awesome projects like [Angular](https://angular.dev/), [React](https://github.com/facebook/react) and [Vue](https://github.com/vuejs/vue), which improve developer productivity and enable the creation of fast, testable, and extensible frontend applications. However, while plenty of superb libraries, helpers, and tools exist for Node (and server-side JavaScript), none of them effectively solve the main problem of **architecture**.
+The `content/` folder contains markdown pages grouped by topic. When you add a new page, place it next to related topics so readers can discover connected material via navigation and search.
 
-Nest provides an out-of-the-box application architecture which allows developers and teams to create highly testable, scalable, loosely coupled, and easily maintainable applications. The architecture is heavily inspired by Angular.
+#### Who Arth Is For
 
-#### Installation
+If you are:
 
-To get started, you can either scaffold the project with the [Nest CLI](/cli/overview), or [clone a starter project](#alternatives) (both will produce the same outcome).
+* A **protocol engineer** designing or reviewing mechanisms,
+* A **quant developer** building models, backtests, or execution systems, or
+* An **active DeFi researcher or learner** trying to understand how things work under the hood,
 
-To scaffold the project with the Nest CLI, run the following commands. This will create a new project directory, and populate the directory with the initial core Nest files and supporting modules, creating a conventional base structure for your project. Creating a new project with the **Nest CLI** is recommended for first-time users. We'll continue with this approach in [First Steps](first-steps).
+you should find both hands-on tutorials and reference material here. A reasonable path through the docs is:
 
-```bash
-$ npm i -g @nestjs/cli
-$ nest new project-name
-```
+1. Start with **primers** to build intuition.
+2. Move on to **strategy posts** once you're comfortable with basic concepts.
+3. Dive into the **math and modeling** sections when you want more rigour.
 
-> info **Hint** To create a new TypeScript project with stricter feature set, pass the `--strict` flag to the `nest new` command.
+#### Principles: Clarity, Rigour, Reproducibility
 
-#### Alternatives
+Each article should:
 
-Alternatively, to install the TypeScript starter project with **Git**:
+* State its **assumptions** explicitly.
+* Include **references** or links where relevant.
+* Provide at least one **small, reproducible example** (code, notebook, or worked calculation).
 
-```bash
-$ git clone https://github.com/nestjs/typescript-starter.git project
-$ cd project
-$ npm install
-$ npm run start
-```
+When you write about strategies or live markets, include short notes on:
 
-> info **Hint** If you'd like to clone the repository without the git history, you can use [degit](https://github.com/Rich-Harris/degit).
+* **Risk:** market regimes change, backtests can overfit, and historical performance is not predictive.
+* **Execution:** slippage, liquidity, oracle risk, and gas costs all affect real outcomes.
+* **Scope:** what the example does *not* cover (e.g. no L2 gas modeling, no MEV considerations).
 
-Open your browser and navigate to [`http://localhost:3000/`](http://localhost:3000/).
+Readers should be able to understand what was tested, under which assumptions, and how to reproduce or adapt the work.
 
-To install the JavaScript flavor of the starter project, use `javascript-starter.git` in the command sequence above.
+---
 
-You can also start a new project from scratch by installing the core and supporting packages. Keep in mind that you'll need to set up the project boilerplate files on your own. At a minimum, you'll need these dependencies: `@nestjs/core`, `@nestjs/common`, `rxjs`, and `reflect-metadata`. Check out this short article on how to create a complete project: [5 steps to create a bare minimum NestJS app from scratch!](https://dev.to/micalevisk/5-steps-to-create-a-bare-minimum-nestjs-app-from-scratch-5c3b).
+#### Contributing
+
+Contributions are welcome. Arth is meant to grow as a community-driven collection of explainers, tutorials, and references.
+
+If you'd like to add content, update an article, or fix a typo, follow the steps below.
+
+1. **Fork and branch**
+
+   * Fork the repository.
+   * Create a feature branch named:
+
+     ```text
+     feature/<short-description>
+     ```
+
+2. **Add or update content**
+
+   * Add or edit a markdown file under the appropriate folder in `content/`.
+   * Use clear headings and a logical structure.
+   * Prefer small, focused changes over large, sweeping edits.
+   * Make examples reproducible (include parameters, data sources, and any setup notes).
+
+3. **Add assets (if needed)**
+
+   * For protocol or project logos, use `logos/`.
+   * For general site images, diagrams, or figures, use `src/assets/`.
+   * Reference them using relative paths, for example:
+
+     * `/logos/your-image.svg`
+     * `assets/your-image.png`
+
+4. **Install dependencies and generate docs locally**
+
+   Using **npm**:
+
+   ```bash
+   npm install
+   npm run docs    # regenerates docs using the Dgeni pipeline (runs the "docs-only" script)
+   npm run start   # serve the site locally at http://localhost:4200/
+   ```
+
+   Using **yarn**:
+
+   ```bash
+   yarn            # installs dependencies
+   yarn docs       # regenerates docs (runs the "docs-only" script)
+   yarn start      # serve the site locally at http://localhost:4200/
+   ```
+
+   Using **pnpm**:
+
+   ```bash
+   pnpm install
+   pnpm run docs
+   pnpm run start
+   ```
+
+   Once the dev server is running, navigate to the relevant route and confirm that:
+
+   * Your new page appears in the expected section.
+   * Code blocks render correctly.
+   * Links and images work.
+
+5. **Run checks**
+
+   * Run linters if available:
+
+     ```bash
+     npm run lint
+     ```
+
+   * Keep your markdown consistent with the existing style:
+
+     * Use meaningful headings.
+     * Keep line lengths reasonable.
+     * Prefer fenced code blocks with language tags (for example, ` ```ts`, ` ```python`).
+
+   * Keep commits small and atomic, with descriptive commit messages.
+
+6. **Open a pull request**
+
+   * Open a PR against the `master` branch.
+   * In the description, explain:
+
+     * What you changed.
+     * Why you changed it.
+     * Any reproduction steps, sample inputs, or supporting artifacts (data files, notebooks, diagrams).
+   * A maintainer will review your changes and may request small adjustments before merging.
+
+By contributing, you agree to the project's MIT license (see `LICENSE`). If you have questions about structure, content style, or the publication workflow, open an issue and describe what you're trying to do. We'll help you get oriented so you can focus on the content itself.
+
+Thank you for helping build Arth. Every contribution makes the library more useful for the next reader.

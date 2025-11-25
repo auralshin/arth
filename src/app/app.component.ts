@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, ChildrenOutletContexts, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { HOMEPAGE_TITLE, TITLE_SUFFIX } from './constants';
+import { routeAnimations } from './route-animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [routeAnimations],
 })
 export class AppComponent implements OnInit {
   private robotsElement: HTMLMetaElement;
@@ -17,7 +19,12 @@ export class AppComponent implements OnInit {
     private readonly metaService: Meta,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly contexts: ChildrenOutletContexts,
   ) {}
+
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
+  }
 
   async ngOnInit() {
     this.router.events

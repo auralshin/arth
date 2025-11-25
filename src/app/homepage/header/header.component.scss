@@ -48,12 +48,16 @@
 }
 
 header {
-  display: block;
+  /* Use flex layout so the nav icon, logo and actions align responsively */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
   background: var(--header-background);
   width: 100%;
   height: 70px;
   z-index: 10000;
+  padding: 0 12px; /* small horizontal padding for mobile */
 }
 
 .icon-wrapper {
@@ -101,21 +105,24 @@ header {
 }
 
 :host ::ng-deep .logo-wrapper {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   height: 100%;
-  text-align: center;
-  vertical-align: top;
-  padding-left: 85px;
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 12px;
 
+  /* On larger screens keep extra left spacing so logo doesn't clash with sidebar button */
   @include utils.media(large) {
-    padding-left: 15px;
+    padding-left: 85px;
   }
   @include utils.media(medium) {
-    padding-left: 10px;
+    padding-left: 15px;
   }
 
   a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     padding-top: 10px;
   }
   @media print {
@@ -129,35 +136,18 @@ header {
 .menu-wrapper {
   @extend .center-top;
   position: relative;
-  float: right;
   padding: 14px 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: auto; /* push actions to the far right in flex layout */
 
   @media (min-width: 1500px) {
     margin-right: 30px;
   }
 
-  @media (max-width: 1499px) {
-    li:first-of-type {
-      display: none;
-    }
-
-    .search-wrapper {
-      margin-right: 0;
-    }
-  }
-
   @media (max-width: 1350px) {
-    padding: 14px 5px;
-
-    li:nth-of-type(3) {
-      display: none;
-    }
-  }
-
-  @media (max-width: 1150px) {
-    ul {
-      display: none !important;
-    }
+    padding: 14px 10px;
   }
 
   @media (max-width: 600px) {
@@ -168,13 +158,7 @@ header {
 
   @include utils.media(large) {
     margin-right: 0;
-    padding: 14px 5px;
-  }
-
-  @include utils.media(normal) {
-    ul {
-      display: none !important;
-    }
+    padding: 14px 8px;
   }
 
   @include utils.media(small) {
@@ -182,48 +166,49 @@ header {
       display: none;
     }
   }
+
   ul {
-    display: inline-block;
-    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
     padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 20px;
   }
 
   li {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 30px;
+    display: inline-flex;
+    align-items: center;
+  }
 
-    &:first-of-type {
-      margin-left: 0;
+  .playground-item {
+    .playground-cta {
+      @extend .transition-fast;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: var(--main-color, variables.$red-gradient);
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      cursor: not-allowed;
     }
 
-    &:last-of-type a {
-      @include utils.radius(2px);
-      transition: none;
-      padding: 4px 6px;
-      background: variables.$red-gradient;
-
-      &:hover {
-        background: #262626;
-      }
-    }
-
-    @include utils.media(large) {
-      margin-left: 20px;
+    @media (max-width: 1150px) {
+      display: none;
     }
   }
 
-  a {
-    @extend .transition-fast;
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 14px;
-    font-weight: 600;
-
-    &:hover {
-      color: var(--primary-4dp);
+  .theme-item {
+    app-theme-mode-toggle {
+      display: inline-flex;
     }
   }
+
   @media print {
     display: none;
   }
@@ -320,8 +305,9 @@ header {
     width: 100%;
   }
 
+  /* Keep the nav icon in-flow on very small screens to avoid overlapping the logo */
   .icon-wrapper {
-    position: absolute;
+    position: relative;
   }
 }
 
@@ -412,7 +398,7 @@ header {
 ::ng-deep .DocSearch-Button:focus {
   border-bottom-color: variables.$red-color;
   width: 240px;
-  
+
   @media (min-width: 1200px) and (max-width: 1300px) {
     width: 190px;
   }
@@ -448,8 +434,8 @@ header {
   display: none;
 }
 
-::ng-deep .DocSearch-Button:active, 
-::ng-deep .DocSearch-Button:focus, 
+::ng-deep .DocSearch-Button:active,
+::ng-deep .DocSearch-Button:focus,
 ::ng-deep.DocSearch-Button:hover {
   color: #a5a5a5;
 }
