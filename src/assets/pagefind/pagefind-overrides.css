@@ -1,6 +1,6 @@
-/* Custom Pagefind UI overrides to keep the search bar consistent across dev and prod builds */
+/* --- Pagefind search bar overrides --- */
 
-body .pagefind-ui {
+#search .pagefind-ui {
   width: 100%;
   max-width: none;
   background: transparent !important;
@@ -9,9 +9,11 @@ body .pagefind-ui {
   box-shadow: none !important;
   font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif !important;
   position: relative;
+  z-index: 9999;
 }
 
-body .pagefind-ui__form {
+/* Pill container */
+#search .pagefind-ui__form {
   position: relative;
   display: flex !important;
   align-items: center;
@@ -20,12 +22,13 @@ body .pagefind-ui__form {
   padding: 0 !important;
   min-height: 48px;
   border-radius: 12px;
-  border: 1px solid var(--header-search-border, rgba(255, 255, 255, 0.18));
-  background: var(--header-search-background, rgba(255, 255, 255, 0.12));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--header-search-border, rgba(255, 255, 255, 0.18)) !important;
+  background: var(--header-search-background, rgba(255, 255, 255, 0.12)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
 }
 
-body .pagefind-ui__form::before {
+/* Magnifying glass icon */
+#search .pagefind-ui__form::before {
   content: '';
   position: absolute;
   left: 18px;
@@ -41,7 +44,8 @@ body .pagefind-ui__form::before {
   pointer-events: none;
 }
 
-body .pagefind-ui__search-input {
+/* Text input */
+#search .pagefind-ui__search-input {
   flex: 1 1 auto;
   width: 100%;
   min-height: 48px;
@@ -56,30 +60,44 @@ body .pagefind-ui__search-input {
   box-shadow: none !important;
 }
 
-body .pagefind-ui__search-input::placeholder {
+/* Hide native search clear button (Safari/Chrome) */
+#search .pagefind-ui__search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* Placeholder */
+#search .pagefind-ui__search-input::placeholder {
   color: var(--header-search-placeholder, rgba(255, 255, 255, 0.7)) !important;
   opacity: 1;
 }
 
-body .pagefind-ui__search-input:focus,
-body .pagefind-ui__search-input:focus-visible {
+#search .pagefind-ui__search-input:focus,
+#search .pagefind-ui__search-input:focus-visible {
   outline: none !important;
   background: transparent !important;
 }
 
-body .pagefind-ui__search-clear {
+/* CLEAR button — this is the bit that was visually broken */
+#search .pagefind-ui__search-clear {
   position: absolute;
   right: 14px;
   top: 50%;
   transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px 10px;
   border-radius: 6px;
-  border: none;
+  border: none !important;
   background: var(
     --header-search-background-focus,
     rgba(255, 255, 255, 0.12)
-  );
-  background: color-mix(in srgb, var(--header-search-clear, var(--primary)) 14%, transparent);
+  ) !important;
+  background: color-mix(
+    in srgb,
+    var(--header-search-clear, var(--primary)) 14%,
+    transparent
+  ) !important;
   color: var(--header-search-clear, var(--primary)) !important;
   font-weight: 600;
   font-size: 13px;
@@ -87,84 +105,105 @@ body .pagefind-ui__search-clear {
   transition: background 150ms ease, opacity 150ms ease, transform 150ms ease;
 }
 
-body .pagefind-ui__search-clear.pagefind-ui__suppressed {
+#search .pagefind-ui__search-clear.pagefind-ui__suppressed {
   display: none !important;
 }
 
-body .pagefind-ui__search-clear:hover,
-body .pagefind-ui__search-clear:focus-visible {
+#search .pagefind-ui__search-clear:hover,
+#search .pagefind-ui__search-clear:focus-visible {
   opacity: 0.9;
   outline: none;
 }
 
-body .pagefind-ui__search-clear:active {
+#search .pagefind-ui__search-clear:active {
   transform: translateY(-50%) scale(0.95);
 }
 
-body .pagefind-ui__drawer {
-  display: none !important;
-}
-
-body .pagefind-ui__results {
+/* Show the drawer - it contains the results! */
+#search .pagefind-ui__drawer {
+  display: flex !important;
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
   width: 100%;
-  margin: 16px 0 0 !important;
+  z-index: 10000;
+  flex-direction: column;
+}
+
+/* --- Search Results Dropdown --- */
+
+#search .pagefind-ui__results-area {
+  display: block !important;
+  width: 100%;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#search .pagefind-ui__results {
+  display: block !important;
+  width: 100%;
+  margin: 0 !important;
   padding: 12px 0 !important;
   border-radius: 16px !important;
   border: 1px solid var(--header-search-results-border, rgba(255, 255, 255, 0.14)) !important;
   background: var(--header-search-results-background, rgba(18, 18, 18, 0.92)) !important;
   box-shadow: 0 18px 70px rgba(0, 0, 0, 0.35) !important;
   max-height: min(70vh, 540px);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  position: relative;
+  z-index: 10001;
 }
 
-body .pagefind-ui__results-area {
-  background: transparent !important;
-  padding: 0 !important;
+#search .pagefind-ui__result-link {
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  cursor: pointer;
 }
 
-body .pagefind-ui__result {
+#search .pagefind-ui__result {
   display: block;
   padding: 16px 22px !important;
   color: var(--header-search-result-title, var(--color-1dp, #f1f1f1)) !important;
   transition: background 140ms ease;
   border-top: 1px solid var(--header-search-results-border, rgba(255, 255, 255, 0.08));
+  cursor: pointer;
 }
 
-body .pagefind-ui__result:first-child {
+#search .pagefind-ui__result:first-child {
   border-top: none;
 }
 
-body .pagefind-ui__result:hover {
+#search .pagefind-ui__result:hover,
+#search .pagefind-ui__result-link:hover .pagefind-ui__result {
   background: var(--header-search-result-hover, rgba(255, 255, 255, 0.08)) !important;
 }
 
-body .pagefind-ui__result-title {
+#search .pagefind-ui__result-title {
   font-size: 16px !important;
   font-weight: 600 !important;
   color: inherit !important;
   margin-bottom: 6px !important;
 }
 
-body .pagefind-ui__result-excerpt {
+#search .pagefind-ui__result-excerpt {
   font-size: 14px !important;
   line-height: 1.55 !important;
   color: var(--header-search-result-excerpt, var(--color-3dp, #c2c2c2)) !important;
 }
 
-body .pagefind-ui__result-tags {
+#search .pagefind-ui__result-tags {
   margin-top: 12px !important;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-body .pagefind-ui__result-tag {
+#search .pagefind-ui__result-tag {
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
@@ -176,15 +215,15 @@ body .pagefind-ui__result-tag {
   color: var(--header-search-result-highlight-text, #121212);
 }
 
-body .pagefind-ui__message,
-body .pagefind-ui__loading {
+#search .pagefind-ui__message,
+#search .pagefind-ui__loading {
   padding: 16px 20px !important;
   text-align: center;
   color: var(--header-search-result-excerpt, var(--color-3dp, #c2c2c2)) !important;
   font-size: 14px !important;
 }
 
-body .pagefind-ui__button {
+#search .pagefind-ui__button {
   display: inline-flex !important;
   margin: 8px auto 0 !important;
   padding: 8px 18px !important;
@@ -196,8 +235,8 @@ body .pagefind-ui__button {
   transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
 }
 
-body .pagefind-ui__button:hover,
-body .pagefind-ui__button:focus-visible {
+#search .pagefind-ui__button:hover,
+#search .pagefind-ui__button:focus-visible {
   outline: none !important;
   background: var(
     --header-search-background-focus,
@@ -207,12 +246,12 @@ body .pagefind-ui__button:focus-visible {
   color: var(--header-search-result-title, #101010) !important;
 }
 
-body .pagefind-ui mark {
+#search .pagefind-ui mark {
   background: transparent !important;
   color: var(--header-search-result-highlight, var(--primary)) !important;
   font-weight: 600 !important;
 }
 
-body .pagefind-ui__result-excerpt mark {
+#search .pagefind-ui__result-excerpt mark {
   color: var(--header-search-result-highlight, var(--primary)) !important;
 }

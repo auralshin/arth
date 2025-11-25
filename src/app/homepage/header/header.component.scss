@@ -167,21 +167,16 @@ header {
     padding: 14px 10px;
   }
 
-  @media (max-width: 600px) {
+  // Only hide search on very small mobile screens
+  @media (max-width: 480px) {
     .search-wrapper {
-      display: none;
+      display: none !important;
     }
   }
 
   @include utils.media(large) {
     margin-right: 0;
     padding: 14px 8px;
-  }
-
-  @include utils.media(small) {
-    .search-wrapper {
-      display: none;
-    }
   }
 
   ul {
@@ -368,17 +363,43 @@ header {
 .search-wrapper {
   margin-right: 2em;
   height: 100%;
-  display: inline-block;
+  display: inline-block !important; // Force display
   position: relative;
+  min-width: 200px; // Ensure it has space
+
+  &.search-placeholder {
+    .search-icon {
+      display: block;
+    }
+    .search-input {
+      display: block;
+    }
+  }
+
+  &:not(.search-placeholder) {
+    .search-icon {
+      display: none;
+    }
+    .search-input {
+      display: none;
+    }
+  }
+
+  // Reset Pagefind UI container
+  :host ::ng-deep .pagefind-ui {
+    all: unset;
+    display: block;
+  }
 }
 
 .search-icon,
 :host ::ng-deep .DocSearch-Search-Icon {
   position: absolute;
   margin-top: 7px;
-  color: #a5a5a5 !important;
+  color: var(--header-search-icon, #a5a5a5) !important;
   font-size: 14px;
   width: 14px;
+  z-index: 1;
 }
 
 :host ::ng-deep .DocSearch-Search-Icon {
@@ -387,13 +408,12 @@ header {
   }
 }
 
-.search-input,
-::ng-deep .DocSearch-Button {
+.search-input {
   background: transparent;
   border: 0;
-  border-bottom: 2px solid #414141;
+  border-bottom: 2px solid var(--header-search-border, #414141);
   padding: 5px 20px 5px 28px;
-  color: #fff;
+  color: var(--header-search-text, #fff);
   font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
   font-display: swap;
   font-size: 14px;
@@ -410,12 +430,17 @@ header {
   @media (max-width: 1300px) {
     width: 190px;
   }
+
+  &::placeholder {
+    color: var(--header-search-placeholder, #a5a5a5);
+    opacity: 1;
+  }
 }
 
 ::ng-deep .DocSearch-Button:hover,
-::ng-deep .DocSearch-Button:active
+::ng-deep .DocSearch-Button:active,
 ::ng-deep .DocSearch-Button:focus {
-  border-bottom-color: variables.$red-color;
+  border-bottom-color: var(--primary);
   width: 240px;
 
   @media (min-width: 1200px) and (max-width: 1300px) {
@@ -427,14 +452,9 @@ header {
   }
 }
 
-.search-input::placeholder {
-  color: #a5a5a5;
-  opacity: 1;
-}
-
 ::ng-deep .DocSearch-Button {
   border-radius: 0;
-  color: #a5a5a5;
+  color: var(--header-search-placeholder, #a5a5a5);
   padding: 5px;
 }
 
@@ -455,10 +475,12 @@ header {
 
 ::ng-deep .DocSearch-Button:active,
 ::ng-deep .DocSearch-Button:focus,
-::ng-deep.DocSearch-Button:hover {
-  color: #a5a5a5;
+::ng-deep .DocSearch-Button:hover {
+  color: var(--header-search-placeholder, #a5a5a5);
 }
 
+// Remove the close icon styles - not needed with Pagefind
+/*
 .close-icon {
   position: absolute;
   right: 0;
@@ -491,6 +513,7 @@ header {
     transform: rotate(-45deg) translateY(3px);
   }
 }
+*/
 
 @media (max-width: 1300px) {
   .shop-link {

@@ -460,7 +460,10 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private initializeSearch() {
     const win = window as any;
+    
+    // Check if Pagefind UI is already initialized
     if (win.pagefindUI) {
+      console.log('Pagefind UI already initialized, skipping');
       if (this.pendingSearchFocus) {
         this.searchFocusAttempts = 0;
         this.focusSearchInput();
@@ -479,6 +482,13 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
+    // Don't clear if already has pagefind content
+    const hasPagefindContent = searchElement.querySelector('.pagefind-ui');
+    if (hasPagefindContent) {
+      console.log('Pagefind UI already rendered, skipping initialization');
+      return;
+    }
+
     const placeholderInput = document.querySelector(
       '.search-placeholder .search-input',
     ) as HTMLInputElement | null;
@@ -493,17 +503,31 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const initPagefind = () => {
       try {
+        console.log('Initializing Pagefind UI...', { bundlePath, searchElement });
         win.pagefindUI = new win.PagefindUI({
           element: searchElement,
           showImages: false,
           resetStyles: false,
-          bundlePath,
+          bundlePath: '/assets/pagefind/',
+          processResult: (result) => {
+            // Strip /assets/ prefix and .html extension from URLs to match Angular routing
+            if (result.url) {
+              result.url = result.url.replace(/^\/assets\//, '/').replace(/\.html$/, '');
+            }
+            return result;
+          },
           translations: {
             placeholder: 'Search docs...',
             zeroResults: 'No results for [SEARCH_TERM]',
             loadMore: 'Load more results',
           },
         });
+        console.log('Pagefind UI initialized successfully');
+        
+        // Remove the placeholder class to hide old search input
+        if (searchElement.classList.contains('search-placeholder')) {
+          searchElement.classList.remove('search-placeholder');
+        }
       } catch (err) {
         console.error('Failed to initialize Pagefind UI', err);
       }
@@ -512,9 +536,6 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.searchFocusAttempts = 0;
       if (this.pendingSearchFocus) {
         this.focusSearchInput(placeholderInput?.value || '');
-      }
-      if (placeholder) {
-        placeholder.style.display = 'none';
       }
     };
 

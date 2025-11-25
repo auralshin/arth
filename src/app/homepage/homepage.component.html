@@ -1,4 +1,4 @@
-<app-header (toggleSidebar)="toggleSidebar()" [isSidebarOpened]="isSidebarOpened">
+<app-header data-pagefind-ignore (toggleSidebar)="toggleSidebar()" [isSidebarOpened]="isSidebarOpened">
   <div class="logo-wrapper">
     <a
       href="/"
@@ -9,13 +9,13 @@
   </div>
 </app-header>
 <div class="container-fluid">
-  <app-menu [isSidebarOpened]="isSidebarOpened" class="app-menu"></app-menu>
+  <app-menu data-pagefind-ignore [isSidebarOpened]="isSidebarOpened" class="app-menu"></app-menu>
   <div class="container" [class.wide]="!isSidebarOpened">
     <div class="page-wrapper">
-      <app-toc [contentReference]="contentRef"></app-toc>
+      <app-toc data-pagefind-ignore [contentReference]="contentRef"></app-toc>
       <router-outlet (activate)="onRouteActivate($event)"></router-outlet>
     </div>
-    <app-footer>
+    <app-footer data-pagefind-ignore>
       <p>
         Made by
         <a

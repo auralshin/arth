@@ -50,3 +50,8 @@ Thumbs.db
 # compiled templates
 src/app/homepage/pages/**/*.html
 .vercel
+
+# Pagefind search index (generated files)
+src/assets/pagefind/*
+!src/assets/pagefind/pagefind-overrides.css
+dist/static/pagefind/
