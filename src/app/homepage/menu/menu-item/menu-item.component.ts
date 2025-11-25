@@ -10,7 +10,7 @@ import { openCloseAnimation } from '../../../common';
 })
 export class MenuItemComponent {
   @Input() isOpen = false;
-  @Input() children?: Array<{
+  @Input() children?: {
     title: string;
     path?: string;
     externalUrl?: string;
@@ -20,7 +20,7 @@ export class MenuItemComponent {
     children?: any[];
     isOpened?: boolean;
     defaultOpen?: boolean;
-  }>;
+  }[];
   @Input() path?: string;
   @Input() title: string;
   @Input() icon?: string;

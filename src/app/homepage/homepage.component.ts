@@ -460,7 +460,7 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private initializeSearch() {
     const win = window as any;
-    
+
     // Check if Pagefind UI is already initialized
     if (win.pagefindUI) {
       console.log('Pagefind UI already initialized, skipping');
@@ -523,7 +523,7 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
           },
         });
         console.log('Pagefind UI initialized successfully');
-        
+
         // Remove the placeholder class to hide old search input
         if (searchElement.classList.contains('search-placeholder')) {
           searchElement.classList.remove('search-placeholder');
