@@ -74,7 +74,7 @@ header {
 
   &:hover {
     cursor: pointer;
-    background: #212121;
+    background: var(--background-3dp);
   }
   &.opened {
     width: 250px;
@@ -92,7 +92,7 @@ header {
     svg {
       width: 30px;
       height: 30px;
-      fill: #fff;
+      fill: var(--header-icon-color, #fff);
     }
   }
   @include utils.media(medium) {
@@ -124,7 +124,24 @@ header {
     display: inline-flex;
     align-items: center;
     padding-top: 10px;
+    text-decoration: none;
   }
+
+  .logo-text {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
   @media print {
     left: 50%;
     position: relative;
@@ -329,7 +346,7 @@ header {
   &::after,
   &::before {
     content: '';
-    background: #fff;
+    background: var(--header-icon-color, #fff);
     display: block;
     height: 2px;
     width: 100%;
@@ -344,6 +361,8 @@ header {
   @include utils.media(large) {
     display: none;
   }
+
+  fill: var(--header-icon-color, #fff);
 }
 
 .search-wrapper {

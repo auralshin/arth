@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="/" target="_self"><img src="./src/assets/logos/arth_sunset_gold_logo_512.png" width="120" alt="arth Logo" /></a>
+  <a href="/" target="_self"><img src="./src/assets/logos/logo-arth.png" width="120" alt="arth Logo" /></a>
 </p>
 
   <p align="center">Arth — a focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners.</p>
