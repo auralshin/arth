@@ -1,25 +1,19 @@
-### Serial Correlation and Autocorrelation
+### Autocorrelation
 
-Serial Correlation and Autocorrelation anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Returns, Expectation & Variance | Tags: time-series, autocorrelation, dependence, momentum, mean-reversion
 
-#### Why it matters
-- Frame the real-world problems serial correlation and autocorrelation addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with autocorrelation.
-- Document integration risks, governance constraints, and user experience trade-offs tied to serial correlation and autocorrelation.
+Autocorrelation measures dependence between a time series and its own past values. Positive autocorrelation means that high values tend to follow high values; negative autocorrelation means that high values tend to be followed by low values. In returns, positive autocorrelation is associated with momentum effects, while negative autocorrelation can indicate mean reversion or microstructure noise.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind serial correlation and autocorrelation.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Formally, autocorrelation at a lag compares returns separated by that lag. Estimating the pattern of autocorrelations across lags reveals structure such as trending behaviour, seasonality, or the memory of volatility shocks.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of autocorrelation?
-- How do unit economics or incentive loops change when serial correlation and autocorrelation scales?
-- Which edge cases have tripped up teams shipping serial correlation and autocorrelation before?
+For DeFi markets, autocorrelation is relevant to signal design and backtesting. Evidence of persistence in funding rates, volume, or on-chain activity supports strategies that lean into or against recent patterns. Strong autocorrelation also affects risk models, since independence assumptions break down.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Stationarity](/quant-math/stationarity)
+* [Random Walks](/quant-math/random-walks)
+* [Mean Reversion](/quant-math/mean-reversion)
+
+---

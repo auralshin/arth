@@ -1,25 +1,19 @@
 ### Geometric Brownian Motion
 
-Geometric Brownian Motion anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Random Walks, Calculus, Volatility | Tags: gbm, stochastic-processes, prices, diffusion
 
-#### Why it matters
-- Frame the real-world problems geometric brownian motion addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with gbm.
-- Document integration risks, governance constraints, and user experience trade-offs tied to geometric brownian motion.
+Geometric Brownian Motion is a continuous time model where the logarithm of price follows a Brownian motion with drift. In this framework, prices remain positive, returns are normally distributed over fixed intervals, and variance grows linearly with time. The model has a long history in option pricing and basic risk calculations.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind geometric brownian motion.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+The structure of Geometric Brownian Motion allows closed form solutions for many quantities, including distribution of future prices and some derivatives. It encodes constant volatility and log normal price distributions, which rarely hold exactly in practice but provide a tractable starting point.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of gbm?
-- How do unit economics or incentive loops change when geometric brownian motion scales?
-- Which edge cases have tripped up teams shipping geometric brownian motion before?
+In DeFi, Geometric Brownian Motion is useful as a simple scenario generator or benchmark. Comparing empirical return distributions and volatility clustering to GBM predictions highlights where real markets diverge, pointing toward the need for models with stochastic volatility, jumps, or more complex dynamics when higher fidelity is required.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Random Walks](/quant-math/random-walks)
+* [Volatility](/quant-math/volatility)
+* [Jump Processes](/quant-math/jumps)
+
+---

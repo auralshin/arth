@@ -1,25 +1,19 @@
-### Jump Processes and Fat Tails
+### Jump Processes
 
-Jump Processes and Fat Tails anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Random Variables, Volatility, Geometric Brownian Motion | Tags: jumps, tails, discontinuities, risk
 
-#### Why it matters
-- Frame the real-world problems jump processes and fat tails addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with jumps.
-- Document integration risks, governance constraints, and user experience trade-offs tied to jump processes and fat tails.
+Jump processes extend diffusion models by allowing occasional discontinuous moves. Instead of prices evolving only through small incremental changes, jumps represent sudden shifts driven by news, liquidations, exploits, or structural events. Mathematically, these processes combine continuous components with Poisson or more general jump mechanisms.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind jump processes and fat tails.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Jumps matter for risk because they concentrate loss or gain into short intervals and produce heavier tails than normal distributions predict. Classic variance based risk metrics can underestimate the probability and severity of extreme moves in the presence of jumps.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of jumps?
-- How do unit economics or incentive loops change when jump processes and fat tails scales?
-- Which edge cases have tripped up teams shipping jump processes and fat tails before?
+In DeFi, jumps are common. Security incidents, governance decisions, regulatory news, and large liquidation cascades can produce sharp price and liquidity changes. Modelling these events as jump processes supports more realistic scenario analysis and tail risk estimation, especially for leveraged and path sensitive structures.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Geometric Brownian Motion](/quant-math/gbm)
+* [VaR & CVaR](/quant-math/var-cvar)
+* [Simulation – Scenarios](/simulation/scenarios)
+
+---

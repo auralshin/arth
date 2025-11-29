@@ -1,25 +1,19 @@
-### Basic Optimization Concepts
+### Optimization
 
-Basic Optimization Concepts anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Expectation & Variance, Calculus, Linear algebra | Tags: optimization, objective, constraints, portfolios
 
-#### Why it matters
-- Frame the real-world problems basic optimization concepts addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with optimization.
-- Document integration risks, governance constraints, and user experience trade-offs tied to basic optimization concepts.
+Optimization provides a framework for choosing decision variables to maximise or minimise an objective subject to constraints. In portfolio problems, the variables are typically asset weights or exposures, the objective involves expected return or utility, and constraints encode risk limits, leverage caps, or regulatory rules.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind basic optimization concepts.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Many portfolio optimisation problems can be formulated as convex programs, where local optima are global and efficient algorithms exist. Others involve non convex constraints, integer decisions, or complex risk measures, requiring approximations or heuristics.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of optimization?
-- How do unit economics or incentive loops change when basic optimization concepts scales?
-- Which edge cases have tripped up teams shipping basic optimization concepts before?
+In DeFi contexts, optimization can apply to allocation across tokens, LP positions, and strategies; to selection of leverage levels; and to assignment of collateral across protocols. The quality of the outcome depends on how well the objective and constraints reflect the actual goals and frictions in the system, including gas costs, liquidity, and protocol specific risks.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Mean-Variance](/quant-math/mean-variance)
+* [Position Sizing](/quant-math/position-sizing)
+* [Rebalancing](/quant-math/rebalancing)
+
+---

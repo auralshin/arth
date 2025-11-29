@@ -1,25 +1,19 @@
-### Mean-Variance Optimization (Markowitz)
+### Mean-Variance
 
-Mean-Variance Optimization (Markowitz) anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Covariance, Optimization | Tags: mean-variance, portfolios, frontier, risk-return
 
-#### Why it matters
-- Frame the real-world problems mean-variance optimization (markowitz) addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with mean, variance.
-- Document integration risks, governance constraints, and user experience trade-offs tied to mean-variance optimization (markowitz).
+Mean variance analysis models portfolios in terms of expected return and variance. Under this framework, an efficient portfolio is one that offers the highest expected return for a given level of variance, or equivalently the lowest variance for a given expected return.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind mean-variance optimization (markowitz).
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+The efficient frontier is the set of such portfolios. Points below this frontier are dominated by better combinations. When a risk free asset is available, combining it with efficient risky portfolios generates a straight capital allocation line in expected return and variance space.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of mean, variance?
-- How do unit economics or incentive loops change when mean-variance optimization (markowitz) scales?
-- Which edge cases have tripped up teams shipping mean-variance optimization (markowitz) before?
+In DeFi, mean variance tools can be applied to baskets of tokens, LP strategies, and derivatives, with expected returns and covariances estimated from historical data or scenarios. The classic framework does not capture all aspects of risk, such as skew, tail risk, or regime changes, but it provides a starting point for systematic allocation and highlights the role of diversification.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Covariance](/quant-math/covariance)
+* [Optimization](/quant-math/optimization)
+* [VaR & CVaR](/quant-math/var-cvar)
+
+---

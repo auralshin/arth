@@ -1,25 +1,19 @@
-### Portfolio Rebalancing Rules
+### Rebalancing
 
-Portfolio Rebalancing Rules anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Mean-Variance, Position Sizing | Tags: rebalancing, portfolios, drift, trading-costs
 
-#### Why it matters
-- Frame the real-world problems portfolio rebalancing rules addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with rebalancing.
-- Document integration risks, governance constraints, and user experience trade-offs tied to portfolio rebalancing rules.
+Rebalancing is the process of bringing a portfolio back toward target weights after market movements cause drift. Without rebalancing, assets that outperform tend to dominate the portfolio over time, changing its risk profile. Rebalancing rules determine when and how to trade to restore desired allocations.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind portfolio rebalancing rules.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Strategies include calendar based rebalancing at fixed intervals, threshold based rebalancing when weights deviate by more than a set amount, and more dynamic approaches linked to volatility or risk measures. Each choice trades off tracking of targets against trading costs, taxes, and market impact.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of rebalancing?
-- How do unit economics or incentive loops change when portfolio rebalancing rules scales?
-- Which edge cases have tripped up teams shipping portfolio rebalancing rules before?
+On chain, rebalancing carries additional frictions: gas fees, slippage in AMMs, and potential MEV issues. For LP positions and concentrated liquidity, rebalancing may involve adjusting ranges and pool selections rather than simply buying or selling tokens. Designing rebalancing rules that respect both risk objectives and protocol level costs is a central task in DeFi portfolio engineering.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Position Sizing](/quant-math/position-sizing)
+* [Mean-Variance](/quant-math/mean-variance)
+* [Rolling Windows](/quant-math/rolling-windows)
+
+---

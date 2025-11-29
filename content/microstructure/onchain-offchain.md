@@ -1,25 +1,23 @@
-### On-Chain vs Off-Chain Matching
+### On-Chain vs Off-Chain
 
-On-Chain vs Off-Chain Matching anchors the Microstructure. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Orderbooks vs AMMs, Gas & Mempool | Tags: on-chain, off-chain, hybrid, settlement, microstructure
 
-#### Why it matters
-- Frame the real-world problems on-chain vs off-chain matching addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with onchain, offchain.
-- Document integration risks, governance constraints, and user experience trade-offs tied to on-chain vs off-chain matching.
+On chain and off chain trading environments differ in how they record state, enforce rules, and expose information. On chain venues execute trades through smart contracts, with transactions and state changes visible and finalised on the base or rollup chain. Off chain venues execute trades in private or semi private systems, recording only certain aggregates or settlements on chain.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind on-chain vs off-chain matching.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Fully on chain AMMs publish pool states and swap events directly in blocks. Orderbook based DEXs on chain maintain orderbooks in contracts, though capacity and gas costs limit order frequency and depth. These designs benefit from transparency and composability but must cope with gas costs, mempool exposure, and transaction ordering constraints.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of onchain, offchain?
-- How do unit economics or incentive loops change when on-chain vs off-chain matching scales?
-- Which edge cases have tripped up teams shipping on-chain vs off-chain matching before?
+Off chain orderbooks with on chain settlement, as used by some perps and spot venues, allow frequent updates and fine grained microstructure off chain while settling balances and enforcing finality on chain. This reduces gas usage and latency constraints for makers but introduces additional trust and failure modes in the off chain components.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+Hybrid architectures blur the boundary further. Intents and quotes may be negotiated off chain and then rolled into batches on chain through auctions. Layered systems such as rollups shift execution and ordering off the main chain while anchoring correctness through proofs.
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+The choice between on chain and off chain components affects MEV surfaces, latency risk, censorship possibilities, and how well trading activity composes with other DeFi protocols.
+
+---
+
+#### See Also
+
+* [Latency Risk](/microstructure/latency-risk)
+* [Transaction Ordering & MEV](/transaction-ordering-mev)
+* [Perp DEX](/protocols/perp-dex)
+
+---

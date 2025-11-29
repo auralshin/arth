@@ -1,25 +1,19 @@
-### Random Variables and Distributions
+### Random Variables
 
-Random Variables and Distributions anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Basic probability, algebra | Tags: math, probability, distributions, quant
 
-#### Why it matters
-- Frame the real-world problems random variables and distributions addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with random, variables.
-- Document integration risks, governance constraints, and user experience trade-offs tied to random variables and distributions.
+Random variables attach numbers to uncertain events. Instead of talking about vague outcomes such as “price goes up” or “a liquidation happens”, a random variable represents these events numerically. Examples include the return of an asset over one day, the number of liquidations in a block, or the volume traded in a pool over an hour.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind random variables and distributions.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+A random variable comes with a distribution that describes which values are likely and which are rare. Distributions can be discrete, continuous, or mixed, depending on whether the variable takes distinct values or ranges. Moments such as expectation and variance summarise key aspects of the distribution, and play a central role in risk and portfolio analysis.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of random, variables?
-- How do unit economics or incentive loops change when random variables and distributions scales?
-- Which edge cases have tripped up teams shipping random variables and distributions before?
+Random variables provide the basic language for describing risk in DeFi. Returns, price jumps, liquidation counts, and funding payments can all be modelled this way, enabling formal reasoning about averages, variability, and tail behaviour rather than relying on isolated scenarios.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Expectation & Variance](/quant-math/expectation-variance)
+* [Sampling](/quant-math/sampling)
+* [Returns](/quant-math/returns)
+
+---

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { openCloseAnimation } from '../../../common';
 
 @Component({
@@ -8,7 +8,7 @@ import { openCloseAnimation } from '../../../common';
   // changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [openCloseAnimation],
 })
-export class MenuItemComponent {
+export class MenuItemComponent implements OnInit {
   @Input() isOpen = false;
   @Input() children?: {
     title: string;
@@ -26,6 +26,16 @@ export class MenuItemComponent {
   @Input() icon?: string;
   @Input() externalUrl?: string;
   @Input() isNew?: boolean;
+
+  ngOnInit() {
+    console.log('MenuItemComponent init:', {
+      title: this.title,
+      hasChildren: !!this.children,
+      childrenLength: this.children?.length,
+      path: this.path,
+      externalUrl: this.externalUrl
+    });
+  }
 
   toggle() {
     this.isOpen = !this.isOpen;

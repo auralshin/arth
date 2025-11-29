@@ -312,11 +312,6 @@ import { RestakingEconomicsComponent } from './homepage/pages/staking-restaking-
 import { RestakingModelsComponent } from './homepage/pages/staking-restaking-yield/restaking-models/restaking-models.component';
 import { ValidatorEconomicsComponent } from './homepage/pages/staking-restaking-yield/validator-economics/validator-economics.component';
 import { YieldDecompositionComponent } from './homepage/pages/staking-restaking-yield/yield-decomposition/yield-decomposition.component';
-import { FirstTxComponent } from './homepage/pages/start-here/first-tx/first-tx.component';
-import { SafetyChecklistComponent } from './homepage/pages/start-here/safety-checklist/safety-checklist.component';
-import { SetUpAnalyticsComponent } from './homepage/pages/start-here/set-up-analytics/set-up-analytics.component';
-import { SetUpWalletComponent } from './homepage/pages/start-here/set-up-wallet/set-up-wallet.component';
-import { Web3GlossaryComponent } from './homepage/pages/start-here/web3-glossary/web3-glossary.component';
 import { BreakoutComponent } from './homepage/pages/strategy-library/breakout/breakout.component';
 import { CombiningStrategiesComponent } from './homepage/pages/strategy-library/combining-strategies/combining-strategies.component';
 import { DeltaNeutralComponent as StrategyLibraryDeltaNeutralComponent } from './homepage/pages/strategy-library/delta-neutral/delta-neutral.component';
@@ -658,11 +653,6 @@ import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matte
     RestakingModelsComponent,
     ValidatorEconomicsComponent,
     YieldDecompositionComponent,
-    FirstTxComponent,
-    SafetyChecklistComponent,
-    SetUpAnalyticsComponent,
-    SetUpWalletComponent,
-    Web3GlossaryComponent,
     BreakoutComponent,
     CombiningStrategiesComponent,
     StrategyLibraryDeltaNeutralComponent,

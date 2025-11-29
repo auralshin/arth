@@ -1,25 +1,19 @@
-### Stationarity and Regime Shifts
+### Stationarity
 
-Stationarity and Regime Shifts anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Autocorrelation, Sampling | Tags: time-series, stationarity, regimes, modelling
 
-#### Why it matters
-- Frame the real-world problems stationarity and regime shifts addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with stationarity.
-- Document integration risks, governance constraints, and user experience trade-offs tied to stationarity and regime shifts.
+Stationarity describes time series whose statistical properties are stable over time. In a stationary series, quantities such as mean, variance, and autocovariance do not change with the starting point in time. This property underlies many time series models and inference techniques.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind stationarity and regime shifts.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Financial series such as prices are often non-stationary, displaying trends, drifts, and structural breaks. Returns and certain transformed variables can be closer to stationary, but even then, regimes and volatility shifts are common. Treating a non-stationary series as stationary leads to misleading estimates and forecasts.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of stationarity?
-- How do unit economics or incentive loops change when stationarity and regime shifts scales?
-- Which edge cases have tripped up teams shipping stationarity and regime shifts before?
+In DeFi analytics, stationarity assumptions appear in models of returns, funding, usage metrics, and protocol flows. Testing for stationarity and identifying breaks or regime changes is an important step before fitting models or extrapolating risk metrics into the future.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Autocorrelation](/quant-math/autocorrelation)
+* [Random Walks](/quant-math/random-walks)
+* [Rolling Windows](/quant-math/rolling-windows)
+
+---

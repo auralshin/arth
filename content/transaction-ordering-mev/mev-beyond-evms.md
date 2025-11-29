@@ -1,21 +1,23 @@
-## MEV Beyond EVMs
+### MEV Beyond EVMs
 
-Non-EVM chains alter the MEV landscape with different scheduling rules, concurrency models, and fee markets.
-Understanding these differences is key when porting strategies across ecosystems.
+> info **Metadata** Level: Advanced | Prerequisites: MEV Overview, Execution Environments | Tags: mev, execution-environments, solana, move, appchains
 
-### Solana's SVM
+MEV is not specific to EVM based chains. Any system where an entity controls transaction ordering or inclusion faces similar extraction possibilities. Differences in execution environment, consensus, and runtime architecture change the details but not the basic principle.
 
-Solana executes transactions in parallel using account locks. MEV involves designing bundles that minimize
-account contention and exploit priority fees. Local fee markets and QUIC networking influence propagation and
-ordering.
+High throughput chains with parallel execution, such as Solana style runtimes, change how contention appears. Transactions may touch disjoint accounts and be processed concurrently, but conflicts still exist on popular markets and shared state. Scheduling and account level locking become part of the MEV surface.
 
-### Move VM systems
+Move based systems, app chains, and rollups with customised sequencers all present distinct patterns. In some cases, app specific chains allow protocol designers to integrate MEV aware logic directly into their execution and fee systems. In others, centralised sequencers take on builder like roles, concentrating ordering power and associated risks.
 
-Move-based chains (Aptos, Sui) enforce resource-oriented programming. Deterministic scheduling and explicit
-capability proofs limit some MEV vectors but introduce new ones, such as object-centric frontrunning.
+Cross domain MEV appears when opportunities span multiple chains or layers. Arbitrage, liquidations, or oracle updates that depend on relative prices across environments give rise to strategies that combine bridging, messaging, and transaction ordering in multiple places at once.
 
-### Cross-chain MEV
+Studying MEV beyond EVMs emphasises that MEV is a structural phenomenon tied to control over state transitions, not a quirk of any particular virtual machine.
 
-Bridges and shared sequencers enable atomic arbitrage across layers. Latency, bridge risk, and validator
-coordination become critical. Research explores shared mempools, SUAVE-like orchestration, and latency hedging
-to capture value safely.
+---
+
+#### See Also
+
+* [Execution Environments](/blockchain-execution-environments)
+* [Transaction Ordering & MEV](/transaction-ordering-mev)
+* [Mitigation & Defenses](/transaction-ordering-mev/mitigation-and-defenses)
+
+---

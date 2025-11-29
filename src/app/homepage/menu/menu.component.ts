@@ -26,9 +26,22 @@ interface MenuItem {
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuComponent implements OnInit {
+  private _isSidebarOpened = true;
+
   @Input()
+  set isSidebarOpened(value: boolean) {
+    this._isSidebarOpened = value;
+    console.log('MenuComponent - isSidebarOpened setter called:', value);
+  }
+
+  get isSidebarOpened(): boolean {
+    return this._isSidebarOpened;
+  }
+
   @HostBinding('class.opened')
-  isSidebarOpened = true;
+  get isOpened(): boolean {
+    return this._isSidebarOpened;
+  }
 
   readonly items: MenuItem[] = [
     {
@@ -58,13 +71,8 @@ export class MenuComponent implements OnInit {
         { title: 'What "On-Chain" Means', path: '/start-here/on-chain-meaning' },
         { title: 'Tokens & Addresses', path: '/start-here/tokens-addresses' },
         { title: 'Use Cases', path: '/start-here/use-cases' },
-        { title: 'Web3 Glossary', path: '/start-here/web3-glossary' },
         { title: 'Where People Lose Money', path: '/start-here/losing-money' },
         { title: 'Trading Foundations', path: '/trading-foundations' },
-        { title: 'Set Up Wallet', path: '/start-here/set-up-wallet' },
-        { title: 'Safety Checklist', path: '/start-here/safety-checklist' },
-        { title: 'First Transaction', path: '/start-here/first-tx' },
-        { title: 'Set Up Analytics', path: '/start-here/set-up-analytics' },
       ],
     },
     {

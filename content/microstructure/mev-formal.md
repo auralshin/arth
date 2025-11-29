@@ -1,25 +1,21 @@
-### MEV More Formally
+### MEV Formally
 
-MEV More Formally anchors the Microstructure. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Gas & Mempool, Orderbooks vs AMMs | Tags: mev, optimisation, microstructure, auctions
 
-#### Why it matters
-- Frame the real-world problems mev more formally addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with mev, formal.
-- Document integration risks, governance constraints, and user experience trade-offs tied to mev more formally.
+MEV Formally looks at maximal extractable value as an optimisation problem. Given a set of pending and potential transactions and control over ordering, inclusion, and censorship, a block builder faces a choice of which sequence yields the greatest value according to some objective, often fee revenue plus direct trading profits.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind mev more formally.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+This perspective treats a block as a combinatorial object. Each transaction changes state and affects the profitability of including others. Some combinations unlock arbitrage or liquidations; others conflict or fail. The builder searches over bundles and permutations to identify sequences that extract value from price discrepancies, liquidity conditions, and protocol rules.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of mev, formal?
-- How do unit economics or incentive loops change when mev more formally scales?
-- Which edge cases have tripped up teams shipping mev more formally before?
+Formulating MEV in this way clarifies what counts as MEV. The key element is privileged influence over ordering or inclusion. Arbitrage performed by ordinary users without special ordering control is simply trading. The same arbitrage performed by a block builder who can reorder competing trades to capture profit becomes MEV.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+The optimisation lens also highlights trade offs between private and social value. Some forms of MEV align incentives and support healthy markets, such as closing mispricings and executing liquidations that keep protocols solvent. Others primarily transfer value from ordinary users to sophisticated actors, as in aggressive sandwiches or latency games around oracle updates.
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+---
+
+#### See Also
+
+* [MEV Overview](/building-blocks/mev-overview)
+* [Transaction Ordering & MEV](/transaction-ordering-mev)
+* [Statistical Modeling](/transaction-ordering-mev/statistical-modeling)
+
+---

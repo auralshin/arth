@@ -1,25 +1,19 @@
-### Rolling Windows and Moving Averages
+### Rolling Windows
 
-Rolling Windows and Moving Averages anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Sampling, Returns | Tags: time-series, estimation, rolling, volatility, metrics
 
-#### Why it matters
-- Frame the real-world problems rolling windows and moving averages addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with rolling, windows.
-- Document integration risks, governance constraints, and user experience trade-offs tied to rolling windows and moving averages.
+Rolling windows are moving subsets of data used to compute time-varying statistics. Instead of using the entire sample to estimate a single volatility or mean, a rolling approach computes these quantities over recent periods, updating them as new data arrives and old data leaves the window.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind rolling windows and moving averages.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+This technique highlights how metrics evolve over time. Rolling volatility reveals clusters of high and low risk. Rolling Sharpe ratios show how performance changes across regimes. Rolling correlations show when diversification benefits weaken or strengthen.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of rolling, windows?
-- How do unit economics or incentive loops change when rolling windows and moving averages scales?
-- Which edge cases have tripped up teams shipping rolling windows and moving averages before?
+In DeFi, rolling windows are natural in dashboards and risk monitors. They align with how protocols and traders experience markets day by day. Window choice is a key parameter: short windows react quickly but are noisy, while long windows are smoother but slower to reflect new conditions.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Volatility](/quant-math/volatility)
+* [Sharpe Ratio](/quant-math/sharpe)
+* [Drawdown](/quant-math/drawdown)
+
+---

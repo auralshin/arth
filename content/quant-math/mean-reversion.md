@@ -1,25 +1,19 @@
-### Mean-Reverting Processes
+### Mean Reversion
 
-Mean-Reverting Processes anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Autocorrelation, Random Walks | Tags: mean-reversion, time-series, signals, regimes
 
-#### Why it matters
-- Frame the real-world problems mean-reverting processes addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with mean, reversion.
-- Document integration risks, governance constraints, and user experience trade-offs tied to mean-reverting processes.
+Mean reversion describes processes that tend to move back toward a long run average or equilibrium level. After an extreme move, the process exhibits a tendency to drift back, rather than wandering away indefinitely as in a pure random walk.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind mean-reverting processes.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Mathematical models of mean reversion include discrete time autoregressive processes and continuous time Ornstein Uhlenbeck dynamics. These models introduce a pull toward a central value, with strength determined by a reversion speed parameter. Noise still drives fluctuations, but large deviations are less persistent on average.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of mean, reversion?
-- How do unit economics or incentive loops change when mean-reverting processes scales?
-- Which edge cases have tripped up teams shipping mean-reverting processes before?
+In DeFi markets, mean reversion ideas appear in pairs trading, funding rate normalisation, and some volatility strategies. Identifying when mean reversion is likely versus when trends dominate is an empirical question, and regime switching is common. Risk management for mean reverting strategies must account for the possibility of structural shifts where the effective mean changes.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Autocorrelation](/quant-math/autocorrelation)
+* [Random Walks](/quant-math/random-walks)
+* [Signals – Momentum vs Mean Reversion](/signals/momentum-vs-mean-reversion)
+
+---

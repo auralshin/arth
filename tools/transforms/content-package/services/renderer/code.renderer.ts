@@ -54,6 +54,13 @@ export function applyCodeRenderer(renderer: Renderer) {
       );
       return escapeAts(escapeBrackets(result));
     }
+
+    // Special handling for formula blocks - render as div instead of code block
+    if (language === 'formula') {
+      // Don't use code renderer, create custom HTML for formulas
+      return `<pre class="language-formula"><div class="formula-content">${code}</div></pre>`;
+    }
+
     let output: string = originalCodeRenderer.call(
       renderer,
       code,

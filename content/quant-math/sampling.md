@@ -1,25 +1,19 @@
-### Sampling, Estimation, and Confidence Intervals
+### Sampling
 
-Sampling, Estimation, and Confidence Intervals anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Random Variables, Expectation & Variance | Tags: statistics, sampling, estimation, data, backtesting
 
-#### Why it matters
-- Frame the real-world problems sampling, estimation, and confidence intervals addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with sampling.
-- Document integration risks, governance constraints, and user experience trade-offs tied to sampling, estimation, and confidence intervals.
+Sampling describes how data points are collected from an underlying process and how those samples are used to estimate properties of that process. For time series such as prices or returns, sampling frequency and method directly shape the statistics that are observed.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind sampling, estimation, and confidence intervals.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Estimators such as sample mean and sample variance use finite samples to approximate expectations and variances. Their accuracy depends on sample size, dependence structure, and the presence of outliers. Biased sampling, such as ignoring periods of extreme volatility or failing to record failed transactions, leads to distorted conclusions.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of sampling?
-- How do unit economics or incentive loops change when sampling, estimation, and confidence intervals scales?
-- Which edge cases have tripped up teams shipping sampling, estimation, and confidence intervals before?
+In DeFi, sampling choices include bar sizes for candles, aggregation across chains or pools, and selection of intervals for funding or liquidation statistics. Seemingly small decisions, such as using daily versus hourly returns, can produce different volatility and risk estimates, especially for assets with heavy tails or clustered volatility.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [LLN & CLT](/quant-math/lln-clt)
+* [Rolling Windows](/quant-math/rolling-windows)
+* [Returns](/quant-math/returns)
+
+---

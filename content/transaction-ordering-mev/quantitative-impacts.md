@@ -1,27 +1,23 @@
-## Quantitative Impacts & Modeling
+### Quantitative Impacts
 
-Searchers and protocol designers rely on quantitative models to estimate MEV profit, user cost, and welfare
-redistribution. This section covers the core math behind auctions, latency advantages, and social utility.
+> info **Metadata** Level: Advanced | Prerequisites: Slippage, Returns, MEV Taxonomy | Tags: mev, measurement, cost, metrics, lp
 
-### Gas auctions and bidding
+Quantitative analysis of MEV focuses on measuring how much value is extracted, from whom, and under which market conditions. It turns abstract discussions of fairness and efficiency into concrete numbers: basis points of slippage, share of LP returns lost to arbitrage, or fraction of fees captured by block level actors.
 
-Gas markets resemble first-price auctions with endogenous block space. Expected clearing prices depend on
-searcher competition, bundle profitability, and validator policies. Modeling involves equilibrium analysis and
-historical mempool data.
+At the trade level, costs can be decomposed into explicit fees, baseline price impact given liquidity, and additional losses attributable to adversarial ordering, such as sandwiches. Comparing observed execution prices to counterfactual benchmarks, such as best available price in absence of front running, reveals MEV related costs.
 
-### Latency games
+For LPs, analysis examines how much of the rebalancing and price alignment work is compensated by fees versus lost to arbitrageurs with ordering advantage. The balance between LP returns, arbitrage profits, and protocol fees determines whether providing liquidity remains attractive over time.
 
-Milliseconds of latency advantage can translate into consistent edge. Queueing theory models arrival processes
-and success probabilities for competing bundles, while network simulations quantify benefits of specialized
-infrastructure.
+At the system level, metrics aggregate MEV across blocks, markets, or time periods. These include total extractable value, realised MEV captured by different actor classes, and correlations between MEV intensity and volatility or liquidity. Scenario analysis considers how changes in protocol design, fee structures, or ordering rules would shift these quantities.
 
-### Slippage and price impact
+Quantitative impacts also feed back into design. Protocols can simulate the introduction of batch auctions, different fee tiers, or new routing rules to estimate their effect on user costs and MEV distribution before deployment.
 
-MEV profits often derive from predictable slippage in AMMs. Linking invariant equations to probabilistic order
-flow lets analysts forecast profits and user loss. Monte Carlo scenarios stress test how liquidity and volatility
-shape outcomes.
+---
 
-### Fairness and welfare
+#### See Also
 
-Welfare analysis compares user cost, validator revenue, and searcher profit. Metrics such as surplus distribution
-or fairness curves guide protocol design decisions and regulatory debates.
+* [Statistical Modeling](/transaction-ordering-mev/statistical-modeling)
+* [Slippage](/microstructure/slippage)
+* [Liquidity Pools](/building-blocks/liquidity-pools)
+
+---

@@ -1,25 +1,19 @@
-### Returns and Log-Returns
+### Returns
 
-Returns and Log-Returns anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: All | Prerequisites: Basic algebra | Tags: returns, prices, performance, time-series
 
-#### Why it matters
-- Frame the real-world problems returns and log-returns addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with returns.
-- Document integration risks, governance constraints, and user experience trade-offs tied to returns and log-returns.
+Returns measure the relative change in value of an asset or portfolio over time. Simple returns compare end value to starting value over a period. Log returns take logarithms of price ratios, which makes aggregation over time additive at the cost of some interpretive complexity.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind returns and log-returns.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+The choice between simple and log returns affects both statistical properties and intuition. Simple returns are more direct and align with realised profit or loss on a single trade. Log returns are convenient for modelling and compounding, especially when analysing many periods and processes with multiplicative structure.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of returns?
-- How do unit economics or incentive loops change when returns and log-returns scales?
-- Which edge cases have tripped up teams shipping returns and log-returns before?
+In DeFi, returns apply not only to spot positions but also to LP shares, yield strategies, and leveraged structures. Properly defining the return of a position that involves collateral, borrowed funds, and rewards requires clear accounting of all cash flows and valuation points.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Volatility](/quant-math/volatility)
+* [Sharpe Ratio](/quant-math/sharpe)
+* [Drawdown](/quant-math/drawdown)
+
+---

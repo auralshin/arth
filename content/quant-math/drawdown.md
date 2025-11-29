@@ -1,25 +1,19 @@
-### Maximum Drawdown and Recovery
+### Drawdown
 
-Maximum Drawdown and Recovery anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: All | Prerequisites: Returns, Basic time-series | Tags: drawdown, risk, path-dependence, performance
 
-#### Why it matters
-- Frame the real-world problems maximum drawdown and recovery addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with drawdown.
-- Document integration risks, governance constraints, and user experience trade-offs tied to maximum drawdown and recovery.
+Drawdown measures declines from previous peaks in a portfolio or price series. Maximum drawdown is the largest peak to trough fall observed over a period. Unlike volatility, which treats upside and downside symmetrically, drawdown focuses on how bad things can get along the path, regardless of eventual recovery.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind maximum drawdown and recovery.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Drawdown is path dependent. Two return sequences with the same final result and volatility can have very different drawdown histories. Long periods of choppy sideways behaviour, repeated small losses, or sharp crashes can all produce significant drawdowns, with different psychological and practical implications.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of drawdown?
-- How do unit economics or incentive loops change when maximum drawdown and recovery scales?
-- Which edge cases have tripped up teams shipping maximum drawdown and recovery before?
+In DeFi, drawdown matters for margin, liquidation risk, and operational resilience. Strategies that look attractive on average may still pass through drawdowns that exceed risk tolerance or collateral capacity. Monitoring drawdowns over multiple time scales helps align leverage and position sizing with realistic worst case paths.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Sharpe Ratio](/quant-math/sharpe)
+* [VaR & CVaR](/quant-math/var-cvar)
+* [Position Sizing](/quant-math/position-sizing)
+
+---

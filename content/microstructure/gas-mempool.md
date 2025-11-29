@@ -1,25 +1,23 @@
-### Gas, Priority Fees, and Mempool Basics
+### Gas & Mempool
 
-Gas, Priority Fees, and Mempool Basics anchors the Microstructure. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: What Is DeFi, Execution Environments | Tags: gas, mempool, fees, ordering, microstructure
 
-#### Why it matters
-- Frame the real-world problems gas, priority fees, and mempool basics addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with gas, mempool.
-- Document integration risks, governance constraints, and user experience trade-offs tied to gas, priority fees, and mempool basics.
+Gas is the metering system for computation and storage on a chain. Every transaction specifies an upper bound on gas consumption and a fee rate that it is willing to pay. Block producers select transactions and pack them into blocks, aiming to maximise fee revenue subject to gas limits and protocol rules.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind gas, priority fees, and mempool basics.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+The mempool is the staging area for pending transactions. When a user broadcasts a transaction, it enters the mempool of nodes, where it competes with other transactions. The state of the mempool at a given moment is a snapshot of intent: swaps waiting to execute, liquidations queued up, arbitrage bundles, and position adjustments.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of gas, mempool?
-- How do unit economics or incentive loops change when gas, priority fees, and mempool basics scales?
-- Which edge cases have tripped up teams shipping gas, priority fees, and mempool basics before?
+Gas fees and mempool structure determine who gets executed first, which trades are dropped during congestion, and how MEV searchers respond to opportunities. Transactions with higher effective fees are more likely to be included earlier, but sophisticated arrangements between searchers, builders, and validators can override simple bidding rules.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+During quiet periods, the mempool may be thin and gas fees low, giving most transactions similar inclusion times. During volatile episodes, the mempool can become congested, with surging gas prices, long delays for low fee transactions, and intense competition among arbitrage and liquidation flows. The resulting execution uncertainty and cost materially affect strategy performance.
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+From a microstructure viewpoint, gas and the mempool are part of the market. They shape what is feasible in real time, which strategies remain viable, and how value is split between end users and block level actors.
+
+---
+
+#### See Also
+
+* [Transaction Ordering & MEV](/transaction-ordering-mev)
+* [MEV Overview](/building-blocks/mev-overview)
+* [Latency Risk](/microstructure/latency-risk)
+
+---

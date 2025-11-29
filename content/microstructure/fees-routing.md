@@ -1,25 +1,23 @@
-### Fees, Rebates, and Routing
+### Fees & Routing
 
-Fees, Rebates, and Routing anchors the Microstructure. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: AMMs 101, Slippage | Tags: fees, routing, aggregators, execution, liquidity
 
-#### Why it matters
-- Frame the real-world problems fees, rebates, and routing addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with fees, routing.
-- Document integration risks, governance constraints, and user experience trade-offs tied to fees, rebates, and routing.
+Fees and routing determine how much a trade costs beyond pure price impact. Protocols charge explicit fees on swaps or trades, which are often split between LPs, protocol treasuries, and affiliates. Networks also charge gas fees for transaction execution. Routing refers to the path an order takes across pools and venues to obtain an outcome.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind fees, rebates, and routing.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+In AMMs, each swap applies a fixed or tiered fee on the input or output amount. These fees accumulate in the pool and are paid to LPs in proportion to their share, sometimes with a fraction diverted to protocol governance. Variable fee models adjust fee levels in response to volatility or imbalances, aiming to better compensate LPs and absorb shocks.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of fees, routing?
-- How do unit economics or incentive loops change when fees, rebates, and routing scales?
-- Which edge cases have tripped up teams shipping fees, rebates, and routing before?
+On orderbook based DEXs, explicit trading fees are charged per execution and may differ by maker and taker. Maker rebates and taker fees shape incentives to provide or consume liquidity, and they influence where tight spreads emerge.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+Routing engines and aggregators observe prices and liquidity across multiple pools and books and construct multi hop paths for trades. A route might split a large swap into smaller pieces across several pools to reduce slippage, or it might use intermediate tokens to pass through deeper liquidity. The trade off is additional gas cost from extra calls and approvals.
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+For users and strategies, effective cost is a combination of explicit fees, implicit slippage, gas, and possible MEV effects such as sandwiching. Protocol and product design often focuses on shifting some of this cost structure: internalising arbitrage to benefit LPs, rebating gas, or co locating routing logic with LP incentives.
+
+---
+
+#### See Also
+
+* [Slippage](/microstructure/slippage)
+* [Gas & Mempool](/microstructure/gas-mempool)
+* [MEV Overview](/building-blocks/mev-overview)
+
+---

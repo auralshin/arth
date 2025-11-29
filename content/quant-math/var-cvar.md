@@ -1,25 +1,19 @@
-### Value at Risk (VaR) and CVaR
+### VaR & CVaR
 
-Value at Risk (VaR) and CVaR anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Expectation & Variance, Sampling, Drawdown | Tags: risk, tails, var, cvar, loss-distribution
 
-#### Why it matters
-- Frame the real-world problems value at risk (var) and cvar addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with var, cvar.
-- Document integration risks, governance constraints, and user experience trade-offs tied to value at risk (var) and cvar.
+Value at Risk and Conditional Value at Risk focus on the tail of the loss distribution. Value at Risk at a given confidence level is a threshold loss that is exceeded only with a specified small probability over a fixed horizon. Conditional Value at Risk, also called expected shortfall, is the average loss given that this threshold has been breached.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind value at risk (var) and cvar.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+VaR provides a percentile view of potential losses but does not describe what happens beyond that point. CVaR extends the picture by summarising the severity of worse cases. Both measures can be computed from historical data, parametric models, or simulations.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of var, cvar?
-- How do unit economics or incentive loops change when value at risk (var) and cvar scales?
-- Which edge cases have tripped up teams shipping value at risk (var) and cvar before?
+In DeFi, VaR and CVaR can be applied to portfolios containing spot tokens, LP positions, borrowed funds, and derivative exposures. The presence of jumps, liquidation events, and sharply changing liquidity means that tail behaviour is often more complex than simple normal models assume, and scenario based or simulation based approaches become important.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Drawdown](/quant-math/drawdown)
+* [Volatility](/quant-math/volatility)
+* [Simulation – Scenarios](/simulation/scenarios)
+
+---

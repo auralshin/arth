@@ -1,25 +1,19 @@
-### Expectation and Variance
+### Expectation & Variance
 
-Expectation and Variance anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Random Variables | Tags: math, expectation, variance, risk, dispersion
 
-#### Why it matters
-- Frame the real-world problems expectation and variance addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with expectation, variance.
-- Document integration risks, governance constraints, and user experience trade-offs tied to expectation and variance.
+Expectation and variance are the basic numerical summaries of a random variable. Expectation captures the average value in the long run, while variance measures how widely outcomes tend to spread around that average. For a return distribution, the expectation relates to average growth, and the variance relates to typical fluctuation size.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind expectation and variance.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Expectation is linear, which means the expectation of a sum is the sum of expectations. This property is the backbone of portfolio analysis, allowing total expected return to be expressed as a weighted combination of individual asset expectations. Variance is not linear, but it can still be decomposed into contributions from individual risks and their interactions, especially when covariance is introduced.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of expectation, variance?
-- How do unit economics or incentive loops change when expectation and variance scales?
-- Which edge cases have tripped up teams shipping expectation and variance before?
+In DeFi, expectations and variances appear in performance evaluation, risk limits, and model calibration. Even when distributions are far from normal, these quantities provide a first-order view of central tendency and dispersion, and they feed into ratios such as Sharpe and Sortino.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Random Variables](/quant-math/random-variables)
+* [Covariance](/quant-math/covariance)
+* [Volatility](/quant-math/volatility)
+
+---

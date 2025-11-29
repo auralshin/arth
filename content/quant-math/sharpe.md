@@ -1,25 +1,19 @@
 ### Sharpe Ratio
 
-Sharpe Ratio anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Returns, Volatility | Tags: performance, sharpe, risk-adjusted-return
 
-#### Why it matters
-- Frame the real-world problems sharpe ratio addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with sharpe.
-- Document integration risks, governance constraints, and user experience trade-offs tied to sharpe ratio.
+The Sharpe ratio measures excess return per unit of volatility. It compares the average return of a strategy above a reference rate, such as a risk free yield, to the standard deviation of those returns. A higher Sharpe ratio indicates higher average compensation for each unit of risk taken, as measured by volatility.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind sharpe ratio.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+The metric assumes that volatility is a reasonable proxy for risk and that returns behave in a relatively stable manner over the sample period. Heavy tails, skew, and time-varying volatility can distort interpretation. A high Sharpe ratio over a short or favourable period does not guarantee robustness.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of sharpe?
-- How do unit economics or incentive loops change when sharpe ratio scales?
-- Which edge cases have tripped up teams shipping sharpe ratio before?
+In DeFi, Sharpe ratios are often computed for LP strategies, yield farms, and perp trading systems. Interpreting these ratios responsibly involves checking sample length, drawdown history, and sensitivity to different measurement horizons.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Sortino Ratio](/quant-math/sortino)
+* [Drawdown](/quant-math/drawdown)
+* [VaR & CVaR](/quant-math/var-cvar)
+
+---

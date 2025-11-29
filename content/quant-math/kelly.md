@@ -1,25 +1,19 @@
-### Kelly Criterion (Optimal f)
+### Kelly Criterion
 
-Kelly Criterion (Optimal f) anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Expectation & Variance, Returns | Tags: kelly, bet-sizing, growth, risk
 
-#### Why it matters
-- Frame the real-world problems kelly criterion (optimal f) addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with kelly.
-- Document integration risks, governance constraints, and user experience trade-offs tied to kelly criterion (optimal f).
+The Kelly criterion describes how to size repeated bets to maximise long run exponential growth of wealth under specific assumptions. For simple binary bets with known probabilities and payoffs, it yields a closed form fraction of capital to allocate. For more complex distributions, the principle generalises by maximising expected log utility.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind kelly criterion (optimal f).
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Kelly optimal sizing is mathematically appealing but often aggressive in practice. It assumes precise knowledge of edge and distribution, independence of bets, and infinite horizon growth objectives. Errors in edge estimation can lead to over sizing and large drawdowns.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of kelly?
-- How do unit economics or incentive loops change when kelly criterion (optimal f) scales?
-- Which edge cases have tripped up teams shipping kelly criterion (optimal f) before?
+In DeFi, Kelly style reasoning appears in leverage choices for strategies with perceived edge, such as basis trades, LP provisioning, or funding capture. Practitioners often scale down from full Kelly to partial fractions to trade off expected growth against drawdown risk and estimation uncertainty.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Position Sizing](/quant-math/position-sizing)
+* [Optimization](/quant-math/optimization)
+* [Drawdown](/quant-math/drawdown)
+
+---

@@ -1,25 +1,19 @@
-### Sortino Ratio and Downside Risk
+### Sortino Ratio
 
-Sortino Ratio and Downside Risk anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Sharpe Ratio, Returns | Tags: performance, downside-risk, sortino, risk-adjusted-return
 
-#### Why it matters
-- Frame the real-world problems sortino ratio and downside risk addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with sortino.
-- Document integration risks, governance constraints, and user experience trade-offs tied to sortino ratio and downside risk.
+The Sortino ratio refines the Sharpe ratio by focusing on downside volatility rather than total volatility. It compares average excess return to the standard deviation of negative returns or returns below a target level. Upside moves do not contribute to the risk measure.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind sortino ratio and downside risk.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+This perspective aligns more closely with risk concerns that focus on losses rather than fluctuations in general. Two strategies can have similar total volatility but very different downside profiles; Sortino distinguishes between them by penalising only harmful deviations.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of sortino?
-- How do unit economics or incentive loops change when sortino ratio and downside risk scales?
-- Which edge cases have tripped up teams shipping sortino ratio and downside risk before?
+For DeFi portfolios that may experience occasional sharp drawdowns or liquidations, Sortino can provide a more informative view than Sharpe alone. However, it shares similar sensitivities to sample length and regime changes, and it relies on a chosen target or threshold for defining downside.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Sharpe Ratio](/quant-math/sharpe)
+* [Drawdown](/quant-math/drawdown)
+* [VaR & CVaR](/quant-math/var-cvar)
+
+---

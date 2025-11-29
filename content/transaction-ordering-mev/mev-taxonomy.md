@@ -1,29 +1,23 @@
-## MEV Taxonomy & Examples
+### MEV Taxonomy
 
-Miner/Maximal Extractable Value (MEV) covers any profit derived from reordering, inserting, or censoring
-transactions. Understanding canonical patterns helps quantify opportunity size and detect potentially harmful
-behavior.
+> info **Metadata** Level: Advanced | Prerequisites: MEV Overview, Orderbooks vs AMMs | Tags: mev, taxonomy, arbitrage, liquidations, sandwiches
 
-### Arbitrage
+MEV Taxonomy organises different MEV strategies into categories based on where value originates and how it is extracted. A structured view clarifies which forms provide useful services to markets and protocols and which primarily degrade user outcomes.
 
-Arbitrageurs exploit price gaps across AMMs, centralized exchanges, and lending markets. Bundles atomically
-trade across venues, ensuring profit if the sequence executes. Profitability depends on gas costs, slippage,
-and competition from other searchers.
+Price alignment strategies include arbitrage between pools, exchanges, and chains. These trades close price gaps, synchronise markets, and often reduce long run inefficiencies, even though they direct profits to specialised actors. Liquidation strategies monitor lending and derivatives protocols for under collateralised positions, executing liquidations that protect depositors and counterparties.
 
-### Sandwich attacks
+Adversarial strategies target ordinary users. Sandwich attacks surround a victim swap with front and back trades that worsen execution for the victim and capture surplus for the attacker. Back running of large trades exploits predictable state changes, such as follow up price moves or oracle adjustments. Censorship or delay of competing transactions can be used to secure exclusive access to profitable flows.
 
-Sandwiches place a buy before a victim swap and a sell after, capturing slippage. Mitigations include private
-order flow, slippage limits, and off-chain RFQ systems. Quantifying expected profit requires modeling pool
-depth, victim trade size, and gas bidding wars.
+Governance related MEV includes manipulations of voting, proposal timing, or on chain auctions. Cross domain MEV spans chains, rollups, or layers, combining messaging, bridges, and ordering to extract value not visible from a single domain.
 
-### Liquidations and forced trades
+A taxonomy is not static. New protocol designs open novel MEV surfaces, and mitigations in one category can shift activity into others. Keeping the classification updated helps track where attention and research effort should focus.
 
-Under-collateralized loans trigger liquidators to repay debt in exchange for collateral at a discount.
-Competition is fierce; protocols design Dutch auctions or sealed-bid systems to maximize recovered value while
-keeping incentives aligned.
+---
 
-### Advanced patterns
+#### See Also
 
-Backrunning oracle updates, time-bandit attacks on previous blocks, and NFT sniping expand MEV beyond simple
-swaps. Each requires specialized infrastructure, including mempool monitoring and customized simulators for
-predicting post-trade state.
+* [Transaction Ordering & MEV](/transaction-ordering-mev)
+* [Mitigation & Defenses](/transaction-ordering-mev/mitigation-and-defenses)
+* [Quantitative Impacts](/transaction-ordering-mev/quantitative-impacts)
+
+---

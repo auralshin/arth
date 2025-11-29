@@ -1,25 +1,19 @@
-### Volatility and Annualization
+### Volatility
 
-Volatility and Annualization anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Returns, Expectation & Variance | Tags: volatility, dispersion, risk, time-series
 
-#### Why it matters
-- Frame the real-world problems volatility and annualization addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with volatility.
-- Document integration risks, governance constraints, and user experience trade-offs tied to volatility and annualization.
+Volatility summarises the typical magnitude of fluctuations in returns. Statistically, it is often defined as the standard deviation of returns over a chosen horizon, sometimes annualised to ease comparison across assets and strategies. High volatility indicates wide swings; low volatility indicates relatively stable behaviour.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind volatility and annualization.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+Volatility is path dependent and sensitive to sampling choices. Short horizons capture fine-grained noise and microstructure effects, while longer horizons average over more variation. Volatility also tends to cluster in time, rising during stressed periods and receding during calm ones, which creates challenges for models that assume constant variance.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of volatility?
-- How do unit economics or incentive loops change when volatility and annualization scales?
-- Which edge cases have tripped up teams shipping volatility and annualization before?
+In DeFi, volatility affects liquidation thresholds, margin requirements, option pricing, and risk limits. LP strategies and leveraged perps are especially sensitive to volatility, both through realised PnL and through indirect effects such as funding and slippage.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Returns](/quant-math/returns)
+* [Autocorrelation](/quant-math/autocorrelation)
+* [VaR & CVaR](/quant-math/var-cvar)
+
+---

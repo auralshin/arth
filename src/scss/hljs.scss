@@ -78,6 +78,24 @@ pre[class*='language-'] {
   border: 0;
 }
 
+/* Formula blocks - mathematical notation */
+pre.language-formula {
+  background: var(--background-2dp);
+  padding: 20px 30px;
+  margin: 20px 0;
+  border-left: 4px solid var(--primary-color, #e0234e);
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+
+  .formula-content {
+    color: var(--text-color);
+    font-family: 'Georgia', 'Cambria Math', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 18px;
+  }
+}
+
 /* Inline code */
 :not(pre) > code[class*='language-'] {
   padding: 0.15em 0.2em 0.05em;

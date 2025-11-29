@@ -1,25 +1,19 @@
-### Covariance and Correlation
+### Covariance
 
-Covariance and Correlation anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Intermediate | Prerequisites: Expectation & Variance | Tags: math, covariance, correlation, portfolios, dependence
 
-#### Why it matters
-- Frame the real-world problems covariance and correlation addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with covariance.
-- Document integration risks, governance constraints, and user experience trade-offs tied to covariance and correlation.
+Covariance measures how two random variables move together. Positive covariance indicates that high values of one variable tend to coincide with high values of the other, while negative covariance indicates opposite co-movements. Correlation is a normalised version of covariance that lies between minus one and plus one, making comparisons easier.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind covariance and correlation.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+In portfolio terms, covariance describes how asset returns interact. Portfolio variance depends not only on individual volatilities but also on the covariances between assets. Low or negative covariance can reduce overall risk without necessarily sacrificing expected return.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of covariance?
-- How do unit economics or incentive loops change when covariance and correlation scales?
-- Which edge cases have tripped up teams shipping covariance and correlation before?
+For DeFi portfolios holding tokens, LP positions, and derivative exposures, covariance captures how these components respond to market moves together. Highly correlated positions behave like a single large bet, while less correlated components can provide diversification even within the same ecosystem.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Expectation & Variance](/quant-math/expectation-variance)
+* [Mean-Variance](/quant-math/mean-variance)
+* [Random Walks](/quant-math/random-walks)
+
+---

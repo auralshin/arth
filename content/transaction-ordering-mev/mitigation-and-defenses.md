@@ -1,27 +1,23 @@
-## Mitigation & Protocol Defenses
+### Mitigation & Defenses
 
-MEV is a structural feature of public blockchains, but protocol design can redirect value flows or soften
-harmful externalities. This section surveys popular mitigation strategies and their trade-offs.
+> info **Metadata** Level: Advanced | Prerequisites: MEV Taxonomy, Transaction Ordering & MEV | Tags: mev, mitigation, defenses, auctions, privacy
 
-### PBS and private relays
+Mitigation and defenses address MEV not by pretending it does not exist, but by reshaping how and by whom it is captured. The aim is to reduce harmful forms of MEV, align extraction with useful services, and protect ordinary users from worst case outcomes.
 
-Proposer-Builder Separation (PBS) and MEV-Boost introduce competition among block builders while letting
-validators outsource ordering. Private relays reduce mempool leakage yet centralize power and introduce
-censorship risks.
+Design space includes user level tools, protocol level mechanisms, and base layer changes. User level tools route sensitive orders through private channels that bypass public mempools, reducing exposure to sandwiches and some forms of front running. Protocol level mechanisms internalise arbitrage and liquidation flows, routing them through contracts that share value with LPs or treasuries instead of external searchers.
 
-### Intent systems and privacy
+Batch auctions and frequent call markets execute orders in discrete intervals, with uniform clearing prices. This breaks many single transaction ordering games by removing a strict timeline within a batch. Commit and reveal schemes and encrypted mempools hide transaction contents until ordering is fixed, blocking strategies that rely on inspecting real time intent.
 
-Intent-centric protocols (CowSwap, Anoma, SUAVE) let users specify desired outcomes instead of raw transactions.
-Matchmakers or solvers fulfill intents, aiming to keep bids private until settlement to prevent frontrunning.
+At the base layer, proposer builder separation and specialised block auctions attempt to compartmentalise MEV while making its markets more transparent. Restaking and shared security frameworks can also be used to build MEV aware infrastructure, although they introduce their own risks.
 
-### Fair ordering and latency bands
+No single mitigation eliminates MEV. Each approach shifts incentives, sometimes reducing certain strategies while encouraging others. Analysis focuses on how a combination of techniques changes the distribution of costs and benefits across users, protocols, and block level actors.
 
-Ideas like Frequent Batch Auctions, time-band approaches, and randomized ordering attempt to reduce harmful MEV
-by batching or partially obfuscating arrival times. Implementations must balance fairness with throughput and
-user expectations about inclusion latency.
+---
 
-### Redistribution vs elimination
+#### See Also
 
-Many mitigations redistribute value rather than remove it. Understanding who captures residual MEV—users,
-builders, validators, or governance token holders—helps evaluate whether a mechanism aligns incentives while
-preserving security budgets.
+* [MEV Taxonomy](/transaction-ordering-mev/mev-taxonomy)
+* [How Blocks Form](/transaction-ordering-mev/how-blocks-form)
+* [Quantitative Impacts](/transaction-ordering-mev/quantitative-impacts)
+
+---

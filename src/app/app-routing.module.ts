@@ -17,11 +17,6 @@ import { TokensAddressesComponent } from './homepage/pages/start-here/tokens-add
 import { UseCasesComponent } from './homepage/pages/start-here/use-cases/use-cases.component';
 import { LosingMoneyComponent } from './homepage/pages/start-here/losing-money/losing-money.component';
 import { HowToReadComponent as StartHereHowToReadComponent } from './homepage/pages/start-here/how-to-read/how-to-read.component';
-import { FirstTxComponent } from './homepage/pages/start-here/first-tx/first-tx.component';
-import { SafetyChecklistComponent } from './homepage/pages/start-here/safety-checklist/safety-checklist.component';
-import { SetUpAnalyticsComponent } from './homepage/pages/start-here/set-up-analytics/set-up-analytics.component';
-import { SetUpWalletComponent } from './homepage/pages/start-here/set-up-wallet/set-up-wallet.component';
-import { Web3GlossaryComponent } from './homepage/pages/start-here/web3-glossary/web3-glossary.component';
 import { TradingFoundationsComponent } from './homepage/pages/trading-foundations/trading-foundations.component';
 import { Tokens101Component } from './homepage/pages/building-blocks/tokens-101/tokens-101.component';
 import { TokenStandardsComponent } from './homepage/pages/building-blocks/token-standards/token-standards.component';
@@ -222,11 +217,6 @@ const routes: Routes = [
         { path: 'start-here/use-cases', component: UseCasesComponent },
         { path: 'start-here/losing-money', component: LosingMoneyComponent },
         { path: 'start-here/how-to-read', component: StartHereHowToReadComponent },
-        { path: 'start-here/first-tx', component: FirstTxComponent },
-        { path: 'start-here/safety-checklist', component: SafetyChecklistComponent },
-        { path: 'start-here/set-up-analytics', component: SetUpAnalyticsComponent },
-        { path: 'start-here/set-up-wallet', component: SetUpWalletComponent },
-        { path: 'start-here/web3-glossary', component: Web3GlossaryComponent },
         { path: 'trading-foundations', component: TradingFoundationsComponent },
         { path: 'building-blocks/tokens-101', component: Tokens101Component },
         { path: 'building-blocks/token-standards', component: TokenStandardsComponent },

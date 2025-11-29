@@ -1,25 +1,19 @@
-### Law of Large Numbers and Central Limit Theorem
+### LLN & CLT
 
-Law of Large Numbers and Central Limit Theorem anchors the Quant & Math Toolkit for research teams. Use this page to explain what the topic solves, how it behaves in live systems, and how to evaluate it with production metrics.
+> info **Metadata** Level: Advanced | Prerequisites: Random Variables, Expectation & Variance | Tags: math, probability, convergence, asymptotics
 
-#### Why it matters
-- Frame the real-world problems law of large numbers and central limit theorem addresses for protocol, trading, or tooling teams.
-- Highlight signals, metrics, or models practitioners watch when working with lln, clt.
-- Document integration risks, governance constraints, and user experience trade-offs tied to law of large numbers and central limit theorem.
+The Law of Large Numbers and the Central Limit Theorem explain how averages behave when many independent or weakly dependent observations are combined. The Law of Large Numbers states that sample averages tend to approach the true expectation as the number of observations grows. The Central Limit Theorem describes how suitably scaled sums tend to have approximately normal distributions, even when individual terms are not normal.
 
-#### Starter outline
-1. Foundational concepts: vocabulary, math, and architecture choices behind law of large numbers and central limit theorem.
-1. Implementation patterns and stack diagrams showing where it plugs into DeFi workflows.
-1. Risk and observability checklist: what to monitor, how to measure success, and how to fail safely.
+These results justify treating sample means and other statistics as stable quantities, at least under conditions where independence and identical distributions are reasonable approximations. They underpin confidence intervals, hypothesis tests, and many risk metrics based on historical data.
 
-#### Research prompts
-- What data sets or dashboards best reveal the health of lln, clt?
-- How do unit economics or incentive loops change when law of large numbers and central limit theorem scales?
-- Which edge cases have tripped up teams shipping law of large numbers and central limit theorem before?
+In DeFi analytics, LLN and CLT are often used implicitly when returns are aggregated over time, when Sharpe ratios are estimated from samples, or when backtests assume that average behaviour in the sample is indicative of the future. Understanding the limitations of these theorems is as important as knowing their statements, especially in environments with regime changes and structural breaks.
 
-#### Next steps for the draft
-- Link to complementary primitives or strategies so readers can keep exploring.
-- Add diagrams, equations, or pseudo-code once the narrative scaffolding is ready.
-- Collect production anecdotes or post-mortems to keep the page grounded.
+---
 
-**Note:** Replace these scaffolding notes with full prose, diagrams, and data-backed examples when ready.
+#### See Also
+
+* [Sampling](/quant-math/sampling)
+* [Returns](/quant-math/returns)
+* [Volatility](/quant-math/volatility)
+
+---
