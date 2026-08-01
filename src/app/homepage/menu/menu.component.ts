@@ -1,7 +1,9 @@
 import {
   Component,
+  ElementRef,
   HostBinding,
   Input,
+  NgZone,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -31,7 +33,6 @@ export class MenuComponent implements OnInit {
   @Input()
   set isSidebarOpened(value: boolean) {
     this._isSidebarOpened = value;
-    console.log('MenuComponent - isSidebarOpened setter called:', value);
   }
 
   get isSidebarOpened(): boolean {
@@ -603,24 +604,73 @@ export class MenuComponent implements OnInit {
     },
   ];
 
+  /** Matches the 250ms open/close animation on the sub-nav. */
+  private static readonly EXPAND_ANIMATION_MS = 250;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly host: ElementRef<HTMLElement>,
+    private readonly zone: NgZone,
   ) {}
 
   ngOnInit() {
-    console.log('MenuComponent ngOnInit - items count:', this.items.length);
-    console.log('MenuComponent ngOnInit - isSidebarOpened:', this.isSidebarOpened);
-    console.log(
-      'MenuComponent ngOnInit - HostBinding will apply class.opened:',
-      this.isSidebarOpened,
-    );
-
     this.router.events
       .pipe(filter((ev) => ev instanceof NavigationEnd))
-      .subscribe(() => this.toggleCategory());
+      .subscribe(() => this.onNavigationEnd());
 
     this.toggleCategory();
+  }
+
+  /**
+   * Navigating collapses the previously open section and expands another, which
+   * changes the scroller's content height. The browser then clamps scrollTop and
+   * the sidebar visibly jumps. Hold the scroll position across that reflow, and
+   * only move it if the active link genuinely ended up off-screen.
+   */
+  private onNavigationEnd() {
+    const scroller = this.getScroller();
+    const previousScrollTop = scroller ? scroller.scrollTop : 0;
+
+    this.toggleCategory();
+
+    if (!scroller) {
+      return;
+    }
+
+    this.zone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {
+        scroller.scrollTop = previousScrollTop;
+        // Re-apply once the expand animation has settled, then reveal if needed.
+        setTimeout(() => {
+          scroller.scrollTop = previousScrollTop;
+          this.revealActiveLink(scroller);
+        }, MenuComponent.EXPAND_ANIMATION_MS + 30);
+      });
+    });
+  }
+
+  private getScroller(): HTMLElement | null {
+    return this.host.nativeElement.querySelector('.menu-content');
+  }
+
+  private revealActiveLink(scroller: HTMLElement) {
+    const active = scroller.querySelector<HTMLElement>('a.active');
+    if (!active) {
+      return;
+    }
+
+    const linkTop = active.offsetTop;
+    const linkBottom = linkTop + active.offsetHeight;
+    const viewTop = scroller.scrollTop;
+    const viewBottom = viewTop + scroller.clientHeight;
+
+    // Already visible: leave the scroll exactly where the reader left it.
+    if (linkTop >= viewTop && linkBottom <= viewBottom) {
+      return;
+    }
+
+    scroller.scrollTop = Math.max(0, linkTop - scroller.clientHeight / 3);
   }
 
   // Open only the branches containing the active page; sections now share URL

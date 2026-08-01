@@ -18,66 +18,18 @@ const CONFIG = {
   preferredPort: Number(process.env.PRERENDER_PORT || 4567),
 };
 
-// Routes to prerender - extracted from app-routing.module.ts
-const ROUTES = [
-  '',
-  'landscape-of-defi',
-  'landscape-of-defi/evolution-of-finance',
-  'landscape-of-defi/architecture-of-defi',
-  'landscape-of-defi/economic-premises',
-  'landscape-of-defi/core-math-tools',
-  'landscape-of-defi/metrics-and-analytics-stack',
-  'landscape-of-defi/risk-surfaces',
-  'defi-vs-traditional-finance',
-  'defi-vs-traditional-finance/market-microstructure',
-  'defi-vs-traditional-finance/risk-distribution',
-  'defi-vs-traditional-finance/pricing-and-settlement',
-  'defi-vs-traditional-finance/leverage-and-collateralization',
-  'defi-vs-traditional-finance/liquidity-models',
-  'defi-vs-traditional-finance/data-transparency',
-  'defi-vs-traditional-finance/regulation-and-custody',
-  'transaction-ordering-mev',
-  'transaction-ordering-mev/how-blocks-form',
-  'transaction-ordering-mev/mev-taxonomy',
-  'transaction-ordering-mev/mitigation-and-defenses',
-  'transaction-ordering-mev/quantitative-impacts',
-  'transaction-ordering-mev/mev-beyond-evms',
-  'transaction-ordering-mev/statistical-modeling',
-  'blockchain-execution-environments',
-  'blockchain-execution-environments/evm',
-  'blockchain-execution-environments/solana-svm',
-  'blockchain-execution-environments/move-vm',
-  'blockchain-execution-environments/comparative-benchmarks',
-  'blockchain-execution-environments/quant-engineering',
-  'trading-foundations',
-  'trading-foundations/spot-trading',
-  'trading-foundations/perpetual-futures',
-  'trading-foundations/market-making',
-  'lending-borrowing',
-  'lending-borrowing/interest-rate-models',
-  'lending-borrowing/collateral-math',
-  'lending-borrowing/dynamic-apy',
-  'lending-borrowing/stability-and-systemic-risk',
-  'lending-borrowing/credit-delegation',
-  'staking-restaking-yield',
-  'staking-restaking-yield/proof-of-stake-math',
-  'staking-restaking-yield/restaking-models',
-  'staking-restaking-yield/liquid-staking-derivatives',
-  'staking-restaking-yield/restaking-economics',
-  'staking-restaking-yield/yield-decomposition',
-  'staking-restaking-yield/validator-economics',
-  'quantitative-defi-modeling',
-  'quantitative-defi-modeling/deterministic-simulation-engines',
-  'quantitative-defi-modeling/pnl-metrics',
-  'quantitative-defi-modeling/portfolio-optimization',
-  'quantitative-defi-modeling/scenario-testing',
-  'quantitative-defi-modeling/agent-based-modeling',
-  'quantitative-defi-modeling/oracle-design',
-  'advanced-topics',
-  'math-primer',
-  'tooling-simulation-ecosystem',
-  'meta-modules-capstone',
-];
+// Routes to prerender, parsed from app-routing.module.ts at run time.
+// Derived rather than hardcoded: a manual list silently goes stale when routes
+// change, which yields a prerendered site and search index for pages that no
+// longer exist while omitting every new one.
+const ROUTES = (() => {
+  const routingFile = path.join(__dirname, '..', 'src', 'app', 'app-routing.module.ts');
+  const source = require('fs').readFileSync(routingFile, 'utf8');
+  const found = [...source.matchAll(/path:\s*'([^']*)'/g)]
+    .map((m) => m[1])
+    .filter((r) => r !== '**');
+  return [...new Set(found)];
+})();
 
 // Create HTTP server to serve the dist folder
 function createServer() {

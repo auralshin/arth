@@ -55,3 +55,4 @@ src/app/homepage/pages/**/*.html
 src/assets/pagefind/*
 !src/assets/pagefind/pagefind-overrides.css
 dist/static/pagefind/
+.env*

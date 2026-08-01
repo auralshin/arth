@@ -1,0 +1,39 @@
+# Only dist/ is served (see vercel.json outputDirectory).
+# Everything below is build input or tooling and must not be uploaded.
+
+# Build caches and dependencies — .angular alone is ~1GB
+.angular
+node_modules
+.git
+
+# Sources compiled into dist/ at build time
+src
+content
+tools
+assets
+
+# Repo tooling and docs
+.husky
+.vscode
+*.md
+!README.md
+.editorconfig
+.prettierrc
+.commitlintrc.json
+.browserslistrc
+.nvmrc
+eslint.config.js
+karma.conf.js
+lighthouserc.json
+nodemon.json
+renovate.json
+tsconfig.json
+angular.json
+update-quant-files.js
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# Local env and logs
+.env*
+*.log
+.DS_Store

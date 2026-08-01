@@ -43,9 +43,9 @@ h3 {
   @extend .transition;
   @include utils.transform(rotate(90deg));
 
-  position: absolute;
-  top: 1px;
-  right: 20px;
+  /* Laid out as a flex sibling of the title, not absolutely positioned:
+     long section names wrap to two lines and previously ran underneath it. */
+  flex: 0 0 auto;
   font-size: 20px;
   cursor: pointer;
 }
@@ -99,6 +99,18 @@ li {
 
 .heading {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-right: 4px;
+
+  h3 {
+    flex: 1 1 auto;
+    min-width: 0;      /* let the title wrap instead of pushing the chevron out */
+    overflow-wrap: anywhere;
+  }
+
   &:hover {
     .arrow-icon {
       color: var(--primary);
