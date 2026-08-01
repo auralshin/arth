@@ -6,6 +6,10 @@
 node_modules
 .git
 
+# Prerendered HTML (~65MB) is only the input pagefind indexes against.
+# The app loads the finished index from /assets/pagefind/, so this is not served.
+dist/static
+
 # Sources compiled into dist/ at build time
 src
 content

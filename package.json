@@ -32,7 +32,7 @@
     "pagefind:index": "npx pagefind --site ./dist/static",
     "pagefind:copy": "rm -rf src/assets/pagefind && cp -r dist/static/pagefind src/assets/pagefind",
     "pagefind:build": "npm run pagefind:index && npm run pagefind:copy",
-    "build:search": "npm run build:prod && npm run prerender && npm run pagefind:build && npm run build:prod",
+    "build:search": "rimraf dist && npm run build:prod && npm run prerender && npm run pagefind:build && npm run build:prod",
     "prepare": "husky"
   },
   "lint-staged": {
