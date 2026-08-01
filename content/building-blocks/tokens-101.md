@@ -1,7 +1,6 @@
 ### Tokens 101
 
-> info **Metadata**  
-> Level: Beginner–Intermediate • Prerequisites: What “On-Chain” Means, Tokens & Addresses • Tags: [tokens, fungible, nft, stablecoins, markets, primary, secondary]
+> info **Metadata** Level: Beginner | Prerequisites: What "On-Chain" Means, Tokens & Addresses | Tags: tokens, fungible, nft, stablecoins, primary-markets, secondary-markets
 
 Tokens are the basic “objects” you touch in DeFi.
 
@@ -415,3 +414,14 @@ Once you can answer these, that icon in your wallet is no longer a mystery numbe
 - Circle – [USDC Overview](https://www.circle.com/usdc)
 - MakerDAO – [DAI and the Maker Protocol](https://docs.makerdao.com/)
 - Ethena – [How USDe Works](https://docs.ethena.fi/how-usde-works)
+
+---
+
+#### See Also
+
+* [Token Standards](/building-blocks/token-standards) – The interfaces behind ERC-20, SPL, CW20 and Move tokens
+* [ERC-20](/building-blocks/erc20) – The fungible-token interface in detail
+* [Stablecoins](/building-blocks/stablecoins) – Design axes and peg risk for the tokens that try not to move
+* [Tokenomics](/building-blocks/tokenomics) – Supply, emissions, and how value accrues to a token
+* [Tokens & Addresses](/start-here/tokens-addresses) – Balances, approvals, and key control from the user's side
+* [Swaps & DEXs](/building-blocks/swaps-dexs) – The secondary markets where tokens actually trade

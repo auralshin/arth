@@ -1,4 +1,6 @@
-# Performance Optimization for Simulations
+### Performance Optimization for Simulations
+
+> info **Metadata** Level: Advanced | Prerequisites: Python, NumPy and pandas, Backtesting Framework | Tags: performance, optimisation, python, numpy, numba, parallelism, profiling
 
 DeFi simulations can be computationally intensive, especially when:
 - Running Monte Carlo simulations with thousands of paths
@@ -8,7 +10,7 @@ DeFi simulations can be computationally intensive, especially when:
 
 This guide covers techniques to make your simulations faster and more efficient.
 
-## Profiling First
+#### Profiling First
 
 Always profile before optimizing. Python's `cProfile` and `line_profiler` are your friends:
 
@@ -52,7 +54,7 @@ def my_simulation():
     pass
 ```
 
-## Vectorization with NumPy
+#### Vectorization with NumPy
 
 Replace loops with vectorized operations:
 
@@ -86,7 +88,7 @@ print(f"Vectorized: {time.time() - start:.4f}s")
 # Vectorized is typically 10-100x faster!
 ```
 
-### Vectorized Backtesting
+#### Vectorized Backtesting
 
 ```python
 class VectorizedBacktester:
@@ -135,9 +137,9 @@ class VectorizedBacktester:
         return np.min(drawdown)
 ```
 
-## Parallel Processing
+#### Parallel Processing
 
-### Multiprocessing for CPU-Bound Tasks
+#### Multiprocessing for CPU-Bound Tasks
 
 ```python
 from multiprocessing import Pool, cpu_count
@@ -169,7 +171,7 @@ avg_return = np.mean([r['return'] for r in results])
 print(f"Average return across {len(results)} simulations: {avg_return:.2%}")
 ```
 
-### Parameter Optimization
+#### Parameter Optimization
 
 ```python
 from itertools import product
@@ -206,7 +208,7 @@ def test_strategy(short_window: int, long_window: int):
     return backtester.calculate_returns(signals)
 ```
 
-## Numba JIT Compilation
+#### Numba JIT Compilation
 
 For hot loops, use Numba to compile Python to machine code:
 
@@ -258,9 +260,9 @@ print(f"Numba: {time.time() - start:.4f}s")
 # Numba is typically 50-100x faster!
 ```
 
-## Efficient Data Structures
+#### Efficient Data Structures
 
-### Using Pandas Efficiently
+#### Using Pandas Efficiently
 
 ```python
 import pandas as pd
@@ -284,7 +286,7 @@ df.loc[df['sma_short'] > df['sma_long'], 'signal'] = 1
 df.loc[df['sma_short'] <= df['sma_long'], 'signal'] = -1
 ```
 
-### Categorical Data
+#### Categorical Data
 
 ```python
 # Convert string columns to categorical to save memory
@@ -295,7 +297,7 @@ df['side'] = df['side'].astype('category')
 print(df.memory_usage(deep=True))
 ```
 
-## Caching & Memoization
+#### Caching & Memoization
 
 ```python
 from functools import lru_cache
@@ -343,9 +345,9 @@ class CachedBacktester:
             self.cache = pickle.load(f)
 ```
 
-## Memory Optimization
+#### Memory Optimization
 
-### Chunked Processing
+#### Chunked Processing
 
 ```python
 def process_large_dataset_chunked(filename: str, chunksize: int = 10000):
@@ -367,7 +369,7 @@ def process_chunk(chunk: pd.DataFrame):
     return chunk[['timestamp', 'returns', 'sma']]
 ```
 
-### Data Type Optimization
+#### Data Type Optimization
 
 ```python
 def optimize_dtypes(df: pd.DataFrame) -> pd.DataFrame:
@@ -401,7 +403,7 @@ df = optimize_dtypes(df)
 print(f"Memory usage: {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
 ```
 
-## GPU Acceleration with CuPy
+#### GPU Acceleration with CuPy
 
 For large-scale simulations, use GPU:
 
@@ -433,7 +435,7 @@ def monte_carlo_gpu(S0, mu, sigma, T, dt, n_paths):
 paths = monte_carlo_gpu(100, 0.05, 0.2, 1.0, 1/252, 10000)
 ```
 
-## Complete Optimized Backtest Example
+#### Complete Optimized Backtest Example
 
 ```python
 class OptimizedBacktester:
@@ -541,7 +543,7 @@ print(f"Optimized: {time.time() - start:.4f}s")
 # Typical speedup: 10-100x
 ```
 
-## Best Practices
+#### Best Practices
 
 1. **Profile First**: Don't optimize prematurely - measure where time is spent
 2. **Vectorize**: Use NumPy/Pandas vectorized operations instead of loops
@@ -552,21 +554,37 @@ print(f"Optimized: {time.time() - start:.4f}s")
 7. **Chunk Large Datasets**: Process data in manageable chunks
 8. **GPU When Needed**: For truly large-scale simulations, use GPU acceleration
 
-## Benchmarking Results
+#### Benchmarking Results
 
 Typical speedups you can expect:
 
-| Optimization | Speedup |
-|--------------|---------|
-| Vectorization (NumPy) | 10-100x |
-| Numba JIT | 50-100x |
-| Multiprocessing | Nx (N = cores) |
-| GPU (CuPy) | 100-1000x |
-| Caching | ∞ (instant) |
-| Data type optimization | 2-5x memory reduction |
+<table>
+  <tbody>
+    <tr><td><strong>Optimisation</strong></td><td><strong>Typical speedup</strong></td></tr>
+    <tr><td>Vectorisation (NumPy)</td><td>10-100x</td></tr>
+    <tr><td>Numba JIT</td><td>50-100x</td></tr>
+    <tr><td>Multiprocessing</td><td>Nx, where N is the core count</td></tr>
+    <tr><td>GPU (CuPy)</td><td>100-1000x</td></tr>
+    <tr><td>Caching</td><td>Effectively instant on repeat calls</td></tr>
+    <tr><td>Data type optimisation</td><td>2-5x memory reduction</td></tr>
+  </tbody>
+</table>
 
-## Next Steps
+> warning **These are order-of-magnitude ranges** Actual speedups depend on workload shape, data size, and hardware. Measure your own before assuming any of them.
+
+#### Next Steps
 
 - Learn about [Event-Driven Architecture](/building-simulations/event-driven-architecture) for efficient event processing
 - Explore [Data Pipeline & Replay](/building-simulations/data-pipeline-replay) for optimized data handling
 - See [Backtesting Framework](/building-simulations/backtesting-framework) for putting it all together
+
+---
+
+#### See Also
+
+* [Backtesting Framework](/building-simulations/backtesting-framework) – The engine these techniques speed up
+* [Data Pipeline & Historical Replay](/building-simulations/data-pipeline-replay) – Storage and chunking for large datasets
+* [Event-Driven Architecture](/building-simulations/event-driven-architecture) – Throughput of the event loop itself
+* [Parameter Sweeps and Sensitivity Analysis](/simulation/param-sweeps) – The main consumer of parallel runs
+* [Working with Market Data in Python](/data-tooling/python) – The pandas and NumPy foundations assumed here
+* [Reproducible Experiments](/data-tooling/reproducible) – Keeping optimised runs reproducible

@@ -152,3 +152,15 @@ If you encounter a symbol, abbreviation, or variable name you don't recognise:
    * Indicator Index
    * Formula Cheat Sheet
 3. If it still isn't clear, treat that as a useful signal: the docs may need improvement, and you are welcome to point it out.
+
+---
+
+#### See Also
+
+* [Notation Reference](/reference/notation) – The full symbol table in one place
+* [Formula Cheat Sheet](/reference/formula-cheatsheet) – Formulas written in this notation
+* [Glossary](/reference/glossary) – Terms rather than symbols
+* [Returns](/quant-math/returns) – Where `R_t` and `r_t` are defined properly
+* [Volatility](/quant-math/volatility) – `sigma` and its annualisation
+* [Sharpe Ratio](/quant-math/sharpe) – A worked page using these conventions end to end
+* [How to Read an Arth Article](/start-here/how-to-read) – How to approach the maths sections

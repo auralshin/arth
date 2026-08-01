@@ -2,7 +2,7 @@
 
 > info **Metadata** Level: All | Prerequisites: None | Tags: contributing, community, collaboration
 
-Arth is built by a community of DeFi practitioners, researchers, and developers who share knowledge and improve the ecosystem collectively. This page outlines communication channels, community standards, and ways to engage beyond documentation contributions.
+Arth is built by a community of quants, developers, analysts, and researchers who share knowledge and improve the ecosystem collectively. This page outlines communication channels, community standards, and ways to engage beyond documentation contributions.
 
 ---
 

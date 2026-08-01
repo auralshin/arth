@@ -1,78 +1,213 @@
 ### Orderbooks vs AMMs
 
-> info **Metadata** Level: Intermediate | Prerequisites: Liquidity Pools, AMMs 101, Returns | Tags: microstructure, orderbook, amm, liquidity, execution, routing
+> info **Metadata** Level: Intermediate | Prerequisites: Trading Foundations, Returns, Volatility | Tags: microstructure, orderbook, amm, liquidity, queue-position, adverse-selection
 
-Orderbooks and automated market makers are two different ways to organise trading and liquidity. Orderbooks arrange standing buy and sell orders at various prices, forming a visible ladder of demand and supply. AMMs pool liquidity in smart contracts governed by pricing curves, where price emerges from an invariant and current reserves rather than from explicit quotes.
+Nearly every market in the world clears through a limit order book. Equities, futures, listed options, most spot foreign exchange and every major centralised crypto venue match buyers to sellers using a queue of standing orders and a deterministic priority rule. The automated market maker is a much newer and much narrower construction: a smart contract that quotes continuously from a formula applied to its own inventory. Setting the two side by side is genuinely instructive, but only if the order book is understood first on its own terms rather than as a foil.
 
-Both structures answer the same question: at what price can a given size of trade clear, and what happens to liquidity after that trade? They differ in how they represent liquidity, how prices adjust, who chooses quotes, and where risk and edge accumulate. These differences shape slippage, MEV surfaces, and the way DeFi protocols plug into broader markets.
-
----
-
-#### Two models of liquidity
-
-An orderbook shows liquidity as a set of discrete orders. On one side sit bids, each with a limit price and size. On the other side sit asks. The best bid and best ask define the tightest spread, and the depth at each price level builds a staircase of liquidity outwards from the mid. Liquidity is granular: each order has an owner, a size, and a specific price.
-
-An AMM shows liquidity through reserves of two or more assets locked in a pool. The pool obeys a pricing rule. In a constant product design, the product of reserves stays roughly constant as trades move the price. Stableswap and other hybrid curves bend that relationship to produce flatter regions around a target price. Instead of a ladder of discrete orders, the pool behaves like a smooth curve of marginal prices as reserves change.
-
-Both systems can support similar notional depth, but they expose it differently. In an orderbook, depth depends on how many traders are willing to quote at each price. In an AMM, depth depends on how much capital LPs stake and on the curvature of the pricing rule.
+Both mechanisms answer the same two questions — at what price does a given size clear, and what does the market look like afterwards — and both extract a payment from the taker of liquidity to compensate the provider for the risk of trading with someone better informed. Where they differ is in who decides the quote, how quickly it can change, and what happens to a provider who is slow.
 
 ---
 
-#### How trades consume liquidity
+#### The Limit Order Book
 
-In an orderbook, a market order walks the book. A market buy matches against the best ask until its size is filled, possibly consuming multiple price levels. The realised execution price is the size weighted average of all matched orders. After the trade, the top of book moves to the next remaining orders, and the spread may widen or narrow depending on refill behaviour.
+A **limit order book** is the set of all resting orders for an instrument, organised by price. Each order specifies a side, a limit price and a quantity. Bids sit below the asks; the highest bid and the lowest ask are the **best bid and offer**, and the difference between them is the **quoted spread**. The **mid price** is their average, and it is a convention rather than a tradeable price — nobody transacts at the mid.
 
-In an AMM, a trade pushes the pool along its curve. A swap reduces reserves of the asset being bought and increases reserves of the asset being sold. The pricing rule translates this new reserve point into a new marginal price. Execution price is not taken from a list of discrete orders but from the integral along the curve segment traversed by the trade.
+Three structural parameters shape everything else. The **tick size** is the minimum price increment, which sets a floor on how tight the spread can be. The **lot size** is the minimum quantity increment. The **matching rule** determines which resting order trades first.
 
-Slippage looks different in each picture but reflects the same underlying idea. In an orderbook, slippage appears when a trade size is large relative to depth near the mid. In an AMM, slippage appears when a trade moves reserves far enough along the curve that marginal price changes significantly. Depth, curvature, and trade size jointly determine the gap between reference price and realised average price.
+**Price-time priority** is the dominant rule: among orders at the same price, the one that arrived earliest trades first. This makes the book a set of queues rather than a set of pools, and it turns the arrival time of an order into an asset. Some venues use pro-rata allocation instead, splitting incoming volume across resting orders in proportion to size, which changes maker behaviour completely — under pro-rata, quoting large is how you get filled, so displayed size inflates.
 
----
+**Queue position** is the practical consequence. If 900 units rest at the best bid and you join behind them, you trade only after those 900 are consumed at that price. This matters for a reason beyond patience: a level is fully exhausted mainly when there is genuine one-directional pressure, so orders at the back of the queue are filled disproportionately often in exactly the states where the price is about to move against them. Front-of-queue fills are a mixture of noise and information; back-of-queue fills are skewed towards information. Improving latency is therefore not only about speed of reaction — it buys a better place in the queue at every newly created price level.
 
-#### Who sets prices and carries inventory
-
-Orderbooks concentrate control with active makers. Each price level exists because some participant chose to post an order there. Makers decide spreads, sizes, and how quickly to update quotes when conditions change. Their PnL comes from capturing spread and, if they manage inventory well, from favourable positioning relative to price moves.
-
-AMMs spread control across LPs. LPs decide how much capital to supply and, in concentrated designs, over which price ranges to allocate it. The actual quoting behaviour is encoded in the AMM formula and fee parameters, not in per order decisions. Inventory risk is shared across LPs and driven mechanically by the curve’s rebalancing effect when trades flow through the pool.
-
-This difference shows up in response to volatility. In an orderbook, makers may widen spreads, pull quotes, or reduce size, making the book thin and fragile. In an AMM, the curve continues to quote everywhere along its domain as long as reserves remain positive. Depth may become economically thin as prices move into poorly funded ranges, but quotes do not disappear entirely without explicit LP withdrawals.
+The book also displays less than it contains. Iceberg and reserve orders show a fraction of their true size, and liquidity that is not displayed at all will often appear when a large order starts to execute. Displayed depth is a lower bound on real depth, and its reliability varies enormously by instrument. See [Order Types](/execution/order-types).
 
 ---
 
-#### Information, latency, and adverse selection
+#### Formal Definition
 
-In orderbooks, information and latency matter at the level of individual orders. Makers with fast market data and low latency infrastructure can adjust quotes quickly in response to news or large orders. Slower makers are more likely to be picked off when the market is about to move; their stale quotes become cheap optionality for informed takers.
+A market order **walks the book**, matching against successive price levels until filled. The realised price is the size-weighted average of the levels consumed:
 
-AMMs encode quotes in a deterministic function of reserves. There is no concept of a “stale” quote in the same sense. Adverse selection appears through flows rather than through explicit quote updates. When prices move elsewhere, arbitrageurs trade against the pool to realign it, and the pool’s inventory shifts. LPs effectively sell into up moves and buy into down moves, accumulating impermanent loss unless fees and other rewards compensate.
+```text
+VWAP_exec    = sum(q_i * p_i) / sum(q_i)
+slippage_bps = 10000 * (VWAP_exec - P_mid) / P_mid        for a buy
+```
 
-Latency still matters around AMMs, but in a different way. Arbitrageurs race to be first to realign pools, and liquidators race to be first to trigger liquidations based on off chain moves or oracle updates. The pool itself does not update quotes in response to information; the rest of the system pushes it back toward fair values through order flow.
+where `q_i` is the quantity taken from level `i` and `p_i` is that level's price.
+
+The spread itself has an economic explanation. Suppose a fraction `alpha` of incoming orders come from traders who know something the maker does not, and that after such a trade the efficient price moves by `delta` against the maker. A maker quoting a half-spread `s` earns `s` from uninformed flow and loses `delta - s` to informed flow:
+
+```text
+E[profit per fill] = (1 - alpha) * s + alpha * (s - delta)
+                   = s - alpha * delta
+```
+
+Setting expected profit to zero gives the break-even half-spread:
+
+```text
+s = alpha * delta
+```
+
+The spread is not a fee. It is the price of adverse selection, and it widens when either the proportion of informed flow rises or the size of the information moves rises — which is why spreads widen before announcements and during volatility, without any maker deciding to be greedy. See [Adverse Selection](/execution/adverse-selection).
+
+With `alpha = 0.15` and `delta = 12 bps`, the break-even half-spread is `0.15 * 12 = 1.8 bps`, implying a quoted spread of 3.6 bps. In heavily traded instruments the realised spread is often much tighter, pinned at one tick, which tells you the tick is binding and makers are competing on queue position instead of on price.
 
 ---
 
-#### Fragmentation, routing, and composability
+#### Worked Example: Walking a Book
 
-Orderbooks fragment across venues. The same asset can trade on multiple centralised and decentralised orderbooks, each with its own depth, fees, and latency characteristics. Cross venue routing engines and smart order routers attempt to recombine this fragmentation by splitting orders and arbitraging price differences, but inventory and information can remain unevenly distributed.
+<table>
+  <tbody>
+    <tr><td><strong>Side</strong></td><td><strong>Price</strong></td><td><strong>Size</strong></td><td><strong>Cumulative</strong></td></tr>
+    <tr><td>Ask</td><td>100.09</td><td>3,000</td><td>5,800</td></tr>
+    <tr><td>Ask</td><td>100.05</td><td>1,500</td><td>2,800</td></tr>
+    <tr><td>Ask</td><td>100.03</td><td>800</td><td>1,300</td></tr>
+    <tr><td>Ask</td><td>100.02</td><td>500</td><td>500</td></tr>
+    <tr><td>Bid</td><td>100.01</td><td>900</td><td>900</td></tr>
+    <tr><td>Bid</td><td>100.00</td><td>2,200</td><td>3,100</td></tr>
+    <tr><td>Bid</td><td>99.98</td><td>1,400</td><td>4,500</td></tr>
+  </tbody>
+</table>
 
-AMMs fragment liquidity across pools and fee tiers rather than across discrete books. Different pools may quote the same pair with different invariants or different fee levels. Routing logic in DEX aggregators must decide how to split a trade across many pools and intermediates. Because AMMs are smart contracts, routing paths can be composed with other DeFi primitives inside a single transaction, but at the cost of additional gas and exposure to MEV.
+The quoted spread is one tick, `100.02 - 100.01 = 0.01`, and the mid is `100.015`. A market buy for 2,000 units executes as follows:
 
-Protocol level composability is generally easier with AMMs than with orderbooks. A contract can interact with a pool as if it were a single counterparty: call a swap function, receive tokens, and proceed. Integrating deeply with an orderbook often requires more complex logic for posting and cancelling orders, managing queue position, and handling partial fills.
+1. **500 at 100.02** costs `50,010`
+2. **800 at 100.03** costs `80,024`
+3. **700 at 100.05** costs `70,035`
+4. **Total**: `200,069` for 2,000 units, so `VWAP_exec = 100.0345`
+5. **Slippage versus mid**: `10000 * (100.0345 - 100.015) / 100.015 = 1.95 bps`
+
+About a quarter of that 1.95 bps is the half-spread of 0.50 bps that you always pay to cross; the rest is the price impact of consuming three levels. Taking the whole displayed ask side — all 5,800 units — would cost `580,379`, a VWAP of `100.0653` and slippage of `5.03 bps`.
 
 ---
 
-#### Price discovery and reference prices
+#### The Constant-Function Model
 
-Orderbooks often act as primary venues for price discovery, especially when they are deep and active. The top of book and recent trades reflect the current balance of supply and demand among informed and uninformed participants. Other venues, including AMMs, frequently track these prices via arbitrage.
+An automated market maker replaces the queue with an invariant. In the **constant product** design, a pool holding `x` units of the base asset and `y` of the quote asset maintains:
 
-AMMs can participate in price discovery, particularly in markets where orderbooks are thin or absent, but they are more often shaped by external prices. Arbitrageurs use discrepancies between AMM prices and off chain or other on chain venues as a source of profit and as a mechanism to transmit information into the pool. The AMM’s curve affects how quickly and smoothly that information is incorporated.
+```text
+x * y = k
+```
 
-For protocols that rely on prices, the distinction matters. Oracles that draw from AMMs inherit their curve shaped microstructure and susceptibility to targeted trades. Oracles that draw from orderbooks inherit sensitivities to spoofing, thin depth, and off chain matching behaviour.
+The marginal (spot) price is `y / x`. To buy `dx` units of the base asset, the trader must supply enough quote to restore the invariant:
+
+```text
+dy        = y * dx / (x - dx)
+avg_price = dy / dx = P_0 * x / (x - dx)
+slippage  = u / (1 - u)          where u = dx / x
+```
+
+and inverting the last expression gives the size tradeable within a slippage budget `s`:
+
+```text
+dx = x * s / (1 + s)
+```
+
+Three things follow immediately. The pool quotes at every price from zero to infinity, so it never runs out of quotes, only out of sensible ones. Slippage depends only on the fraction of the reserve consumed, not on the absolute size of the trade. And there is no spread in the order-book sense: the fee is a separate, explicit charge added on top, and it is the only compensation liquidity providers receive for adverse selection. See [AMMs 101](/building-blocks/amms-101).
 
 ---
 
-#### Consequences for design and risk
+#### Worked Example: The Same Trade Through a Pool
 
-Choosing an orderbook or AMM structure is not just about user interface. It determines where inventory sits, who bears which risks, and how MEV surfaces appear. Orderbooks expose classic microstructure phenomena: queue position, maker taker fee dynamics, and fine grained latency games. AMMs expose curve geometry, impermanent loss, and arbitrage races.
+Take a pool with `x = 400,000` base units and `y = 40,000,000` quote units, so the spot price is `40,000,000 / 400,000 = 100` — the same as the book above. The fee is 30 bps on the input.
 
-Many modern designs mix elements from both worlds. Hybrid venues have off chain orderbooks with on chain settlement, AMMs that incorporate limit order style orders at specific ticks, or batch auction layers that sit on top of pools. Understanding the pure forms of orderbooks and AMMs makes it easier to reason about these hybrids and to trace how changes in structure will affect traders, LPs, and protocol level risk.
+1. **Quote required, ignoring fees**: `dy = 40,000,000 * 2,000 / 398,000 = 201,005.03`
+2. **Average price before fees**: `201,005.03 / 2,000 = 100.5025`, so slippage is `50.25 bps`
+3. **Cross-check with the formula**: `u = 2,000 / 400,000 = 0.005`, and `0.005 / 0.995 = 0.005025` — the same 50.25 bps
+4. **With the 30 bps fee**: the trader pays `201,005.03 / 0.997 = 201,609.86`, an average price of `100.8049`
+5. **All-in cost versus spot**: `80.49 bps`
+
+Comparing 80 bps against the book's 1.95 bps looks damning, but the comparison is about depth, not mechanism. A like-for-like measurement makes that explicit:
+
+<table>
+  <tbody>
+    <tr><td><strong>Slippage budget</strong></td><td><strong>Book capacity</strong></td><td><strong>Pool capacity</strong></td></tr>
+    <tr><td>1.5 bps</td><td>1,300 units (130,000)</td><td>60 units (6,000)</td></tr>
+    <tr><td>10 bps</td><td>&mdash;</td><td>400 units (40,000)</td></tr>
+    <tr><td>5.03 bps</td><td>5,800 units (580,000)</td><td>&mdash;</td></tr>
+  </tbody>
+</table>
+
+The book in this example is simply deeper near the mid. A deep stablecoin pool with a flattened invariant will beat a thin order book on the same measure, and frequently does. The mechanism sets the *shape* of the cost curve; the capital sets its *level*.
+
+> info **Compare depth, not architecture** The only honest comparison between venues is cost in basis points for the size you actually intend to trade, at the time you intend to trade it. Everything else is a description of plumbing.
+
+---
+
+#### Where They Genuinely Differ
+
+<table>
+  <tbody>
+    <tr><td><strong>Dimension</strong></td><td><strong>Limit order book</strong></td><td><strong>Constant-function AMM</strong></td></tr>
+    <tr><td>Quote origin</td><td>Discretionary, per order</td><td>Deterministic, from reserves</td></tr>
+    <tr><td>Priority</td><td>Price-time or pro-rata queue</td><td>None; transaction ordering decides</td></tr>
+    <tr><td>Reaction to news</td><td>Makers cancel and requote</td><td>Curve cannot move; arbitrage moves it</td></tr>
+    <tr><td>Provider compensation</td><td>Spread, plus any maker rebate</td><td>Explicit swap fee only</td></tr>
+    <tr><td>Provider loss channel</td><td>Picked off before requoting</td><td>Arbitraged along the curve</td></tr>
+    <tr><td>Depth in stress</td><td>Can vanish entirely</td><td>Persists, at worsening prices</td></tr>
+    <tr><td>Capital efficiency</td><td>High; quotes need not be prefunded</td><td>Low unless liquidity is concentrated</td></tr>
+  </tbody>
+</table>
+
+The deepest difference is the right to cancel. An order-book maker who sees news can pull quotes in microseconds; a pool cannot, so its inventory is realigned by arbitrageurs, and the profit they take is the pool's loss. That loss is structural rather than accidental — providers systematically sell into rallies and buy into declines. See [Impermanent Loss](/building-blocks/impermanent-loss) and [Concentrated Liquidity](/protocols/concentrated-liquidity), which recovers much of the capital efficiency by confining liquidity to a price range at the cost of requiring active management.
+
+---
+
+#### In Practice Across Venue Types
+
+**Equities.** Fragmented across many order books plus off-exchange venues, tied together by a consolidated best quote and a routing obligation. Tick sizes bind in liquid names, so competition happens in the queue.
+
+**Futures.** A single dominant book per contract, often with pro-rata or a mixed allocation rule in short-dated interest rate contracts. Depth is concentrated at the front month; calendar spreads trade as their own instruments. See [Futures 101](/markets/futures-101).
+
+**Foreign exchange.** No central book. Liquidity is distributed across bank platforms and electronic communication networks, with "last look" allowing a provider to reject a trade after seeing it — an explicit optionality that does not exist in a firm book.
+
+**Listed options.** Thousands of strike-expiry combinations, most quoted by a handful of makers with wide spreads. Displayed depth is thin and quotes are largely derived from a model rather than from order flow. See [Vol Surface](/derivatives/vol-surface).
+
+**On-chain.** Constant-function pools dominate spot, with order books more common in perpetual futures venues. Ordering within a block is contested rather than time-prioritised, which replaces the latency race with a fee auction. See [Gas & Mempool](/microstructure/gas-mempool) and [On-Chain vs Off-Chain](/microstructure/onchain-offchain).
+
+---
+
+#### Assumptions and Failure Modes
+
+- **Displayed depth is assumed real.** Iceberg orders understate it; orders that will be cancelled the moment you take them overstate it. Depth measured from a snapshot is not depth available to your order.
+- **The book is assumed static during execution.** It is not. Consuming levels signals your intent, and remaining liquidity moves away. Impact estimated from a snapshot understates realised cost for anything but small orders. See [Market Impact](/execution/market-impact).
+- **Adverse selection is assumed symmetric across the queue.** It is not: back-of-queue fills are more informed than front-of-queue fills, so a naive spread-capture estimate flatters slow makers.
+- **The AMM invariant is assumed to hold across the trade.** It does within a single swap, but reserves change between blocks, and the price you simulated is not the price you will get if another trade lands first.
+- **Pool depth is assumed stable.** Liquidity providers can withdraw, and concentrated positions can fall out of range entirely, so a pool that quoted tightly yesterday may not today.
+- **Fees are assumed to compensate providers.** Whether fee income exceeds arbitrage losses is an empirical question that varies by pair, fee tier and volatility regime, and it is frequently answered in the negative.
+- **The two models are assumed to be alternatives.** Hybrids are now common: off-chain books with on-chain settlement, pools with limit-order-like ticks, and batch auctions layered above pools. Reasoning about the pure forms is a starting point, not a classification of real venues.
+
+> warning **Educational content only** This page explains market mechanics. It is not advice about where or how to trade, and no venue type is presented as superior.
+
+---
+
+#### Code
+
+```python
+def walk_book(levels, quantity):
+    """Execute a market order against (price, size) levels, best first.
+
+    Returns the size-weighted average price and any unfilled remainder.
+    """
+    remaining, cost, filled = quantity, 0.0, 0.0
+    for price, size in levels:
+        take = min(remaining, size)
+        cost += take * price
+        filled += take
+        remaining -= take
+        if remaining == 0:
+            break
+    return {"vwap": cost / filled if filled else None, "unfilled": remaining}
+
+
+def cpmm_quote(base_reserve, quote_reserve, base_out, fee_rate=0.003):
+    """Quote required to remove `base_out` from a constant-product pool.
+
+    The fee is charged on the input, so it is divided out, not added.
+    """
+    quote_in = quote_reserve * base_out / (base_reserve - base_out) / (1 - fee_rate)
+    spot = quote_reserve / base_reserve
+    avg_price = quote_in / base_out
+    return {"quote_in": quote_in, "slippage_bps": 10_000 * (avg_price - spot) / spot}
+```
 
 ---
 
@@ -80,5 +215,9 @@ Many modern designs mix elements from both worlds. Hybrid venues have off chain 
 
 * [Slippage](/microstructure/slippage)
 * [Fees & Routing](/microstructure/fees-routing)
+* [Latency Risk](/microstructure/latency-risk)
+* [Adverse Selection](/execution/adverse-selection)
+* [Order Types](/execution/order-types)
 * [Liquidity Pools](/building-blocks/liquidity-pools)
-* [MEV Overview](/building-blocks/mev-overview)
+
+---

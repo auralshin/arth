@@ -156,3 +156,15 @@ As you read later sections:
 * Then ask, "What is fundamentally different here?"
 
 That gap is where most surprises—and most risks—live.
+
+---
+
+#### See Also
+
+* [What Is DeFi](/welcome/what-is-defi) – The definition these analogies map onto
+* [Orderbooks vs AMMs](/microstructure/orderbooks-vs-amms) – The exchange comparison in depth
+* [Lending & Borrowing](/building-blocks/lending-borrowing) – The margin-account analogue, mechanically
+* [Yield Farming](/building-blocks/yield-farming) – Where the savings-account analogy breaks
+* [Governance](/building-blocks/governance) – Token voting versus central-bank policy setting
+* [Market Participants](/markets/market-participants) – Who plays which role in traditional markets
+* [Reading Paths](/welcome/reading-paths) – The New to DeFi route onwards from here

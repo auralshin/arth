@@ -55,7 +55,7 @@ To get the most out of `/quant-math`, `/signals`, `/strategies`, and `/simulatio
 * Basic statistics:
   * Mean, standard deviation, correlation at a conceptual level
 
-> tip **Good enough to start** If words like “variance” or “correlation” feel fuzzy, that’s okay. Start with the intuition and examples; you can loop back to the formal math later.
+> info **Good enough to start** If words like “variance” or “correlation” feel fuzzy, that’s okay. Start with the intuition and examples; you can loop back to the formal math later.
 
 ---
 

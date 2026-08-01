@@ -1,12 +1,17 @@
-### Arth: A DeFi Knowledge Hub
+### Arth: A Quant Encyclopedia
 
-Arth is a focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners. It brings together clear, practical explanations of decentralized finance protocols, trading and yield strategies, and the quantitative modeling techniques that support them. Content ranges from approachable primers to deep-dive technical explainers.
+> info **Metadata** Level: All | Prerequisites: None | Tags: overview, welcome, quantitative-finance, defi, contributing
+
+Arth is an open encyclopedia of quantitative finance — the math, the market structure, the data work, and the code. It brings together clear, practical explanations of probability and statistics, signal construction, strategy design, portfolio and risk management, and the engineering needed to test any of it honestly. Content ranges from approachable primers to deep-dive technical explainers.
+
+Markets are the application layer. Arth covers them as they actually exist today, which includes a large and self-contained section on **DeFi and on-chain markets** — AMMs, lending protocols, perps, MEV, and on-chain data. That material sits alongside the general theory rather than standing in for it: a Sharpe ratio is a Sharpe ratio whether the returns came from a futures desk or a liquidity position.
 
 Arth is built for people who like to connect theory with code. As you move through the docs, you'll see:
 
-* **DeFi primers** that explain how protocols and primitives work.
-* **Strategy write-ups** that show how traders and builders capture value or design automated strategies.
-* **Mathematical explainers** with worked examples in probability, statistics, optimization, and numerical methods.
+* **Mathematical explainers** with worked examples in probability, statistics, stochastic processes, and optimization.
+* **Signal and strategy write-ups** that go from a raw feature to a testable, sized, risk-managed rule.
+* **Market and protocol primers** that explain how venues, instruments, and on-chain primitives actually work.
+* **Tooling and simulation guides** for sourcing data, building backtests, and avoiding the ways they lie to you.
 
 Many articles include code snippets, math notation, diagrams, and small, reproducible examples. Where it helps, we link to runnable examples or notebooks in
 [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript),
@@ -20,15 +25,17 @@ The `content/` folder contains markdown pages grouped by topic. When you add a n
 
 If you are:
 
-* A **protocol engineer** designing or reviewing mechanisms,
-* A **quant developer** building models, backtests, or execution systems, or
-* An **active DeFi researcher or learner** trying to understand how things work under the hood,
+* A **finance enthusiast or student** building real intuition instead of collecting tips,
+* A **quant developer or engineer** building models, backtests, or execution systems,
+* An **analyst or researcher** who needs a reliable place to look up a metric, a formula, or a mechanism, or
+* A **protocol engineer** designing or reviewing on-chain mechanisms,
 
 you should find both hands-on tutorials and reference material here. A reasonable path through the docs is:
 
-1. Start with **primers** to build intuition.
-2. Move on to **strategy posts** once you're comfortable with basic concepts.
-3. Dive into the **math and modeling** sections when you want more rigour.
+1. Start with the **math and statistics** sections to build intuition.
+2. Move on to **signals and strategies** once you're comfortable with returns, volatility, and risk metrics.
+3. Dive into **simulation and backtesting** when you want to test ideas rather than argue about them.
+4. Branch into **DeFi & On-Chain Markets** whenever you want the on-chain instance of a concept.
 
 #### Principles: Clarity, Rigour, Reproducibility
 
@@ -140,3 +147,15 @@ If you'd like to add content, update an article, or fix a typo, follow the steps
 By contributing, you agree to the project's MIT license (see `LICENSE`). If you have questions about structure, content style, or the publication workflow, open an issue and describe what you're trying to do. We'll help you get oriented so you can focus on the content itself.
 
 Thank you for helping build Arth. Every contribution makes the library more useful for the next reader.
+
+---
+
+#### See Also
+
+* [How to Navigate](/welcome/how-to-navigate) – A map of the sections and how they fit together
+* [Reading Paths](/welcome/reading-paths) – Routes through the docs for different backgrounds
+* [Prerequisites](/welcome/prerequisites) – What each section assumes you already know
+* [Risk & Reality Check](/welcome/risk-reality-check) – How to read strategy and backtest material honestly
+* [Trading Foundations](/trading-foundations) – Entry point for the markets and instruments material
+* [What Is DeFi](/welcome/what-is-defi) – Entry point for the on-chain domain section
+* [How to Contribute](/contributing/how-to-contribute) – The full contribution workflow

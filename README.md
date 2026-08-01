@@ -2,7 +2,7 @@
   <a href="/" target="_self"><img src="./src/assets/logos/logo-arth.png" width="120" alt="arth Logo" /></a>
 </p>
 
-  <p align="center">Arth — a focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners.</p>
+  <p align="center">Arth — an open encyclopedia of quantitative finance, for finance enthusiasts, quant developers, and analysts.</p>
     <p align="center">
 <a href="https://github.com/auralshin/arth"><img src="https://img.shields.io/badge/GitHub-arth-blue" alt="GitHub" /></a>
 <a href="https://github.com/auralshin/arth/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
@@ -11,15 +11,18 @@
 
 ## Description
 
-Arth is a focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners. Our goal is to collect clear, practical explanations of decentralized finance protocols, trading and yield strategies, and the quantitative math and modeling techniques that support them.
+Arth is an open encyclopedia of quantitative finance — the math, the market structure, the data work, and the code. Our goal is to collect clear, practical explanations of the quantitative foundations (probability, statistics, stochastic processes, portfolio theory), the methods built on top of them (signals, strategies, risk, backtesting), and the markets they get applied to.
+
+DeFi and on-chain markets are covered as a large, self-contained section of that encyclopedia rather than as its subject.
 
 This repository powers the documentation site for the Arth project. It's built on top of the [Angular CLI](https://github.com/angular/angular-cli) and uses the [Dgeni documentation generator](https://github.com/angular/dgeni) to compile markdown files from the `content/` directory into the published site.
 
-Content ranges from approachable primers to deep-dive technical explainers, organized around three core pillars:
+Content ranges from approachable primers to deep-dive technical explainers, organized around four core pillars:
 
-- DeFi primers that explain how protocols and primitives work
-- Strategy write-ups that describe how traders and builders capture value or design automated strategies
-- Mathematical explainers and worked examples that reveal the quantitative foundations
+- Mathematical explainers and worked examples that build the quantitative foundations
+- Signal and strategy write-ups that go from a raw feature to a sized, risk-managed rule
+- Tooling and simulation guides for sourcing data and building honest backtests
+- Market and protocol primers, including a full DeFi & on-chain markets section
 
 Articles may include code snippets, math notation, diagrams, and reproducible examples in JavaScript, TypeScript, or Python.
 
@@ -90,7 +93,7 @@ Arth is an MIT-licensed open source project. If you'd like to support the projec
 - Repository - [https://github.com/auralshin/arth](https://github.com/auralshin/arth)
 - Website - [Vercel (dev)](https://arth-ten.vercel.app/)
 
-Arth is intended for people who like to bridge theory and practice. If you're a protocol engineer, quant developer, or an active DeFi researcher, you'll find hands-on tutorials and reference material. If you're learning, start with the primers and progress to strategy posts and the math deep dives when you feel comfortable.
+Arth is intended for people who like to bridge theory and practice. If you're a quant developer, an analyst, a finance enthusiast, or a protocol engineer, you'll find hands-on tutorials and reference material. If you're learning, start with the math and statistics sections and progress to signals, strategies, and backtesting when you feel comfortable.
 
 We aim for clarity, rigour and reproducibility. Each article should state its assumptions, include references where relevant, and try to provide small reproducible examples. When publishing strategies, consider ethical and risk-related notes: market conditions change, backtests have limitations, and on-chain execution has slippage and gas considerations.
 

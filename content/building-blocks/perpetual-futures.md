@@ -47,6 +47,6 @@ Risks include liquidation risk under volatile conditions, funding cost risk when
 #### See Also
 
 * [Perp DEX](/protocols/perp-dex) – Architecture of decentralised perp exchanges  
-* [Trading Foundations](/advanced-topics/trading-foundations) – Broader context for perps in trading systems  
+* [Trading Foundations](/trading-foundations) – Broader context for perps in trading systems  
 * [Liquidations](/building-blocks/liquidations) – How distressed perp positions are closed  
 * [Derivatives](/building-blocks/derivatives) – Other derivative instruments in DeFi

@@ -1,4 +1,6 @@
-# Event-Driven Architecture for Simulations
+### Event-Driven Architecture for Simulations
+
+> info **Metadata** Level: Advanced | Prerequisites: TypeScript, Backtesting Framework | Tags: simulation, event-driven, architecture, typescript, backtesting, event-replay
 
 Building robust DeFi simulations requires a flexible architecture that can handle complex interactions between components. Event-driven architecture (EDA) provides a powerful pattern for organizing simulation logic, enabling:
 
@@ -7,9 +9,9 @@ Building robust DeFi simulations requires a flexible architecture that can handl
 - **Auditability**: Every action creates a traceable event record
 - **Extensibility**: New components can subscribe to existing events without modifying core logic
 
-## Core Concepts
+#### Core Concepts
 
-### Event Types
+#### Event Types
 
 ```typescript
 enum EventType {
@@ -36,7 +38,7 @@ interface SimulationEvent {
 }
 ```
 
-### Event Bus
+#### Event Bus
 
 The event bus is the central nervous system of your simulation:
 
@@ -87,9 +89,9 @@ class EventBus {
 }
 ```
 
-## Simulation Components as Event Producers/Consumers
+#### Simulation Components as Event Producers/Consumers
 
-### Market Data Provider
+#### Market Data Provider
 
 ```typescript
 class MarketDataProvider {
@@ -121,7 +123,7 @@ class MarketDataProvider {
 }
 ```
 
-### Strategy Engine
+#### Strategy Engine
 
 ```typescript
 class StrategyEngine {
@@ -152,7 +154,7 @@ class StrategyEngine {
 }
 ```
 
-### Order Execution Engine
+#### Order Execution Engine
 
 ```typescript
 class OrderExecutionEngine {
@@ -210,9 +212,9 @@ class OrderExecutionEngine {
 }
 ```
 
-## Advanced Patterns
+#### Advanced Patterns
 
-### Event Replay for Debugging
+#### Event Replay for Debugging
 
 ```typescript
 class EventReplayer {
@@ -235,7 +237,7 @@ class EventReplayer {
 }
 ```
 
-### Conditional Event Processing
+#### Conditional Event Processing
 
 ```typescript
 class ConditionalProcessor {
@@ -267,7 +269,7 @@ class ConditionalProcessor {
 }
 ```
 
-### Event Aggregation
+#### Event Aggregation
 
 ```typescript
 class EventAggregator {
@@ -320,7 +322,7 @@ aggregator.aggregate(EventType.MARKET_DATA, (events) => {
 });
 ```
 
-## Block-Based Event Processing
+#### Block-Based Event Processing
 
 For blockchain simulations, organize events by block:
 
@@ -369,7 +371,7 @@ class BlockProcessor {
 }
 ```
 
-## Complete Example: Event-Driven Backtest
+#### Complete Example: Event-Driven Backtest
 
 ```typescript
 async function runEventDrivenBacktest() {
@@ -402,7 +404,7 @@ async function runEventDrivenBacktest() {
 }
 ```
 
-## Best Practices
+#### Best Practices
 
 1. **Event Ordering**: Use priority queues to ensure events are processed in the correct order
 2. **Idempotency**: Make event handlers idempotent to allow safe replay
@@ -412,8 +414,19 @@ async function runEventDrivenBacktest() {
 6. **Testing**: Use event replay to test specific scenarios
 7. **Observability**: Log events to external systems for monitoring
 
-## Next Steps
+#### Next Steps
 
 - Learn about [Data Pipeline & Replay](/building-simulations/data-pipeline-replay) for handling historical data
 - Explore [Performance Optimization](/building-simulations/performance-optimization) techniques
 - See [Backtesting Framework](/building-simulations/backtesting-framework) for practical implementation
+
+---
+
+#### See Also
+
+* [Event-Driven Backtesting Basics](/simulation/event-driven) – The same pattern at a smaller scale
+* [Backtesting Framework](/building-simulations/backtesting-framework) – The components the event bus connects
+* [Data Pipeline & Historical Replay](/building-simulations/data-pipeline-replay) – Where market-data events come from
+* [Agent-Based Simulation](/building-simulations/agent-based-simulation) – Agents as event producers and consumers
+* [Performance Optimization](/building-simulations/performance-optimization) – Keeping event throughput high
+* [Gas and the Mempool](/microstructure/gas-mempool) – The block and ordering behaviour these events model

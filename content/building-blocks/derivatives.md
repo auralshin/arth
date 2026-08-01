@@ -53,6 +53,6 @@ Assessing these effects involves mapping networks of exposures, understanding ho
 #### See Also
 
 * [Perpetual Futures](/building-blocks/perpetual-futures) – Main linear derivative in crypto markets  
-* [Trading Foundations](/advanced-topics/trading-foundations) – Framework for thinking about payoffs and risk  
+* [Trading Foundations](/trading-foundations) – Framework for thinking about payoffs and risk  
 * [Risk Types](/risk/types) – Market, liquidity, and counterparty risk in derivative structures  
 * [Simulation – Scenarios](/simulation/scenarios) – Scenario analysis for derivative-heavy portfolios

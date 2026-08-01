@@ -167,3 +167,15 @@ The rest of the **Start Here** section zooms in on each of these building blocks
 * How they can fail
 
 As you read, try to imagine where John's story would diverge from your own. That's where the learning starts.
+
+---
+
+#### See Also
+
+* [Common DeFi Use Cases](/start-here/use-cases) – The same actions, organised by purpose
+* [Lending & Borrowing](/building-blocks/lending-borrowing) – How the supply and borrow legs actually work
+* [AMMs 101](/building-blocks/amms-101) – The pricing curve behind John's swap
+* [Impermanent Loss](/building-blocks/impermanent-loss) – The LP warning she saw, quantified
+* [Liquidations](/building-blocks/liquidations) – What happens if her health factor falls too far
+* [Where People Lose Money in DeFi](/start-here/losing-money) – The failure modes hiding inside that day
+* [Reading Paths](/welcome/reading-paths) – Where to go once the story makes sense

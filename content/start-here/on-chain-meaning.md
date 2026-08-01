@@ -140,3 +140,14 @@ As you read later sections, try to ask:
 * What part of this could other people see and react to?
 
 Those answers will shape both opportunities and risks.
+
+---
+
+#### See Also
+
+* [Tokens & Addresses](/start-here/tokens-addresses) – How identity and balances are recorded on that ledger
+* [Gas and the Mempool](/microstructure/gas-mempool) – Fee markets and the public waiting room
+* [On-Chain vs Off-Chain Execution](/microstructure/onchain-offchain) – Where hybrid systems draw the line
+* [How Blocks Form](/transaction-ordering-mev/how-blocks-form) – From mempool to included block
+* [MEV Overview](/building-blocks/mev-overview) – What reordering around your transaction looks like
+* [What Is DeFi](/welcome/what-is-defi) – What gets built on top of on-chain state

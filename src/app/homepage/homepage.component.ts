@@ -492,10 +492,6 @@ export class HomepageComponent implements OnInit, OnDestroy, AfterViewInit {
     const placeholderInput = document.querySelector(
       '.search-placeholder .search-input',
     ) as HTMLInputElement | null;
-    const placeholder = document.querySelector(
-      '.search-placeholder',
-    ) as HTMLElement | null;
-
     searchElement.innerHTML = '';
     this.ensurePagefindCss();
 

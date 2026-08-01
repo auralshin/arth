@@ -1,7 +1,7 @@
 {
-  "name": "arth-defi-knowledge-hub",
+  "name": "arth-quant-encyclopedia",
   "version": "1.0.0",
-  "description": "Arth - A focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners",
+  "description": "Arth - An open encyclopedia of quantitative finance for enthusiasts, developers, and analysts",
   "author": "Anshul Rai <personal@anshulrai.dev>",
   "homepage": "https://github.com/auralshin/arth",
   "repository": {
@@ -12,6 +12,7 @@
     "url": "https://github.com/auralshin/arth/issues"
   },
   "license": "MIT",
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
     "ng": "ng",
     "prestart": "npm run docs",

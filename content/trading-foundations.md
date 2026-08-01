@@ -1,295 +1,211 @@
 ### Trading Foundations
 
-> info **Metadata** Level: Intermediate | Prerequisites: Returns, Volatility, Impermanent Loss, AMMs 101, Perpetual Futures | Tags: trading, amm, orderbook, derivatives, market-making
+> info **Metadata** Level: Intermediate | Prerequisites: Returns, Volatility | Tags: microstructure, order-books, execution, derivatives, market-making, liquidity
 
-This module introduces the **core trading primitives used in DeFi**: spot trading on AMMs and order books, perpetual futures, and basic market-making ideas.
+Before any strategy can be evaluated, three mechanical questions have to be answered: how does an order become a trade, what does that conversion cost, and who is on the other side. This page covers those mechanics — venues and matching, the anatomy of execution cost, the instruments through which exposure is actually taken, and the economics of providing liquidity rather than consuming it.
 
-The goal here is to build **trader-level intuition**:
+The material is deliberately venue-agnostic. A central limit order book, a dealer market, a request-for-quote platform, and an automated market maker are four answers to the same problem: aggregating willingness to trade at a price. They differ in who bears inventory risk, how quotes are updated, and what a large order does to the price — and those differences show up directly in a strategy's net returns.
 
-- How trades actually move prices and consume liquidity
-- How perps stay tethered (more or less) to an index
-- What it means to “make” a market instead of just taking liquidity
-
-> info **Math lives elsewhere**  
-> This module is deliberately light on derivations. It will tell you **which equations matter and why**, and then point you to the dedicated math/curve pages for full details.
+> warning **Not Financial Advice** This page explains market mechanics. It is not a recommendation to trade on any venue or in any instrument.
 
 ---
 
-#### 4.1 Spot Trading (AMMs & Order Books)
+#### How Trades Get Matched
 
-Spot trading is the baseline action in DeFi: swapping one asset for another. In this module we look at how this works in two main settings:
+Almost every venue is a variation on one of four designs.
 
-- **Automated Market Makers (AMMs)** – liquidity pools governed by invariant functions
-- **Order Books** – traditional bid/ask ladders with discrete quotes
+<table>
+  <tbody>
+    <tr><td><strong>Design</strong></td><td><strong>Who provides the price</strong></td><td><strong>Typical use</strong></td></tr>
+    <tr><td>Central limit order book</td><td>Anyone, by posting resting limit orders; matched by price then time priority</td><td>Listed equities, futures, most crypto exchanges</td></tr>
+    <tr><td>Dealer / principal market</td><td>A dealer quotes a two-sided price and takes the other side onto its own book</td><td>Corporate bonds, FX, structured products</td></tr>
+    <tr><td>Request for quote</td><td>The taker asks several dealers; the best response wins</td><td>Fixed income, swaps, large blocks</td></tr>
+    <tr><td>Automated market maker</td><td>A deterministic pricing function over pooled reserves; no discretion, no updates between blocks</td><td>On-chain spot markets</td></tr>
+  </tbody>
+</table>
 
-The emphasis is on **how execution, price impact, and LP PnL arise from mechanics**, not on edge cases of specific protocols.
+Two properties of the design determine most of what a trader experiences. **Quote update latency** decides how stale a posted price can become before it is traded against — near-instant on an exchange with co-located makers, one block on an automated market maker, and a human decision cycle in an RFQ market. **Priority rules** decide who gets filled when several participants want the same trade; price-time priority makes queue position an asset in itself.
 
----
-
-**AMM invariants and pricing**
-
-You’ll see the main AMM “families”:
-
-- **Constant product** AMMs (e.g. \(x * y = k\))  
-- **Constant sum** and **hybrid stableswap** style curves  
-- Other variants that tweak curvature to change price impact
-
-For each, we focus on:
-
-- What the **invariant** represents conceptually (a surface of feasible reserves)
-- How you read **spot price** from the curve
-- How to think about **marginal price** and **slippage** as you walk along the curve
-
-The heavy algebra, proofs, and generalizations live in the dedicated AMM math pages (e.g. `/building-blocks/amms-101`, `/protocols/amms-depth`).
+See [Order Books vs AMMs](/microstructure/orderbooks-vs-amms) and [Order Types](/execution/order-types).
 
 ---
 
-**Liquidity as a curve & slippage**
+#### Formal Definition: What Execution Costs
 
-We treat **liquidity as a geometric object**:
+The cost of a trade is the difference between the price you got and a reference price, and the choice of reference is what distinguishes the standard measures.
 
-- Reserves trace out a curve/surface defined by the invariant
-- A trade of size \(\Delta\) moves you along that curve
-- The **executed price** is effectively an average price over that segment
+```text
+effective_half_spread = side * (P_exec - M_decision)
 
-You’ll learn to:
+implementation_shortfall = side * (P_exec - P_decision) * Q + fees + delay_cost
 
-- Interpret “steep” vs “flat” regions of the curve
-- Explain why large trades punch deeper into the curve and face more slippage
-- Connect **pool depth** and **trade size** to realized execution prices
+realised_half_spread   = side * (P_exec - M_after)
+price_impact           = side * (M_after - M_decision)
+```
 
----
+where:
 
-**Price impact & impermanent loss (IL)**
+- `side` is `+1` for a buy and `-1` for a sell
+- `P_exec` is the volume-weighted price actually achieved
+- `M_decision` is the mid price at the moment the decision was made
+- `M_after` is the mid some interval after the fill
+- `Q` is the quantity traded
+- `delay_cost` is the movement between the decision and the first fill
 
-For LPs, spot trading is not just about fees; it’s about **path-dependent PnL**.
+The decomposition `effective = realised + impact` is the useful identity: it splits the cost into the part the liquidity provider keeps and the part that reflects the market moving because you traded. A strategy whose backtest assumes fills at the mid has set all four of these to zero. See [Implementation Shortfall](/execution/implementation-shortfall) and [Transaction Cost Analysis](/execution/transaction-cost-analysis).
 
-We’ll:
+Impact is not linear in size. Across markets and eras a **square-root** relationship is the standard working model:
 
-- Show how **price impact** arises mechanically from the curve
-- Connect **trade flows** and **price paths** to LP portfolio changes
-- Discuss **impermanent loss** qualitatively:
-  - Why LPs effectively hold a rebalanced portfolio
-  - When fee income can dominate IL
-  - How volatility and correlation shape outcomes
+```text
+impact ~= Y * sigma * sqrt(Q / V)
+```
 
-Detailed IL formulas, approximations, and simulations are handled in the IL-focused pages.
-
----
-
-**Order books and execution**
-
-To compare AMMs with centralized/perp-style venues, we introduce key order book concepts:
-
-- **Bid/ask and depth curves**  
-- **Limit vs market orders**  
-- **Visible vs hidden liquidity** (icebergs, internalization, etc.)  
-- Basic execution cost components:
-  - Spread + slippage + fees
-
-We won’t build a full matching engine here. Instead, we’ll show:
-
-- How to think of an order book as another form of **liquidity surface**
-- How to compare execution quality:
-  - AMM path on a curve vs walking the book
-- Where **MEV, latency, and adverse selection** sneak into execution
+where `sigma` is volatility, `V` is the period's traded volume, and `Y` is a fitted constant of order one. The practical consequence is that the cost per unit *rises* with participation rate, though more slowly than proportionally, which is why large orders are worked over time rather than sent at once. See [Market Impact](/execution/market-impact) and [Almgren–Chriss](/execution/almgren-chriss).
 
 ---
 
-**Practical: AMM slippage explorer**
+#### Worked Example: Walking a Book vs Traversing a Curve
 
-You’ll build a small, self-contained exercise:
+Buying 1,000 units, on two venue designs. All figures are illustrative arithmetic constructed for this page.
 
-- Implement a **constant-product AMM swap function**
-- For a range of trade sizes:
-  - Compute pre- and post-trade reserves
-  - Compute effective execution price
-  - Calculate slippage vs mid-price
+**Order book.** The mid is 100.00, with the ask side stacked as follows:
 
-The point is to **feel** how liquidity and trade size translate into price impact, not to build production code.
+<table>
+  <tbody>
+    <tr><td><strong>Level</strong></td><td><strong>Price</strong></td><td><strong>Size</strong></td><td><strong>Cumulative cost</strong></td></tr>
+    <tr><td>1</td><td>100.02</td><td>400</td><td>40,008</td></tr>
+    <tr><td>2</td><td>100.05</td><td>300</td><td>70,023</td></tr>
+    <tr><td>3</td><td>100.09</td><td>500</td><td>&mdash;</td></tr>
+  </tbody>
+</table>
 
----
+1. Fill 400 at 100.02 for 40,008, then 300 at 100.05 for 30,015, then the remaining 300 at 100.09 for 30,027.
+2. **Total cost**: `40,008 + 30,015 + 30,027 = 100,050`.
+3. **Execution price**: `100,050 / 1,000 = 100.05`.
+4. **Cost against the mid**: `0.05 / 100.00 = 5.0` basis points, plus whatever the venue charges a taker.
 
-#### 4.2 Perpetual Futures
+**Constant-product automated market maker.** Reserves of 1,000,000 units of the asset and 100,000,000 units of the numéraire, so the spot price is 100.00 and the invariant is `k = 1e14`. The fee is 30 basis points on the input.
 
-Perpetual futures (“perps”) are a core DeFi primitive for **leveraged, directional, and hedged positions** without expiry.
+1. **Reserves after the trade**: the asset reserve falls to `1,000,000 - 1,000 = 999,000`.
+2. **Numéraire required by the invariant**: `1e14 / 999,000 = 100,100,100.10`, so the net input is `100,100,100.10 - 100,000,000 = 100,100.10`.
+3. **Gross input including the fee**: `100,100.10 / 0.997 = 100,401.30`.
+4. **Execution price**: `100,401.30 / 1,000 = 100.4013`.
+5. **Cost against spot**: `0.4013 / 100.00 = 40.1` basis points, of which about 10.0 is price impact from moving along the curve and about 30.1 is the fee.
 
-This module focuses on:
-
-- How perps stay loosely aligned with spot markets
-- The risk mechanics: margin, liquidations, and funding
-- How to think about leveraged positions as **path-dependent bets** on underlying price processes
-
----
-
-**Funding rates and tethering to index**
-
-We treat funding as a **feedback mechanism**:
-
-- When perp price trades above index, longs pay shorts
-- When perp price trades below index, shorts pay longs
-
-You’ll:
-
-- Understand how funding:
-  - Nudges perp prices back toward an index
-  - Creates an economic cost/benefit to holding positions
-- See a **continuous-time style view**:
-  - Funding as a drift adjustment term
-  - How persistent basis → persistent funding
-
-The exact funding formulas, stochastic models, and derivations appear in the more advanced derivatives/math pages.
+The comparison is not a verdict on either design — it is entirely determined by the depth chosen for each. Its purpose is to show that the *shape* of the cost differs: the order book's cost is a step function determined by resting size, while the curve's cost is smooth, deterministic, and computable in advance from the reserves. That determinism is exactly what makes an automated market maker's quote exploitable by anyone who sees a price move elsewhere first. See [Slippage](/microstructure/slippage) and [Adverse Selection](/execution/adverse-selection).
 
 ---
 
-**Mark price, index price, and oracles**
+#### Instruments: Forwards, Futures, and Perpetuals
 
-We distinguish:
+Exposure is rarely taken in the cash instrument alone. Three related contracts cover most of the ground.
 
-- **Index price** – a reference price from external markets (oracle/TWAP)
-- **Mark price** – the “risk” price used to calculate PnL and margin
-- **Last traded price** – the actual transaction price on the exchange
+A **forward** is a bilateral agreement to transact at a fixed price on a future date. Its fair price is set by no-arbitrage against buying the asset today and financing it — the cost-of-carry relationship covered in [Cash-and-Carry](/strategies/cash-carry).
 
-We discuss:
+A **future** is a standardised, exchange-traded forward with daily variation margin. Daily settlement is the substantive difference: it removes most counterparty risk and it turns the position into a source of daily cash flows, so financing and margin are part of the strategy rather than an afterthought. Because contracts expire, maintaining exposure requires rolling, and the roll's cost or benefit is a first-order component of returns. See [Futures 101](/markets/futures-101) and [Roll and Carry](/markets/roll-and-carry).
 
-- Why mark price is often smoothed (TWAP, bounded by oracles)  
-- How different choices affect:
-  - Liquidation timing
-  - Manipulation incentives
-- The **exposure** traders have if mark and index diverge
+A **perpetual future** removes the expiry and replaces convergence-by-delivery with a recurring **funding payment** between longs and shorts, sized to pull the contract price toward an index. This makes the carry a floating rate rather than a locked-in one, and makes positioning directly observable in the funding rate. See [Perpetual Futures](/building-blocks/perpetual-futures) and [Funding Rate](/signals/funding-rate).
 
-This ties back into `/building-blocks/oracles` and `/microstructure/*` when you look at oracle manipulation and MEV.
+Three prices coexist on a margined venue and are routinely confused:
 
----
+- **Index price** — a reference computed from external markets, usually a weighted or time-averaged composite
+- **Mark price** — the price used for margin and liquidation, deliberately smoothed and bounded so that a brief dislocation does not trigger mass liquidations
+- **Last traded price** — what actually printed on this venue
 
-**Risk, margin, and liquidation mechanics**
-
-Perps are defined as much by their **risk engine** as by their price.
-
-We’ll cover:
-
-- Initial vs maintenance margin
-- Leverage as **position size relative to collateral**
-- How liquidation thresholds are computed at a high level
-- Why deleveraging cascades can occur:
-  - Correlated liquidations
-  - Thin liquidity + aggressive liquidation engines
-
-You’ll see how, under a simple stochastic price process (e.g. GBM), you can reason about **probability of liquidation** as a function of leverage, volatility, and time horizon — conceptually, not yet with full closed-form math.
+The gap between mark and last is where liquidation timing, and much of the incentive to manipulate, lives. See [Oracles](/building-blocks/oracles) and [Leverage and Liquidation](/risk/leverage-liquidation).
 
 ---
 
-**Practical: toy perp market simulation**
+#### Providing Liquidity Instead of Consuming It
 
-You’ll sketch and/or implement:
+Everything above is written from the taker's side. The maker's side is the mirror image: the spread the taker pays is the maker's revenue, and the maker's problem is that this revenue must cover two costs.
 
-- A simple perp venue with:
-  - Index price path (simulated)
-  - A small set of traders with different leverage levels
-  - A basic funding rule and liquidation condition
-- Then measure:
-  - How often different leverage levels get liquidated
-  - How funding transfers wealth between participants
+**Inventory risk.** Each fill leaves a position the maker did not want, carried until an offsetting trade arrives. Its cost scales with volatility and holding time, and the standard response is to skew quotes — shading both sides in the direction that unwinds the position.
 
-This gives you an intuitive feel for **how fragile high leverage is** under realistic volatility, and sets up later, more formal simulation work.
+**Adverse selection.** Some counterparties trade because they know something. Against them, a resting quote is a free option: it is lifted precisely when it is mispriced. The maker's break-even half-spread must cover `alpha * m`, where `alpha` is the informed share of flow and `m` the expected adverse move on those fills.
+
+An automated market maker is the extreme case of both. Its quote schedule is published, deterministic, and cannot be revised between blocks, so an arbitrageur observing a price change on a faster venue trades against a stale curve with near-certainty. The resulting systematic cost — the gap between the pool's outcome and simply holding the rebalanced portfolio — is the on-chain form of adverse selection, and it is closely related to [Impermanent Loss](/building-blocks/impermanent-loss). Concentrated liquidity concentrates fee income and this cost together.
+
+See [Market Making Lite](/strategies/mm-lite) for the quoting model and [LP Business](/strategies/lp-business) for the on-chain version.
 
 ---
 
-#### 4.3 Market Making
+#### In Practice Across Asset Classes
 
-Market making is the flip side of trading: instead of just **consuming** liquidity, you **provide** it and manage inventory, spread, and risk.
+**Equities.** Fragmented across many venues, with maker-taker fee schedules and a minimum tick that frequently binds on liquid names. Routing decisions are a material part of realised cost. See [Smart Order Routing](/execution/smart-order-routing).
 
-This module gives a **conceptual introduction** to continuous-time market-making models, without diving fully into stochastic control proofs.
+**Futures.** One venue per contract, a central book, strict price-time priority. Competition is over speed and queue position. Daily price limits mean that in extreme moves there may be no tradeable price at all.
 
----
+**FX.** No central exchange; liquidity is distributed across bank and non-bank platforms. "Last look" — a brief window in which a quote can be rejected — changes the economics on both sides and has no analogue in exchange-traded markets.
 
-**Inventory, spread, and risk–reward trade-offs**
+**Fixed income and credit.** Largely RFQ and dealer-intermediated. Many instruments do not trade for days, so "the price" is a model output rather than an observation, which distorts every volatility and correlation estimate built from it.
 
-We frame market making as a balancing act between:
-
-- **Spread** – how far from mid you quote (revenue potential)
-- **Inventory** – how much directional risk you accumulate
-- **Order arrival** – how often you get hit/lifted
-
-You’ll see the basic ingredients of models like:
-
-- **Avellaneda–Stoikov** – where:
-  - Mid-price follows a stochastic process
-  - Order arrivals depend on how far your quotes are from mid
-  - You choose spreads to optimize expected utility of final wealth
-
-- **Cartea–Jaimungal / Guéant**-style frameworks:
-  - Stochastic control approaches to dynamic inventory and skew
-  - Penalizing inventory risk while maximizing trading revenue
-
-We keep the math light here and use diagrams, state variables, and narrative to convey the structure.
+**On-chain markets.** Execution is a state transition in a public queue: the intent is visible before it settles, ordering within a block is determined by an economic auction rather than by arrival time, and costs include a gas component that is independent of trade size. This makes small trades disproportionately expensive and makes any latency-sensitive strategy a bidding contest. See [Gas and Mempool](/microstructure/gas-mempool) and [MEV Overview](/building-blocks/mev-overview).
 
 ---
 
-**From theory to practice: discrete quoting**
+#### Assumptions and Failure Modes
 
-Real DeFi / CeFi making is:
-
-- Discrete in time (you update quotes in ticks)
-- Subject to latency, gas, and MEV
-- Constrained by:
-  - Position limits
-  - Risk limits (per asset, per book)
-  - Venue-specific quirks (AMM vs order book)
-
-We discuss:
-
-- How continuous-time “optimal spreads” translate into:
-  - **Quote bands** around mid
-  - **Inventory-based skew** (tight on the side you want to offload)
-- How things change on AMMs:
-  - Providing liquidity as “passive” market making
-  - Concentrated liquidity as **range-based quoting**
-
-This connects back to:
-
-- `/microstructure/*` (latency, adverse selection, MEV)
-- `/strategies/mm-lite` and `/strategies/lp-business` for concrete strategy templates
+- **Assumes the observed price was available to you.** Displayed quotes are firm only until they are cancelled, and the fastest participants cancel first. Backtests filling at the touch assume a queue position they never held. See [Backtest vs Live](/risk/backtest-vs-live).
+- **Assumes size does not move the market.** It does, and the relationship is concave, so a strategy that works at small size can be uneconomic at ten times the size without any change to the signal.
+- **Assumes liquidity persists.** Depth is thinnest exactly when volatility is highest, so the cost model fitted in normal conditions understates the cost in the conditions that determine a strategy's tail.
+- **Assumes the mid is meaningful.** In a wide, one-sided, or stale book the midpoint is not a price anyone would trade at, and every cost measure referenced to it becomes fiction.
+- **Assumes fees are constant.** Exchange schedules are tiered by volume, rebates change, and gas costs vary by orders of magnitude. A strategy whose margin depends on a fee tier has a business risk, not a market risk.
+- **Assumes both legs of a hedge execute.** They do not always. Partial fills, venue outages, and cross-venue latency leave a position that was meant to be neutral temporarily directional.
+- **Assumes the mark price tracks the index.** During a dislocation it may not, and margin is computed on the mark. This is how a position can be liquidated at a price that never traded anywhere else.
 
 ---
 
-**Practical: toy market-making agent**
+#### Code
 
-You’ll outline and/or implement a simple **discrete-time MM agent**:
+```python
+def walk_the_book(levels, quantity):
+    """Volume-weighted execution price for a market order.
 
-- Environment:
-  - Simulated mid-price process
-  - Poisson/Bernoulli order arrivals that hit the best bid/ask with some probability
-- Agent:
-  - Sets bid/ask around mid with spreads that depend on inventory
-  - Tracks P&L and inventory over time
+    `levels` is an ordered list of (price, size) from best to worst.
+    Returns None if the book cannot fill the order, which is the case
+    a backtest silently ignores when it fills everything at the touch.
+    """
+    remaining, cost = quantity, 0.0
+    for price, size in levels:
+        take = min(remaining, size)
+        cost += take * price
+        remaining -= take
+        if remaining == 0:
+            return cost / quantity
+    return None
 
-You’ll then:
 
-- Plot P&L and inventory distributions
-- See how:
-  - Wider spreads reduce fill rate but improve per-trade edge
-  - Stronger inventory aversion (more aggressive skew) changes risk profile
+def constant_product_quote(reserve_asset, reserve_numeraire,
+                           quantity_out, fee_rate=0.003):
+    """Numeraire required to remove `quantity_out` of the asset from a
+    constant-product pool, including the input fee.
 
-Again, the point is to **touch the concepts** (spread vs inventory vs order flow), not to reproduce full academic models.
+    The whole quote is deterministic and computable by anyone, which is
+    exactly why a stale pool is arbitraged with certainty rather than
+    with probability.
+    """
+    invariant = reserve_asset * reserve_numeraire
+    numeraire_after = invariant / (reserve_asset - quantity_out)
+    net_input = numeraire_after - reserve_numeraire
+    return net_input / (1.0 - fee_rate)
+
+
+def square_root_impact(volatility, quantity, period_volume, constant=1.0):
+    """Standard working model for market impact. Concave in size: the
+    marginal cost of the next unit falls, but total cost still grows."""
+    return constant * volatility * (quantity / period_volume) ** 0.5
+```
 
 ---
 
-#### How This Module Fits in the Library
+#### See Also
 
-Trading Foundations acts as a **bridge** between:
+* [Order Books vs AMMs](/microstructure/orderbooks-vs-amms)
+* [Slippage](/microstructure/slippage)
+* [Market Impact](/execution/market-impact)
+* [Perpetual Futures](/building-blocks/perpetual-futures)
+* [Market Making Lite](/strategies/mm-lite)
+* [Transaction Cost Analysis](/execution/transaction-cost-analysis)
 
-- The math in `/quant-math/*` (returns, volatility, drawdown, GBM, etc.)
-- The structural pages in `/building-blocks/*` and `/microstructure/*`
-- The more concrete strategy pages in `/strategies/*` and simulations in `/simulation/*`
-
-After this module, you should be able to:
-
-- Read DeFi trading and LP strategies as **risk/return objects**, not just stories
-- Ask sharper questions about:
-  - Where edge would realistically come from
-  - How microstructure and leverage affect outcomes
-- Navigate into the detailed math pages with a clear sense of **why** you’re learning each formula.
-
-> warning **Not Financial Advice**  
-> This module is for educational purposes only. It explains how trading primitives and models work; it is not a recommendation to trade, use leverage, or deploy capital with any specific strategy or protocol.
+---

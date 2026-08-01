@@ -181,3 +181,15 @@ If a page feels confusing or incomplete, that is not a failure on your part. It 
 * Add examples from your own experience
 
 Reading is the first step; participation is the next.
+
+---
+
+#### See Also
+
+* [Reading Paths](/welcome/reading-paths) – Pick a route that matches your background
+* [How to Navigate](/welcome/how-to-navigate) – The section map and search tips
+* [Notation & Conventions](/welcome/notation-conventions) – The symbols used in the maths sections
+* [Prerequisites](/welcome/prerequisites) – What to shore up before the denser pages
+* [Risk & Reality Check](/welcome/risk-reality-check) – Reading strategy pages with the right scepticism
+* [Why Backtest and Simulate?](/simulation/why-backtest) – Where the read-then-test loop starts
+* [Content Guidelines](/contributing/content-guidelines) – The structure these articles are written to

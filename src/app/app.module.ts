@@ -151,8 +151,6 @@ import { IndicatorsComponent } from './homepage/pages/reference/indicators/indic
 import { FormulasComponent } from './homepage/pages/reference/formulas/formulas.component';
 import { ProtocolsComponent } from './homepage/pages/reference/protocols/protocols.component';
 import { NotationComponent } from './homepage/pages/reference/notation/notation.component';
-import { ReadingPathsComponent as ReferenceReadingPathsComponent } from './homepage/pages/reference/reading-paths/reading-paths.component';
-import { GuideComponent } from './homepage/pages/contributing/guide/guide.component';
 import { StyleComponent } from './homepage/pages/contributing/style/style.component';
 import { PipelineComponent as ContributingPipelineComponent } from './homepage/pages/contributing/pipeline/pipeline.component';
 import { NewPageComponent } from './homepage/pages/contributing/new-page/new-page.component';
@@ -167,7 +165,6 @@ import { QuantEngineeringComponent } from './homepage/pages/blockchain-execution
 import { SolanaSvmComponent } from './homepage/pages/blockchain-execution-environments/solana-svm/solana-svm.component';
 import { BridgesComponent as BuildingBlocksBridgesComponent } from './homepage/pages/building-blocks/bridges/bridges.component';
 import { DerivativesComponent } from './homepage/pages/building-blocks/derivatives/derivatives.component';
-import { LendingComponent } from './homepage/pages/building-blocks/lending/lending.component';
 import { LiquidityPoolsComponent } from './homepage/pages/building-blocks/liquidity-pools/liquidity-pools.component';
 import { TokenomicsComponent } from './homepage/pages/building-blocks/tokenomics/tokenomics.component';
 import { TokenStandardsComponent } from './homepage/pages/building-blocks/token-standards/token-standards.component';
@@ -196,146 +193,13 @@ import { PythonSetupComponent } from './homepage/pages/data-tooling/python-setup
 import { RpcNodesComponent } from './homepage/pages/data-tooling/rpc-nodes/rpc-nodes.component';
 import { TheGraphComponent } from './homepage/pages/data-tooling/the-graph/the-graph.component';
 import { WalletAnalyticsComponent } from './homepage/pages/data-tooling/wallet-analytics/wallet-analytics.component';
-import { DefiVsTraditionalComponent } from './homepage/pages/defi-vs-traditional/defi-vs-traditional.component';
-import { DefiVsTraditionalFinanceComponent } from './homepage/pages/defi-vs-traditional-finance/defi-vs-traditional-finance.component';
-import { DataTransparencyComponent } from './homepage/pages/defi-vs-traditional-finance/data-transparency/data-transparency.component';
-import { LeverageAndCollateralizationComponent } from './homepage/pages/defi-vs-traditional-finance/leverage-and-collateralization/leverage-and-collateralization.component';
-import { LiquidityModelsComponent } from './homepage/pages/defi-vs-traditional-finance/liquidity-models/liquidity-models.component';
-import { MarketMicrostructureComponent } from './homepage/pages/defi-vs-traditional-finance/market-microstructure/market-microstructure.component';
-import { PricingAndSettlementComponent } from './homepage/pages/defi-vs-traditional-finance/pricing-and-settlement/pricing-and-settlement.component';
-import { RegulationAndCustodyComponent } from './homepage/pages/defi-vs-traditional-finance/regulation-and-custody/regulation-and-custody.component';
-import { RiskDistributionComponent } from './homepage/pages/defi-vs-traditional-finance/risk-distribution/risk-distribution.component';
-import { LandscapeOfDefiComponent } from './homepage/pages/landscape-of-defi/landscape-of-defi.component';
-import { ArchitectureOfDefiComponent } from './homepage/pages/landscape-of-defi/architecture-of-defi/architecture-of-defi.component';
-import { CoreMathToolsComponent } from './homepage/pages/landscape-of-defi/core-math-tools/core-math-tools.component';
-import { EconomicPremisesComponent } from './homepage/pages/landscape-of-defi/economic-premises/economic-premises.component';
-import { EvolutionOfFinanceComponent } from './homepage/pages/landscape-of-defi/evolution-of-finance/evolution-of-finance.component';
-import { MetricsAndAnalyticsStackComponent } from './homepage/pages/landscape-of-defi/metrics-and-analytics-stack/metrics-and-analytics-stack.component';
-import { RiskSurfacesComponent } from './homepage/pages/landscape-of-defi/risk-surfaces/risk-surfaces.component';
-import { LendingAndBorrowingComponent } from './homepage/pages/lending-and-borrowing/lending-and-borrowing.component';
-import { LendingBorrowingComponent as LendingBorrowingLendingBorrowingComponent } from './homepage/pages/lending-borrowing/lending-borrowing.component';
-import { CollateralMathComponent } from './homepage/pages/lending-borrowing/collateral-math/collateral-math.component';
-import { CreditDelegationComponent } from './homepage/pages/lending-borrowing/credit-delegation/credit-delegation.component';
-import { DynamicApyComponent } from './homepage/pages/lending-borrowing/dynamic-apy/dynamic-apy.component';
-import { InterestRateModelsComponent } from './homepage/pages/lending-borrowing/interest-rate-models/interest-rate-models.component';
-import { StabilityAndSystemicRiskComponent } from './homepage/pages/lending-borrowing/stability-and-systemic-risk/stability-and-systemic-risk.component';
-import { FrontrunningComponent } from './homepage/pages/market-microstructure/frontrunning/frontrunning.component';
-import { GasOptimizationComponent } from './homepage/pages/market-microstructure/gas-optimization/gas-optimization.component';
-import { JitLiquidityComponent } from './homepage/pages/market-microstructure/jit-liquidity/jit-liquidity.component';
-import { MevComponent } from './homepage/pages/market-microstructure/mev/mev.component';
-import { OrderFlowComponent } from './homepage/pages/market-microstructure/order-flow/order-flow.component';
-import { SandwichAttacksComponent } from './homepage/pages/market-microstructure/sandwich-attacks/sandwich-attacks.component';
-import { SlippageComponent as MarketMicrostructureSlippageComponent } from './homepage/pages/market-microstructure/slippage/slippage.component';
-import { MathPrimerComponent } from './homepage/pages/math-primer/math-primer.component';
-import { MetaModulesCapstoneComponent } from './homepage/pages/meta-modules-capstone/meta-modules-capstone.component';
-import { AaveComponent } from './homepage/pages/protocol-deep-dives/aave/aave.component';
-import { BalancerComponent } from './homepage/pages/protocol-deep-dives/balancer/balancer.component';
-import { CompoundComponent } from './homepage/pages/protocol-deep-dives/compound/compound.component';
-import { CurveComponent } from './homepage/pages/protocol-deep-dives/curve/curve.component';
-import { GmxComponent } from './homepage/pages/protocol-deep-dives/gmx/gmx.component';
-import { PancakeswapComponent } from './homepage/pages/protocol-deep-dives/pancakeswap/pancakeswap.component';
-import { UniswapV2Component } from './homepage/pages/protocol-deep-dives/uniswap-v2/uniswap-v2.component';
-import { UniswapV3Component } from './homepage/pages/protocol-deep-dives/uniswap-v3/uniswap-v3.component';
-import { BrownianMotionComponent } from './homepage/pages/quant-math/brownian-motion/brownian-motion.component';
-import { CalculusComponent } from './homepage/pages/quant-math/calculus/calculus.component';
-import { ConfidenceIntervalsComponent } from './homepage/pages/quant-math/confidence-intervals/confidence-intervals.component';
-import { CorrelationComponent } from './homepage/pages/quant-math/correlation/correlation.component';
-import { CvarComponent } from './homepage/pages/quant-math/cvar/cvar.component';
-import { DistributionsComponent } from './homepage/pages/quant-math/distributions/distributions.component';
-import { ExpectedValueComponent } from './homepage/pages/quant-math/expected-value/expected-value.component';
-import { HypothesisTestingComponent } from './homepage/pages/quant-math/hypothesis-testing/hypothesis-testing.component';
-import { KellyCriterionComponent } from './homepage/pages/quant-math/kelly-criterion/kelly-criterion.component';
-import { LinearAlgebraComponent } from './homepage/pages/quant-math/linear-algebra/linear-algebra.component';
-import { MaxDrawdownComponent } from './homepage/pages/quant-math/max-drawdown/max-drawdown.component';
-import { NumericalMethodsComponent } from './homepage/pages/quant-math/numerical-methods/numerical-methods.component';
-import { ProbabilityTheoryComponent } from './homepage/pages/quant-math/probability-theory/probability-theory.component';
-import { RegressionComponent } from './homepage/pages/quant-math/regression/regression.component';
-import { SharpeRatioComponent } from './homepage/pages/quant-math/sharpe-ratio/sharpe-ratio.component';
-import { SortinoRatioComponent } from './homepage/pages/quant-math/sortino-ratio/sortino-ratio.component';
-import { VarComponent } from './homepage/pages/quant-math/var/var.component';
-import { VarianceStdComponent } from './homepage/pages/quant-math/variance-std/variance-std.component';
-import { QuantitativeDefiModelingComponent } from './homepage/pages/quantitative-defi-modeling/quantitative-defi-modeling.component';
-import { AgentBasedModelingComponent } from './homepage/pages/quantitative-defi-modeling/agent-based-modeling/agent-based-modeling.component';
-import { DeterministicSimulationEnginesComponent } from './homepage/pages/quantitative-defi-modeling/deterministic-simulation-engines/deterministic-simulation-engines.component';
-import { OracleDesignComponent } from './homepage/pages/quantitative-defi-modeling/oracle-design/oracle-design.component';
-import { PnlMetricsComponent } from './homepage/pages/quantitative-defi-modeling/pnl-metrics/pnl-metrics.component';
-import { PortfolioOptimizationComponent } from './homepage/pages/quantitative-defi-modeling/portfolio-optimization/portfolio-optimization.component';
-import { ScenarioTestingComponent } from './homepage/pages/quantitative-defi-modeling/scenario-testing/scenario-testing.component';
 import { CodeSnippetsComponent } from './homepage/pages/reference/code-snippets/code-snippets.component';
 import { FormulaCheatsheetComponent } from './homepage/pages/reference/formula-cheatsheet/formula-cheatsheet.component';
 import { MetricIndexComponent } from './homepage/pages/reference/metric-index/metric-index.component';
 import { ProtocolIndexComponent } from './homepage/pages/reference/protocol-index/protocol-index.component';
 import { ResourcesComponent } from './homepage/pages/reference/resources/resources.component';
-import { CustodyRiskComponent } from './homepage/pages/risk-security/custody-risk/custody-risk.component';
-import { IncidentResponseComponent } from './homepage/pages/risk-security/incident-response/incident-response.component';
-import { OperationalRiskComponent } from './homepage/pages/risk-security/operational-risk/operational-risk.component';
-import { OracleRiskComponent } from './homepage/pages/risk-security/oracle-risk/oracle-risk.component';
-import { ProtocolRiskComponent } from './homepage/pages/risk-security/protocol-risk/protocol-risk.component';
-import { RegulatoryRiskComponent } from './homepage/pages/risk-security/regulatory-risk/regulatory-risk.component';
-import { SecurityChecklistComponent } from './homepage/pages/risk-security/security-checklist/security-checklist.component';
-import { SmartContractRiskComponent } from './homepage/pages/risk-security/smart-contract-risk/smart-contract-risk.component';
-import { AtrComponent as SignalsIndicatorsAtrComponent } from './homepage/pages/signals-indicators/atr/atr.component';
-import { BacktestSignalsComponent } from './homepage/pages/signals-indicators/backtest-signals/backtest-signals.component';
-import { BollingerBandsComponent } from './homepage/pages/signals-indicators/bollinger-bands/bollinger-bands.component';
-import { CombiningSignalsComponent } from './homepage/pages/signals-indicators/combining-signals/combining-signals.component';
-import { EmaComponent } from './homepage/pages/signals-indicators/ema/ema.component';
-import { FundingRatesComponent } from './homepage/pages/signals-indicators/funding-rates/funding-rates.component';
-import { MacdComponent as SignalsIndicatorsMacdComponent } from './homepage/pages/signals-indicators/macd/macd.component';
-import { MovingAveragesComponent as SignalsIndicatorsMovingAveragesComponent } from './homepage/pages/signals-indicators/moving-averages/moving-averages.component';
-import { OnChainVolumeComponent } from './homepage/pages/signals-indicators/on-chain-volume/on-chain-volume.component';
-import { OpenInterestComponent as SignalsIndicatorsOpenInterestComponent } from './homepage/pages/signals-indicators/open-interest/open-interest.component';
-import { RsiComponent as SignalsIndicatorsRsiComponent } from './homepage/pages/signals-indicators/rsi/rsi.component';
-import { SentimentComponent } from './homepage/pages/signals-indicators/sentiment/sentiment.component';
-import { SignalDegradationComponent } from './homepage/pages/signals-indicators/signal-degradation/signal-degradation.component';
-import { StochasticComponent as SignalsIndicatorsStochasticComponent } from './homepage/pages/signals-indicators/stochastic/stochastic.component';
-import { VolumeAnalysisComponent } from './homepage/pages/signals-indicators/volume-analysis/volume-analysis.component';
-import { WhaleTrackingComponent } from './homepage/pages/signals-indicators/whale-tracking/whale-tracking.component';
-import { Backtesting101Component } from './homepage/pages/simulation-backtesting/backtesting-101/backtesting-101.component';
-import { CrossValidationComponent } from './homepage/pages/simulation-backtesting/cross-validation/cross-validation.component';
-import { DataQualityComponent } from './homepage/pages/simulation-backtesting/data-quality/data-quality.component';
-import { EquityCurvesComponent } from './homepage/pages/simulation-backtesting/equity-curves/equity-curves.component';
-import { FrameworksComponent } from './homepage/pages/simulation-backtesting/frameworks/frameworks.component';
-import { LiveDeploymentComponent } from './homepage/pages/simulation-backtesting/live-deployment/live-deployment.component';
-import { MonteCarloComponent } from './homepage/pages/simulation-backtesting/monte-carlo/monte-carlo.component';
-import { OverfittingComponent } from './homepage/pages/simulation-backtesting/overfitting/overfitting.component';
-import { PaperTradingComponent } from './homepage/pages/simulation-backtesting/paper-trading/paper-trading.component';
-import { PerformanceMetricsComponent } from './homepage/pages/simulation-backtesting/performance-metrics/performance-metrics.component';
-import { ReportingComponent } from './homepage/pages/simulation-backtesting/reporting/reporting.component';
-import { SlippageModelComponent } from './homepage/pages/simulation-backtesting/slippage-model/slippage-model.component';
-import { TransactionCostsComponent } from './homepage/pages/simulation-backtesting/transaction-costs/transaction-costs.component';
-import { WalkForwardComponent } from './homepage/pages/simulation-backtesting/walk-forward/walk-forward.component';
-import { StakingRestakingComponent as StakingRestakingStakingRestakingComponent } from './homepage/pages/staking-restaking/staking-restaking.component';
-import { StakingRestakingYieldMechanicsComponent } from './homepage/pages/staking-restaking-yield-mechanics/staking-restaking-yield-mechanics.component';
-import { LiquidStakingDerivativesComponent } from './homepage/pages/staking-restaking-yield/liquid-staking-derivatives/liquid-staking-derivatives.component';
-import { ProofOfStakeMathComponent } from './homepage/pages/staking-restaking-yield/proof-of-stake-math/proof-of-stake-math.component';
-import { RestakingEconomicsComponent } from './homepage/pages/staking-restaking-yield/restaking-economics/restaking-economics.component';
-import { RestakingModelsComponent } from './homepage/pages/staking-restaking-yield/restaking-models/restaking-models.component';
-import { ValidatorEconomicsComponent } from './homepage/pages/staking-restaking-yield/validator-economics/validator-economics.component';
-import { YieldDecompositionComponent } from './homepage/pages/staking-restaking-yield/yield-decomposition/yield-decomposition.component';
-import { BreakoutComponent } from './homepage/pages/strategy-library/breakout/breakout.component';
-import { CombiningStrategiesComponent } from './homepage/pages/strategy-library/combining-strategies/combining-strategies.component';
-import { DeltaNeutralComponent as StrategyLibraryDeltaNeutralComponent } from './homepage/pages/strategy-library/delta-neutral/delta-neutral.component';
-import { LpActiveComponent } from './homepage/pages/strategy-library/lp-active/lp-active.component';
-import { LpConcentratedComponent } from './homepage/pages/strategy-library/lp-concentrated/lp-concentrated.component';
-import { LpPassiveComponent } from './homepage/pages/strategy-library/lp-passive/lp-passive.component';
-import { MarketNeutralComponent } from './homepage/pages/strategy-library/market-neutral/market-neutral.component';
-import { MeanReversionStrategyComponent } from './homepage/pages/strategy-library/mean-reversion/mean-reversion.component';
-import { MomentumComponent as StrategyLibraryMomentumComponent } from './homepage/pages/strategy-library/momentum/momentum.component';
-import { PairsTradingComponent } from './homepage/pages/strategy-library/pairs-trading/pairs-trading.component';
-import { PortfolioRebalancingComponent } from './homepage/pages/strategy-library/portfolio-rebalancing/portfolio-rebalancing.component';
-import { PositionSizingComponent as StrategyLibraryPositionSizingComponent } from './homepage/pages/strategy-library/position-sizing/position-sizing.component';
-import { StatArbComponent } from './homepage/pages/strategy-library/stat-arb/stat-arb.component';
-import { StopLossComponent as StrategyLibraryStopLossComponent } from './homepage/pages/strategy-library/stop-loss/stop-loss.component';
-import { TakeProfitComponent } from './homepage/pages/strategy-library/take-profit/take-profit.component';
-import { TrendFollowingComponent } from './homepage/pages/strategy-library/trend-following/trend-following.component';
-import { YieldAggregationComponent } from './homepage/pages/strategy-library/yield-aggregation/yield-aggregation.component';
-import { ToolingAndSimulationEcosystemComponent } from './homepage/pages/tooling-and-simulation-ecosystem/tooling-and-simulation-ecosystem.component';
 import { ToolingSimulationEcosystemComponent } from './homepage/pages/tooling-simulation-ecosystem/tooling-simulation-ecosystem.component';
-import { TopLevelRoadmapComponent } from './homepage/pages/top-level-roadmap/top-level-roadmap.component';
 import { TradingFoundationsComponent } from './homepage/pages/trading-foundations/trading-foundations.component';
-import { TradingFoundationsMarketMakingComponent } from './homepage/pages/trading-foundations/market-making/market-making.component';
-import { TradingFoundationsPerpetualFuturesComponent } from './homepage/pages/trading-foundations/perpetual-futures/perpetual-futures.component';
-import { TradingFoundationsSpotTradingComponent } from './homepage/pages/trading-foundations/spot-trading/spot-trading.component';
 import { TransactionOrderingMevComponent } from './homepage/pages/transaction-ordering-mev/transaction-ordering-mev.component';
 import { HowBlocksFormComponent } from './homepage/pages/transaction-ordering-mev/how-blocks-form/how-blocks-form.component';
 import { MevBeyondEvmsComponent } from './homepage/pages/transaction-ordering-mev/mev-beyond-evms/mev-beyond-evms.component';
@@ -346,6 +210,92 @@ import { StatisticalModelingComponent } from './homepage/pages/transaction-order
 import { PrerequisitesComponent } from './homepage/pages/welcome/prerequisites/prerequisites.component';
 import { WhatIsDefiComponent } from './homepage/pages/welcome/what-is-defi/what-is-defi.component';
 import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matters/why-this-matters.component';
+import { MarketParticipantsComponent } from './homepage/pages/markets/market-participants/market-participants.component';
+import { InstrumentMapComponent } from './homepage/pages/markets/instrument-map/instrument-map.component';
+import { Equities101Component } from './homepage/pages/markets/equities-101/equities-101.component';
+import { CorporateActionsComponent } from './homepage/pages/markets/corporate-actions/corporate-actions.component';
+import { ShortSellingComponent } from './homepage/pages/markets/short-selling/short-selling.component';
+import { EquityIndicesComponent } from './homepage/pages/markets/equity-indices/equity-indices.component';
+import { Futures101Component } from './homepage/pages/markets/futures-101/futures-101.component';
+import { RollAndCarryComponent } from './homepage/pages/markets/roll-and-carry/roll-and-carry.component';
+import { CalendarSpreadsComponent } from './homepage/pages/markets/calendar-spreads/calendar-spreads.component';
+import { Fx101Component } from './homepage/pages/markets/fx-101/fx-101.component';
+import { FxCarryParityComponent } from './homepage/pages/markets/fx-carry-parity/fx-carry-parity.component';
+import { FixedIncome101Component } from './homepage/pages/markets/fixed-income-101/fixed-income-101.component';
+import { YieldCurvesComponent } from './homepage/pages/markets/yield-curves/yield-curves.component';
+import { DurationConvexityComponent } from './homepage/pages/markets/duration-convexity/duration-convexity.component';
+import { CurveConstructionComponent } from './homepage/pages/markets/curve-construction/curve-construction.component';
+import { CommoditiesComponent } from './homepage/pages/markets/commodities/commodities.component';
+import { Options101Component } from './homepage/pages/derivatives/options-101/options-101.component';
+import { PayoffsParityComponent } from './homepage/pages/derivatives/payoffs-parity/payoffs-parity.component';
+import { NoArbitrageReplicationComponent } from './homepage/pages/derivatives/no-arbitrage-replication/no-arbitrage-replication.component';
+import { BinomialTreesComponent } from './homepage/pages/derivatives/binomial-trees/binomial-trees.component';
+import { BlackScholesComponent } from './homepage/pages/derivatives/black-scholes/black-scholes.component';
+import { GreeksComponent } from './homepage/pages/derivatives/greeks/greeks.component';
+import { DeltaHedgingComponent } from './homepage/pages/derivatives/delta-hedging/delta-hedging.component';
+import { ImpliedVolatilityComponent } from './homepage/pages/derivatives/implied-volatility/implied-volatility.component';
+import { VolSurfaceComponent } from './homepage/pages/derivatives/vol-surface/vol-surface.component';
+import { VolTermStructureComponent } from './homepage/pages/derivatives/vol-term-structure/vol-term-structure.component';
+import { ExoticsComponent } from './homepage/pages/derivatives/exotics/exotics.component';
+import { VarianceSwapsComponent } from './homepage/pages/derivatives/variance-swaps/variance-swaps.component';
+import { BrownianMotionComponent } from './homepage/pages/stochastic-calculus/brownian-motion/brownian-motion.component';
+import { MartingalesFiltrationsComponent } from './homepage/pages/stochastic-calculus/martingales-filtrations/martingales-filtrations.component';
+import { ItoLemmaComponent } from './homepage/pages/stochastic-calculus/ito-lemma/ito-lemma.component';
+import { SdesComponent } from './homepage/pages/stochastic-calculus/sdes/sdes.component';
+import { NumericalSchemesComponent } from './homepage/pages/stochastic-calculus/numerical-schemes/numerical-schemes.component';
+import { ChangeOfMeasureComponent } from './homepage/pages/stochastic-calculus/change-of-measure/change-of-measure.component';
+import { RiskNeutralPricingComponent } from './homepage/pages/stochastic-calculus/risk-neutral-pricing/risk-neutral-pricing.component';
+import { FeynmanKacComponent } from './homepage/pages/stochastic-calculus/feynman-kac/feynman-kac.component';
+import { OrnsteinUhlenbeckComponent } from './homepage/pages/stochastic-calculus/ornstein-uhlenbeck/ornstein-uhlenbeck.component';
+import { HypothesisTestingComponent } from './homepage/pages/stat-methods/hypothesis-testing/hypothesis-testing.component';
+import { ConfidenceIntervalsComponent } from './homepage/pages/stat-methods/confidence-intervals/confidence-intervals.component';
+import { LinearRegressionComponent } from './homepage/pages/stat-methods/linear-regression/linear-regression.component';
+import { RegressionDiagnosticsComponent } from './homepage/pages/stat-methods/regression-diagnostics/regression-diagnostics.component';
+import { FactorModelsComponent } from './homepage/pages/stat-methods/factor-models/factor-models.component';
+import { PcaComponent } from './homepage/pages/stat-methods/pca/pca.component';
+import { ArimaComponent } from './homepage/pages/stat-methods/arima/arima.component';
+import { GarchComponent } from './homepage/pages/stat-methods/garch/garch.component';
+import { UnitRootsComponent } from './homepage/pages/stat-methods/unit-roots/unit-roots.component';
+import { CointegrationComponent } from './homepage/pages/stat-methods/cointegration/cointegration.component';
+import { MultipleTestingComponent } from './homepage/pages/stat-methods/multiple-testing/multiple-testing.component';
+import { BacktestOverfittingComponent } from './homepage/pages/stat-methods/backtest-overfitting/backtest-overfitting.component';
+import { BootstrapComponent } from './homepage/pages/stat-methods/bootstrap/bootstrap.component';
+import { ExecutionOverviewComponent } from './homepage/pages/execution/execution-overview/execution-overview.component';
+import { OrderTypesComponent } from './homepage/pages/execution/order-types/order-types.component';
+import { MarketImpactComponent } from './homepage/pages/execution/market-impact/market-impact.component';
+import { AlmgrenChrissComponent } from './homepage/pages/execution/almgren-chriss/almgren-chriss.component';
+import { TwapVwapComponent } from './homepage/pages/execution/twap-vwap/twap-vwap.component';
+import { ImplementationShortfallComponent } from './homepage/pages/execution/implementation-shortfall/implementation-shortfall.component';
+import { SmartOrderRoutingComponent } from './homepage/pages/execution/smart-order-routing/smart-order-routing.component';
+import { TransactionCostAnalysisComponent } from './homepage/pages/execution/transaction-cost-analysis/transaction-cost-analysis.component';
+import { AdverseSelectionComponent } from './homepage/pages/execution/adverse-selection/adverse-selection.component';
+import { ExecutionBenchmarksComponent } from './homepage/pages/execution/execution-benchmarks/execution-benchmarks.component';
+import { Credit101Component } from './homepage/pages/credit/credit-101/credit-101.component';
+import { CreditSpreadsComponent } from './homepage/pages/credit/credit-spreads/credit-spreads.component';
+import { DefaultProbabilityComponent } from './homepage/pages/credit/default-probability/default-probability.component';
+import { MertonModelComponent } from './homepage/pages/credit/merton-model/merton-model.component';
+import { ReducedFormModelsComponent } from './homepage/pages/credit/reduced-form-models/reduced-form-models.component';
+import { CdsComponent } from './homepage/pages/credit/cds/cds.component';
+import { RecoveryRatesComponent } from './homepage/pages/credit/recovery-rates/recovery-rates.component';
+import { CreditCurvesComponent } from './homepage/pages/credit/credit-curves/credit-curves.component';
+import { MlOverviewComponent } from './homepage/pages/ml-finance/ml-overview/ml-overview.component';
+import { FeatureEngineeringComponent } from './homepage/pages/ml-finance/feature-engineering/feature-engineering.component';
+import { LabellingComponent } from './homepage/pages/ml-finance/labelling/labelling.component';
+import { MetaLabellingComponent } from './homepage/pages/ml-finance/meta-labelling/meta-labelling.component';
+import { PurgedCrossValidationComponent } from './homepage/pages/ml-finance/purged-cross-validation/purged-cross-validation.component';
+import { RegularisationComponent } from './homepage/pages/ml-finance/regularisation/regularisation.component';
+import { EnsemblesComponent } from './homepage/pages/ml-finance/ensembles/ensembles.component';
+import { InterpretabilityComponent } from './homepage/pages/ml-finance/interpretability/interpretability.component';
+import { MlPitfallsComponent } from './homepage/pages/ml-finance/ml-pitfalls/ml-pitfalls.component';
+import { RegimesOverviewComponent } from './homepage/pages/regimes-macro/regimes-overview/regimes-overview.component';
+import { MarkovSwitchingComponent } from './homepage/pages/regimes-macro/markov-switching/markov-switching.component';
+import { HiddenMarkovModelsComponent } from './homepage/pages/regimes-macro/hidden-markov-models/hidden-markov-models.component';
+import { ChangepointDetectionComponent } from './homepage/pages/regimes-macro/changepoint-detection/changepoint-detection.component';
+import { CorrelationBreakdownComponent } from './homepage/pages/regimes-macro/correlation-breakdown/correlation-breakdown.component';
+import { RatesAndInflationComponent } from './homepage/pages/regimes-macro/rates-and-inflation/rates-and-inflation.component';
+import { LiquidityCyclesComponent } from './homepage/pages/regimes-macro/liquidity-cycles/liquidity-cycles.component';
+import { MacroFactorsComponent } from './homepage/pages/regimes-macro/macro-factors/macro-factors.component';
+import { OrderingEconomicsComponent } from './homepage/pages/transaction-ordering-mev/ordering-economics/ordering-economics.component';
 
 @NgModule({
   declarations: [
@@ -492,8 +442,6 @@ import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matte
     FormulasComponent,
     ProtocolsComponent,
     NotationComponent,
-    ReferenceReadingPathsComponent,
-    GuideComponent,
     StyleComponent,
     ContributingPipelineComponent,
     NewPageComponent,
@@ -508,7 +456,6 @@ import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matte
     SolanaSvmComponent,
     BuildingBlocksBridgesComponent,
     DerivativesComponent,
-    LendingComponent,
     LiquidityPoolsComponent,
     TokenomicsComponent,
     TokenStandardsComponent,
@@ -537,146 +484,13 @@ import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matte
     RpcNodesComponent,
     TheGraphComponent,
     WalletAnalyticsComponent,
-    DefiVsTraditionalComponent,
-    DefiVsTraditionalFinanceComponent,
-    DataTransparencyComponent,
-    LeverageAndCollateralizationComponent,
-    LiquidityModelsComponent,
-    MarketMicrostructureComponent,
-    PricingAndSettlementComponent,
-    RegulationAndCustodyComponent,
-    RiskDistributionComponent,
-    LandscapeOfDefiComponent,
-    ArchitectureOfDefiComponent,
-    CoreMathToolsComponent,
-    EconomicPremisesComponent,
-    EvolutionOfFinanceComponent,
-    MetricsAndAnalyticsStackComponent,
-    RiskSurfacesComponent,
-    LendingAndBorrowingComponent,
-    LendingBorrowingLendingBorrowingComponent,
-    CollateralMathComponent,
-    CreditDelegationComponent,
-    DynamicApyComponent,
-    InterestRateModelsComponent,
-    StabilityAndSystemicRiskComponent,
-    FrontrunningComponent,
-    GasOptimizationComponent,
-    JitLiquidityComponent,
-    MevComponent,
-    OrderFlowComponent,
-    SandwichAttacksComponent,
-    MarketMicrostructureSlippageComponent,
-    MathPrimerComponent,
-    MetaModulesCapstoneComponent,
-    AaveComponent,
-    BalancerComponent,
-    CompoundComponent,
-    CurveComponent,
-    GmxComponent,
-    PancakeswapComponent,
-    UniswapV2Component,
-    UniswapV3Component,
-    BrownianMotionComponent,
-    CalculusComponent,
-    ConfidenceIntervalsComponent,
-    CorrelationComponent,
-    CvarComponent,
-    DistributionsComponent,
-    ExpectedValueComponent,
-    HypothesisTestingComponent,
-    KellyCriterionComponent,
-    LinearAlgebraComponent,
-    MaxDrawdownComponent,
-    NumericalMethodsComponent,
-    ProbabilityTheoryComponent,
-    RegressionComponent,
-    SharpeRatioComponent,
-    SortinoRatioComponent,
-    VarComponent,
-    VarianceStdComponent,
-    QuantitativeDefiModelingComponent,
-    AgentBasedModelingComponent,
-    DeterministicSimulationEnginesComponent,
-    OracleDesignComponent,
-    PnlMetricsComponent,
-    PortfolioOptimizationComponent,
-    ScenarioTestingComponent,
     CodeSnippetsComponent,
     FormulaCheatsheetComponent,
     MetricIndexComponent,
     ProtocolIndexComponent,
     ResourcesComponent,
-    CustodyRiskComponent,
-    IncidentResponseComponent,
-    OperationalRiskComponent,
-    OracleRiskComponent,
-    ProtocolRiskComponent,
-    RegulatoryRiskComponent,
-    SecurityChecklistComponent,
-    SmartContractRiskComponent,
-    SignalsIndicatorsAtrComponent,
-    BacktestSignalsComponent,
-    BollingerBandsComponent,
-    CombiningSignalsComponent,
-    EmaComponent,
-    FundingRatesComponent,
-    SignalsIndicatorsMacdComponent,
-    SignalsIndicatorsMovingAveragesComponent,
-    OnChainVolumeComponent,
-    SignalsIndicatorsOpenInterestComponent,
-    SignalsIndicatorsRsiComponent,
-    SentimentComponent,
-    SignalDegradationComponent,
-    SignalsIndicatorsStochasticComponent,
-    VolumeAnalysisComponent,
-    WhaleTrackingComponent,
-    Backtesting101Component,
-    CrossValidationComponent,
-    DataQualityComponent,
-    EquityCurvesComponent,
-    FrameworksComponent,
-    LiveDeploymentComponent,
-    MonteCarloComponent,
-    OverfittingComponent,
-    PaperTradingComponent,
-    PerformanceMetricsComponent,
-    ReportingComponent,
-    SlippageModelComponent,
-    TransactionCostsComponent,
-    WalkForwardComponent,
-    StakingRestakingStakingRestakingComponent,
-    StakingRestakingYieldMechanicsComponent,
-    LiquidStakingDerivativesComponent,
-    ProofOfStakeMathComponent,
-    RestakingEconomicsComponent,
-    RestakingModelsComponent,
-    ValidatorEconomicsComponent,
-    YieldDecompositionComponent,
-    BreakoutComponent,
-    CombiningStrategiesComponent,
-    StrategyLibraryDeltaNeutralComponent,
-    LpActiveComponent,
-    LpConcentratedComponent,
-    LpPassiveComponent,
-    MarketNeutralComponent,
-    MeanReversionStrategyComponent,
-    StrategyLibraryMomentumComponent,
-    PairsTradingComponent,
-    PortfolioRebalancingComponent,
-    StrategyLibraryPositionSizingComponent,
-    StatArbComponent,
-    StrategyLibraryStopLossComponent,
-    TakeProfitComponent,
-    TrendFollowingComponent,
-    YieldAggregationComponent,
-    ToolingAndSimulationEcosystemComponent,
     ToolingSimulationEcosystemComponent,
-    TopLevelRoadmapComponent,
     TradingFoundationsComponent,
-    TradingFoundationsMarketMakingComponent,
-    TradingFoundationsPerpetualFuturesComponent,
-    TradingFoundationsSpotTradingComponent,
     TransactionOrderingMevComponent,
     HowBlocksFormComponent,
     MevBeyondEvmsComponent,
@@ -687,6 +501,92 @@ import { WhyThisMattersComponent } from './homepage/pages/welcome/why-this-matte
     PrerequisitesComponent,
     WhatIsDefiComponent,
     WhyThisMattersComponent,
+    MarketParticipantsComponent,
+    InstrumentMapComponent,
+    Equities101Component,
+    CorporateActionsComponent,
+    ShortSellingComponent,
+    EquityIndicesComponent,
+    Futures101Component,
+    RollAndCarryComponent,
+    CalendarSpreadsComponent,
+    Fx101Component,
+    FxCarryParityComponent,
+    FixedIncome101Component,
+    YieldCurvesComponent,
+    DurationConvexityComponent,
+    CurveConstructionComponent,
+    CommoditiesComponent,
+    Options101Component,
+    PayoffsParityComponent,
+    NoArbitrageReplicationComponent,
+    BinomialTreesComponent,
+    BlackScholesComponent,
+    GreeksComponent,
+    DeltaHedgingComponent,
+    ImpliedVolatilityComponent,
+    VolSurfaceComponent,
+    VolTermStructureComponent,
+    ExoticsComponent,
+    VarianceSwapsComponent,
+    BrownianMotionComponent,
+    MartingalesFiltrationsComponent,
+    ItoLemmaComponent,
+    SdesComponent,
+    NumericalSchemesComponent,
+    ChangeOfMeasureComponent,
+    RiskNeutralPricingComponent,
+    FeynmanKacComponent,
+    OrnsteinUhlenbeckComponent,
+    HypothesisTestingComponent,
+    ConfidenceIntervalsComponent,
+    LinearRegressionComponent,
+    RegressionDiagnosticsComponent,
+    FactorModelsComponent,
+    PcaComponent,
+    ArimaComponent,
+    GarchComponent,
+    UnitRootsComponent,
+    CointegrationComponent,
+    MultipleTestingComponent,
+    BacktestOverfittingComponent,
+    BootstrapComponent,
+    ExecutionOverviewComponent,
+    OrderTypesComponent,
+    MarketImpactComponent,
+    AlmgrenChrissComponent,
+    TwapVwapComponent,
+    ImplementationShortfallComponent,
+    SmartOrderRoutingComponent,
+    TransactionCostAnalysisComponent,
+    AdverseSelectionComponent,
+    ExecutionBenchmarksComponent,
+    Credit101Component,
+    CreditSpreadsComponent,
+    DefaultProbabilityComponent,
+    MertonModelComponent,
+    ReducedFormModelsComponent,
+    CdsComponent,
+    RecoveryRatesComponent,
+    CreditCurvesComponent,
+    MlOverviewComponent,
+    FeatureEngineeringComponent,
+    LabellingComponent,
+    MetaLabellingComponent,
+    PurgedCrossValidationComponent,
+    RegularisationComponent,
+    EnsemblesComponent,
+    InterpretabilityComponent,
+    MlPitfallsComponent,
+    RegimesOverviewComponent,
+    MarkovSwitchingComponent,
+    HiddenMarkovModelsComponent,
+    ChangepointDetectionComponent,
+    CorrelationBreakdownComponent,
+    RatesAndInflationComponent,
+    LiquidityCyclesComponent,
+    MacroFactorsComponent,
+    OrderingEconomicsComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

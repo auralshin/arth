@@ -1,5 +1,7 @@
 ### Building Simulations
 
+> info **Metadata** Level: Intermediate | Prerequisites: Python, Why Backtest and Simulate? | Tags: overview, simulation, backtesting, architecture, agent-based, event-driven
+
 Building robust simulation frameworks is essential for backtesting DeFi strategies, modeling protocol behavior, and understanding complex market dynamics. This section covers practical approaches to building simulation engines, from event-driven architectures to agent-based models.
 
 #### What You'll Learn
@@ -41,3 +43,14 @@ Building robust simulation frameworks is essential for backtesting DeFi strategi
 5. **Risk Assessment**: Monte Carlo simulations for risk metrics
 
 Ready to build? Let's start with backtesting frameworks.
+
+---
+
+#### See Also
+
+* [Backtesting Framework](/building-simulations/backtesting-framework) – Start here: the core engine and its components
+* [Agent-Based Simulation](/building-simulations/agent-based-simulation) – Modelling LPs, arbitrageurs, searchers and traders
+* [Event-Driven Architecture](/building-simulations/event-driven-architecture) – The event bus that keeps components decoupled
+* [Data Pipeline & Historical Replay](/building-simulations/data-pipeline-replay) – Sourcing, storing and replaying historical data
+* [Performance Optimization](/building-simulations/performance-optimization) – Profiling, vectorisation and parallel runs
+* [Why Backtest and Simulate?](/simulation/why-backtest) – The case for simulation, and its limits

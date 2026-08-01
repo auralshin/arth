@@ -75,4 +75,4 @@ Due diligence requires auditing contracts, understanding tokenomics, evaluating 
 
 * [Liquidity Pools](/building-blocks/liquidity-pools) – LP mechanics and fee accrual
 * [Tokenomics](/building-blocks/tokenomics) – Supply, inflation, and value capture
-* [Risk Types](/building-blocks/risk-types) – Categorising and measuring DeFi risks
+* [Risk Types](/risk/types) – Categorising and measuring DeFi risks

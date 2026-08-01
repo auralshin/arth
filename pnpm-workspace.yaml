@@ -1,2 +1,7 @@
-ignoredBuiltDependencies:
-  - puppeteer
+allowBuilds:
+  core-js: false
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  nice-napi: true
+  puppeteer: false

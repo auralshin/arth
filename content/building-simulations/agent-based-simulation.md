@@ -1,5 +1,7 @@
 ### Agent-Based Simulation
 
+> info **Metadata** Level: Advanced | Prerequisites: Python, AMMs 101, Backtesting Framework | Tags: simulation, agent-based, python, mev, liquidity-provision, market-dynamics
+
 Agent-based modeling (ABM) allows you to simulate complex DeFi ecosystems by modeling individual participants (agents) with autonomous behaviors and decision-making rules.
 
 #### Agent Architecture
@@ -334,3 +336,14 @@ def visualize_simulation(sim):
 - Build event-driven architecture for real-time agent simulations
 - Implement data replay mechanisms for historical analysis
 - Optimize performance for large-scale multi-agent systems
+
+---
+
+#### See Also
+
+* [Agent-Based Simulation](/simulation/agent-based) – The conceptual introduction to agent-based modelling
+* [Event-Driven Architecture](/building-simulations/event-driven-architecture) – The event bus that wires agents together
+* [Backtesting Framework](/building-simulations/backtesting-framework) – Single-strategy testing before going multi-agent
+* [Performance Optimization](/building-simulations/performance-optimization) – Scaling to large agent populations
+* [MEV Overview](/building-blocks/mev-overview) – The behaviour modelled by searcher agents
+* [Simulating Liquidations and Cascades](/simulation/liquidations) – A classic multi-agent stress scenario

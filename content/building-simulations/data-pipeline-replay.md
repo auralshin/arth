@@ -1,10 +1,12 @@
-# Data Pipeline & Historical Replay
+### Data Pipeline & Historical Replay
+
+> info **Metadata** Level: Advanced | Prerequisites: TypeScript, SQL, Event Logs and Decoding | Tags: data-pipeline, replay, on-chain-data, time-series, typescript, data-quality
 
 Building a robust data pipeline is critical for accurate DeFi simulations. Your results are only as good as your data quality, completeness, and the fidelity of your replay mechanism.
 
-## Data Sources
+#### Data Sources
 
-### On-Chain Data
+#### On-Chain Data
 
 ```typescript
 interface BlockData {
@@ -61,7 +63,7 @@ class BlockchainDataProvider {
 }
 ```
 
-### DEX Data
+#### DEX Data
 
 ```python
 import ccxt
@@ -117,7 +119,7 @@ class DEXDataProvider:
         } for t in trades]
 ```
 
-### Uniswap V3 Data
+#### Uniswap V3 Data
 
 ```typescript
 import { Pool } from '@uniswap/v3-sdk';
@@ -178,9 +180,9 @@ class UniswapV3DataProvider {
 }
 ```
 
-## Data Storage & Indexing
+#### Data Storage & Indexing
 
-### Time-Series Database
+#### Time-Series Database
 
 ```python
 import sqlite3
@@ -257,9 +259,9 @@ class TimeSeriesDB:
         return pd.read_sql_query(query, self.conn, params=params)
 ```
 
-## Historical Replay Engine
+#### Historical Replay Engine
 
-### Basic Replay
+#### Basic Replay
 
 ```python
 class HistoricalReplay:
@@ -318,7 +320,7 @@ class HistoricalReplay:
                     observer.on_trade(data)
 ```
 
-### High-Fidelity Replay with Order Book
+#### High-Fidelity Replay with Order Book
 
 ```python
 class OrderBookReplay:
@@ -376,7 +378,7 @@ class OrderBookReplay:
         return total_cost / size
 ```
 
-## Data Validation & Cleaning
+#### Data Validation & Cleaning
 
 ```python
 class DataValidator:
@@ -436,7 +438,7 @@ class DataValidator:
         return gaps
 ```
 
-## Complete Pipeline Example
+#### Complete Pipeline Example
 
 ```python
 class DeFiDataPipeline:
@@ -517,7 +519,7 @@ async def main():
     )
 ```
 
-## Best Practices
+#### Best Practices
 
 1. **Data Quality First**: Spend time validating and cleaning data before simulation
 2. **Incremental Updates**: Store data incrementally to avoid refetching
@@ -527,8 +529,20 @@ async def main():
 6. **Benchmarking**: Compare your data against known events (e.g., major hacks, price crashes)
 7. **Storage Efficiency**: Use compression for large datasets
 
-## Next Steps
+#### Next Steps
 
 - Learn about [Event-Driven Architecture](/building-simulations/event-driven-architecture) for processing data streams
 - Explore [Performance Optimization](/building-simulations/performance-optimization) for handling large datasets
 - See [Backtesting Framework](/building-simulations/backtesting-framework) for using historical data in backtests
+
+---
+
+#### See Also
+
+* [Data Preparation for Backtests](/simulation/data-prep) – Aligning and preparing series before replay
+* [Event Logs and Decoding](/data-tooling/event-logs) – Turning raw logs into typed events
+* [RPC Nodes](/data-tooling/rpc-nodes) – Sourcing block and transaction data directly
+* [The Graph](/data-tooling/the-graph) – Indexed subgraph data as a pipeline source
+* [Cleaning and Resampling Market Data](/data-tooling/cleaning) – Gap handling and resampling before replay
+* [Concentrated Liquidity](/protocols/concentrated-liquidity) – The Uniswap v3 state this pipeline reconstructs
+* [Event-Driven Architecture](/building-simulations/event-driven-architecture) – Consuming the replayed stream

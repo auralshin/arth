@@ -82,4 +82,4 @@ Delta-hedging an LP position involves taking offsetting positions in the constit
 * [Concentrated Liquidity](/protocols/concentrated-liquidity) – Range-based liquidity and Uniswap v3 design
 * [Liquidity Pools](/building-blocks/liquidity-pools) – Reserve composition, LP tokens, and risk
 * [Impermanent Loss](/building-blocks/impermanent-loss) – Path dependence and rebalancing cost
-* [LP Returns](/simulations/lp-returns) – Simulated returns under different vol and fee regimes
+* [LP Returns](/simulation/lp-returns) – Simulated returns under different vol and fee regimes

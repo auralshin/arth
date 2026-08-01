@@ -2,7 +2,7 @@
 
 > info **Metadata** Level: All | Prerequisites: None | Tags: contributing, open-source, community
 
-Arth is an open-source knowledge hub for DeFi practitioners, researchers, and developers. Contributions span documentation improvements, new content, code examples, simulation notebooks, and tooling integrations. This page outlines how to get involved and what types of contributions are most valuable.
+Arth is an open-source encyclopedia of quantitative finance for enthusiasts, developers, analysts, and researchers. Contributions span documentation improvements, new content, code examples, simulation notebooks, and tooling integrations. This page outlines how to get involved and what types of contributions are most valuable.
 
 ---
 

@@ -174,3 +174,15 @@ As you explore DeFi:
 * Ask, "If this goes wrong, what could fail and why?"
 
 The rest of the docs unpack each use case in more depth, with examples, math, and simulations where needed.
+
+---
+
+#### See Also
+
+* [Swaps & DEXs](/building-blocks/swaps-dexs) – How the swap use case actually executes
+* [Lending & Borrowing](/building-blocks/lending-borrowing) – Supplying, and borrowing against collateral
+* [Liquidity Pools](/building-blocks/liquidity-pools) – What you join when you provide liquidity
+* [Perpetual Futures](/building-blocks/perpetual-futures) – Leveraged long and short exposure on-chain
+* [Yield Farming](/building-blocks/yield-farming) – Where incentive-driven yield comes from
+* [Stablecoins](/building-blocks/stablecoins) – The savings and payments leg
+* [Where People Lose Money in DeFi](/start-here/losing-money) – How each of these use cases goes wrong

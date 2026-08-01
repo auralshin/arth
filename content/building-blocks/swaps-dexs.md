@@ -68,6 +68,6 @@ From a user perspective, hybrid models offer better execution for certain strate
 
 * [AMMs 101](/building-blocks/amms-101) – Invariant-based pricing and slippage
 * [Liquidity Pools](/building-blocks/liquidity-pools) – Reserve dynamics and LP exposure
-* [Orderbooks vs AMMs](/building-blocks/orderbooks-vs-amms) – Comparing exchange architectures
-* [Gas & Mempool](/building-blocks/gas-mempool) – Transaction costs and ordering
-* [Transaction Ordering & MEV](/building-blocks/transaction-ordering-mev) – Front-running, sandwiching, and mitigation
+* [Orderbooks vs AMMs](/microstructure/orderbooks-vs-amms) – Comparing exchange architectures
+* [Gas & Mempool](/microstructure/gas-mempool) – Transaction costs and ordering
+* [Transaction Ordering & MEV](/transaction-ordering-mev) – Front-running, sandwiching, and mitigation

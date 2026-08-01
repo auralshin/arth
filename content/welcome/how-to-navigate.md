@@ -2,11 +2,14 @@
 
 > info **Metadata** Level: All | Prerequisites: None | Tags: [welcome, overview, navigation]
 
-Welcome to the Arth knowledge hub. You can think of these docs as a city with different neighborhoods:
+Welcome to Arth. You can think of these docs as a city with different neighborhoods:
 
-1. **Welcome / Start Here** – where you get your bearings, build intuition, and pick a path that matches your background.
-2. **Deep Content Tracks** – sections like Building Blocks, Protocol Deep Dives, Quant & Math, Signals, Strategies, Simulation, Risk. These are the “chapters” you’ll keep coming back to.
-3. **Reference & Tools** – glossaries, cheat sheets, indices, and practical guides that help you quickly look things up or turn ideas into something testable.
+1. **Start Here** – where you get your bearings, build intuition, and pick a path that matches your background.
+2. **The Quant Core** – Math & Probability, Statistics & Time Series, Stochastic Processes, Markets & Microstructure, Signals, Strategy Design, Portfolio & Risk, Data & Tooling, Simulation & Backtesting. These are the “chapters” you’ll keep coming back to, and none of them assume a particular market.
+3. **DeFi & On-Chain Markets** – a full domain section for on-chain finance: primitives, protocol designs, MEV and ordering, execution environments, and on-chain data.
+4. **Reference & Tools** – glossaries, cheat sheets, indices, and practical guides that help you quickly look things up or turn ideas into something testable.
+
+The split matters: the quant core teaches the method, and the domain sections show the method applied. A Sharpe ratio, a stop-loss, and an overfitted backtest behave the same way whether the returns came from a futures position or a liquidity position.
 
 Use the sidebar to browse by topic, or the search bar to jump directly to what you care about (for example, type “RSI”, “impermanent loss”, or “Sharpe ratio”).
 
@@ -16,44 +19,59 @@ Use the sidebar to browse by topic, or the search bar to jump directly to what y
 
 You don’t have to read Arth from start to finish. Pick the path that feels closest to where you are now.
 
-**If you’re new to DeFi**
+**If you’re new to markets**
 
-You might have used a centralized exchange or heard about “yield farming”, but the details feel fuzzy.
+You’re curious about how trading and investing actually work, beyond headlines and tips.
 
-* Start in the **Welcome / Start Here** section to get a big-picture view of what DeFi is and how people actually use it.
-* Then move into **Building Blocks** to learn the core ingredients: tokens, swaps, AMMs, lending, stablecoins, oracles, perps.
-* Along the way, look for short sidebars and callouts labelled with “risk” or “common mistakes” – they highlight ways people actually lose money.
+* Start in **Start Here** for reading guidance and a realistic view of what quantitative work can and can’t tell you.
+* Move into **Statistics & Time Series** for the vocabulary you’ll use everywhere: returns, volatility, autocorrelation.
+* Then read **Portfolio & Risk → Performance Metrics** so you can tell a good track record from a lucky one.
+* Along the way, look for callouts labelled “risk” or “common mistakes” – they highlight ways people actually lose money.
 
-Once that feels comfortable, you can:
+**If you come from a math or stats background**
 
-* Visit **Signals & Indicators** to see how tools like RSI and moving averages work.
-* Dip into the **Strategy Library** to see how people combine building blocks into simple strategies.
+You’re comfortable with formulas and distributions and want to see how they map onto markets.
 
-**If you’re already trading or active in DeFi**
+* Skim **Math & Probability** and **Stochastic Processes** to align on notation and assumptions.
+* Connect those ideas to real markets in **Signals & Features** and **Strategy Design**.
+* Spend real time in **Simulation & Backtesting** – it’s where most theoretically sound ideas quietly die.
+* Use **Portfolio & Risk** for the sizing and evaluation machinery.
+
+**If you’re a developer or analyst building things**
+
+You want to source data, compute something correct, and ship it.
+
+* Start in **Data & Tooling** for data sources, cleaning, pipelines, and reproducible environments.
+* Read **Simulation & Backtesting** before writing your own backtester – especially the failure modes.
+* Use **Reference** as your lookup layer: formulas, notation, metric and indicator indices.
+* Dip into **Markets & Microstructure** when your numbers and your fills disagree.
+
+**If you’re already trading**
 
 You understand the basics and maybe run some strategies, but want more structure and better reasoning.
 
-* Skim **Building Blocks** and **Protocol Deep Dives** to fill any gaps in how protocols work under the hood.
-* Spend time in **Signals & Indicators** to see clearly defined indicators (with intuition, formulas, and examples).
-* Use the **Strategy Library** for structured write-ups: what the idea is, how it’s tested, and what can go wrong.
-* When you want to move from intuition to evidence, read **Simulation & Backtesting** to learn how to test ideas honestly.
+* Spend time in **Signals & Features** to see clearly defined indicators (with intuition, formulas, and examples).
+* Use **Strategy Design** for structured write-ups: what the idea is, how it’s tested, and what can go wrong.
+* Read **Portfolio & Risk** to move from “this trade worked” to “this process has an edge”.
+* Read **Markets & Microstructure** to understand the costs that separate a backtest from a fill.
 
-**If you come from a math/quant background**
+**If you’re here for DeFi specifically**
 
-You’re comfortable with formulas and distributions and want to see how they map onto DeFi.
+You want the on-chain instance of all of the above.
 
-* Go straight to the **Quant & Math Toolkit** for probability, statistics, returns, volatility, risk measures, and optimization.
-* Then connect those ideas to real markets in **Signals & Indicators** and the **Strategy Library**.
-* Use **Simulation & Backtesting** to see how these concepts play out on historical and simulated data.
-
-You can always jump back to **Building Blocks** if some DeFi-specific concept (like liquidations or AMMs) needs more intuition.
+* Start with **DeFi & On-Chain Markets → Orientation** for what DeFi is and how people actually use it.
+* Move into **Primitives** for the core ingredients: tokens, swaps, AMMs, lending, stablecoins, oracles, perps.
+* Go deeper with **Protocol Deep Dives**, then **MEV & Transaction Ordering** and **Execution Environments**.
+* Use **On-Chain Data** when you’re ready to query chains yourself.
+* Jump back into the quant core whenever you need the general version of a concept.
 
 **If you care about protocol risk and system design**
 
 You might be a protocol designer, risk reviewer, or someone who wants to understand failure modes.
 
-* Read **Building Blocks** and **Protocol Deep Dives** to see how common designs are structured.
-* Pair that with **Risk & Security** to see smart contract risk, oracle risk, leverage, and operational pitfalls.
+* Read **DeFi & On-Chain Markets → Primitives** and **Protocol Deep Dives** to see how common designs are structured.
+* Pair that with **On-Chain Risk & Simulation** for smart contract risk, oracle manipulation, and frontrunning.
+* Add **Portfolio & Risk → Risk Management** for the non-chain-specific failure modes.
 * Browse **Case Studies** to see real or realistic examples of what goes wrong and why.
 
 #### Quick Map of Key Sections
@@ -63,40 +81,44 @@ Here's a plain-language map of what lives where:
 <table>
   <tbody>
     <tr>
-      <td><strong>Building Blocks</strong></td>
-      <td>The essentials: tokens, swaps, AMMs, lending, stablecoins, liquidations, oracles, perps.</td>
+      <td><strong>Math &amp; Probability</strong></td>
+      <td>Random variables, expectation, variance, covariance, limit theorems, sampling.</td>
     </tr>
     <tr>
-      <td><strong>Protocol Deep Dives</strong></td>
-      <td>How different types of protocols are put together and what trade-offs they make.</td>
+      <td><strong>Statistics &amp; Time Series</strong></td>
+      <td>Turning a price series into estimates: returns, volatility, autocorrelation, stationarity.</td>
     </tr>
     <tr>
-      <td><strong>Market Microstructure</strong></td>
-      <td>How trades actually happen: slippage, fees, liquidity, gas, transaction order, MEV.</td>
+      <td><strong>Stochastic Processes</strong></td>
+      <td>Models of price motion: random walks, GBM, mean reversion, jumps.</td>
     </tr>
     <tr>
-      <td><strong>Data & Tooling</strong></td>
-      <td>How to get data, clean it, and work with it in code or notebooks.</td>
+      <td><strong>Markets &amp; Microstructure</strong></td>
+      <td>How trades actually happen: orderbooks, slippage, fees, routing, latency.</td>
     </tr>
     <tr>
-      <td><strong>Quant & Math Toolkit</strong></td>
-      <td>The mathematical side: probability, returns, volatility, Sharpe, Kelly, portfolio ideas.</td>
+      <td><strong>Signals &amp; Features</strong></td>
+      <td>A catalog of tools like RSI, MACD, Bollinger Bands, volume, funding, and basis features.</td>
     </tr>
     <tr>
-      <td><strong>Signals & Indicators</strong></td>
-      <td>A catalog of tools like RSI, MACD, Bollinger Bands, funding-based signals, on-chain features.</td>
-    </tr>
-    <tr>
-      <td><strong>Strategy Library</strong></td>
+      <td><strong>Strategy Design</strong></td>
       <td>Full strategy stories: what the idea is, how it's built, how it behaves, and how it breaks.</td>
     </tr>
     <tr>
-      <td><strong>Simulation & Backtesting</strong></td>
-      <td>How to test strategies, build simple backtests, and run simulations.</td>
+      <td><strong>Portfolio &amp; Risk</strong></td>
+      <td>Sharpe, drawdown, VaR, Kelly, mean-variance, position sizing, and risk management.</td>
     </tr>
     <tr>
-      <td><strong>Risk & Security</strong></td>
-      <td>All the ways things can fail: smart contracts, oracles, leverage, execution, operations.</td>
+      <td><strong>Data &amp; Tooling</strong></td>
+      <td>How to get data, clean it, and work with it in code or notebooks.</td>
+    </tr>
+    <tr>
+      <td><strong>Simulation &amp; Backtesting</strong></td>
+      <td>How to test strategies, build backtests, and run simulations without fooling yourself.</td>
+    </tr>
+    <tr>
+      <td><strong>DeFi &amp; On-Chain Markets</strong></td>
+      <td>The on-chain domain: primitives, protocol designs, MEV and ordering, execution environments, on-chain data, and the strategies and risks specific to them.</td>
     </tr>
     <tr>
       <td><strong>Case Studies</strong></td>
@@ -150,8 +172,20 @@ A few conventions are used throughout the docs to help you keep track of where y
 
 If you ever feel lost, you can:
 
-* Go back to the **Welcome / Start Here** section and pick a reading path.
+* Go back to the **Start Here** section and pick a reading path.
 * Use the search bar to jump straight to the term or formula you have in mind.
 * Open the **Reference** section and use the indices to find the right page.
 
-The aim is that you always know what you’re reading, why it matters, and where to go next—whether you’re just discovering DeFi or trying to sharpen an existing research or trading process.
+The aim is that you always know what you’re reading, why it matters, and where to go next—whether you’re learning what volatility means or sharpening an existing research process.
+
+---
+
+#### See Also
+
+* [Reading Paths](/welcome/reading-paths) – Full routes for six different backgrounds
+* [Prerequisites](/welcome/prerequisites) – What each section assumes you know
+* [How to Read an Arth Article](/start-here/how-to-read) – Getting the most out of a single page
+* [Notation & Conventions](/welcome/notation-conventions) – Symbols and code style used site-wide
+* [Risk & Reality Check](/welcome/risk-reality-check) – How to read the strategy material responsibly
+* [Glossary](/reference/glossary) – The lookup layer when a term is unfamiliar
+* [Trading Foundations](/trading-foundations) – A good first stop inside the quant core

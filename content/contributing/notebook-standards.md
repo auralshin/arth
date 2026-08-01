@@ -102,7 +102,7 @@ def calculate_impermanent_loss(price_ratio: float) -> float:
 - Write in third person declarative: "This section demonstrates..." not "We will now..."
 - Keep markdown cells concise: 2-5 sentences introducing code
 - Use headers (`##`, `###`) to organize sections
-- Include mathematical notation using LaTeX in markdown: `$x_{t+1} = x_t + \Delta x$`
+- Notation inside a Jupyter notebook may use LaTeX, since notebooks render it. On Arth pages it must not: the site has no math renderer, so write ASCII in a fenced `text` block (`x_next = x_t + delta_x`). See [Notation Reference](/reference/notation).
 
 **Visual Elements**
 - Use **bold** for key terms or warnings

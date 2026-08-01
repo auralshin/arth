@@ -157,3 +157,14 @@ When thinking about tokens and addresses in DeFi, keep this model:
 * **Protocol** = another contract that can move certain tokens according to rules
 
 Everything else—APYs, dashboards, charts—is built on top of those simple ingredients.
+
+---
+
+#### See Also
+
+* [Tokens 101](/building-blocks/tokens-101) – A fuller mental model of what tokens represent
+* [Token Standards](/building-blocks/token-standards) – The interfaces behind transfer and approve
+* [ERC-20](/building-blocks/erc20) – Approvals and allowances in detail
+* [What "On-Chain" Means](/start-here/on-chain-meaning) – The ledger these balances live in
+* [Operational Risk: Keys, Custody, and Human Error](/risk/operational) – Key management and approval hygiene
+* [Common DeFi Use Cases](/start-here/use-cases) – What you do with those balances next

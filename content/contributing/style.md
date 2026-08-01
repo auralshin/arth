@@ -79,7 +79,7 @@ Use `formula` code blocks for centered equations (triple backticks with `formula
 #### Links and References
 
 **Internal Links**
-- Use descriptive text: "[concentrated liquidity](/building-blocks/concentrated-liquidity)" not "click here"
+- Use descriptive text: "[concentrated liquidity](/protocols/concentrated-liquidity)" not "click here"
 - Avoid bare URLs in prose; use markdown link syntax
 - Link to specific sections when possible: `/guards#authorization-guards`
 

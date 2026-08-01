@@ -1,7 +1,7 @@
 {
-  "name": "Arth - DeFi Knowledge Hub",
+  "name": "Arth - The Quant Encyclopedia",
   "short_name": "Arth",
-  "description": "A focused knowledge hub for DeFi practitioners, quantitative researchers, and curious learners",
+  "description": "An open encyclopedia of quantitative finance for enthusiasts, developers, and analysts",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

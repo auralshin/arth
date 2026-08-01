@@ -47,3 +47,14 @@ Stablecoins bundle several types of risk:
 - Design risk: fragile peg mechanisms that fail under stress or create perverse incentives.  
 
 Risk analysis often looks at collateral composition, redemption rules, historical depeg events, and correlations with other assets used elsewhere in the DeFi stack.
+
+---
+
+#### See Also
+
+* [Stablecoin Designs](/protocols/stablecoin-designs) – Peg architectures compared in depth
+* [Tokens 101](/building-blocks/tokens-101) – Where stablecoins sit among token types
+* [Oracles](/building-blocks/oracles) – How protocols price stablecoins and their collateral
+* [Lending & Borrowing](/building-blocks/lending-borrowing) – Stablecoins as borrowable assets and as collateral
+* [Liquidations](/building-blocks/liquidations) – What happens when collateral backing fails
+* [Types of Risk](/risk/types) – Framing collateral, governance and market risk together

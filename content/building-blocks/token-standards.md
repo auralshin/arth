@@ -1,7 +1,6 @@
 ### Token Standards
 
-> info **Metadata**
-> Level: Beginner–Intermediate • Prerequisites: Tokens 101, What “On-Chain” Means • Tags: [token-standards, erc-20, erc-721, erc-1155, spl, cw20, move, aptos, sui, cross-chain]
+> info **Metadata** Level: Beginner-Intermediate | Prerequisites: Tokens 101, What "On-Chain" Means | Tags: token-standards, erc-20, erc-721, erc-1155, spl, cw20, move, aptos, sui, cross-chain
 
 Token standards are the **interfaces** that make tokens predictable.
 
@@ -447,3 +446,14 @@ If you know which family a token belongs to, you already understand most of how 
 * Supra – [Supra official site](https://supra.com/) and exchange research pages for SUPRA
 
 You don’t need to memorize all of this. The goal is to recognize the *shape* of a token’s standard so you can quickly answer: “How does this thing behave, and what risks come with it?”
+
+---
+
+#### See Also
+
+* [Tokens 101](/building-blocks/tokens-101) – What tokens represent, before the interfaces
+* [ERC-20](/building-blocks/erc20) – The most widely implemented fungible standard
+* [Bridges (Primitives)](/building-blocks/bridges) – Moving standardised assets between chains
+* [Blockchain Execution Environments](/blockchain-execution-environments) – Why EVM, SVM and Move standards differ
+* [Move VM (Aptos, Sui)](/blockchain-execution-environments/move-vm) – The object model behind Aptos and Sui token standards
+* [Smart Contract and Protocol Risk Overview](/risk/smart-contract) – Integration risks from non-standard token behaviour

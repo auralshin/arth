@@ -1,5 +1,7 @@
 ### Backtesting Framework
 
+> info **Metadata** Level: Intermediate | Prerequisites: Python, TypeScript, Why Backtest and Simulate? | Tags: backtesting, simulation, python, typescript, strategy-testing, gas-costs
+
 Learn how to build a robust backtesting framework for testing DeFi trading strategies against historical data.
 
 #### Core Components
@@ -184,3 +186,14 @@ print(f"Max Drawdown: {results['max_drawdown']:.2%}")
 - Implement agent-based simulations for multi-player scenarios
 - Build event-driven architecture for real-time testing
 - Optimize performance for large-scale backtests
+
+---
+
+#### See Also
+
+* [Why Backtest and Simulate?](/simulation/why-backtest) – What a backtest can and cannot tell you
+* [Building a Simple Backtester](/simulation/building-backtester) – A minimal version of the same design
+* [Data Pipeline & Historical Replay](/building-simulations/data-pipeline-replay) – Feeding the engine clean historical data
+* [Event-Driven Architecture](/building-simulations/event-driven-architecture) – Decoupling data, strategy and execution
+* [Performance Metrics for Backtests](/simulation/metrics) – Evaluating the equity curve it produces
+* [Backtest vs Live Trading: Why Results Differ](/risk/backtest-vs-live) – The gap between simulated and real fills

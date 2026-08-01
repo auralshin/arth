@@ -12,7 +12,9 @@ export function applyLinkRenderer(renderer: Renderer) {
         text
       ) as string);
 
-      if (link.includes('#')) {
+      // Test the href, not the rendered HTML: marked escapes apostrophes in link
+      // text to &#39;, which would otherwise leave the link as a full page reload.
+      if (href.includes('#')) {
         return link;
       }
       return link.replace('href', 'routerLink');

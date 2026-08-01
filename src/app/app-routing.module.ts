@@ -196,6 +196,92 @@ import { ContentGuidelinesComponent } from './homepage/pages/contributing/conten
 import { HowToContributeComponent } from './homepage/pages/contributing/how-to-contribute/how-to-contribute.component';
 import { NotebookStandardsComponent } from './homepage/pages/contributing/notebook-standards/notebook-standards.component';
 import { ReviewProcessComponent } from './homepage/pages/contributing/review-process/review-process.component';
+import { MarketParticipantsComponent } from './homepage/pages/markets/market-participants/market-participants.component';
+import { InstrumentMapComponent } from './homepage/pages/markets/instrument-map/instrument-map.component';
+import { Equities101Component } from './homepage/pages/markets/equities-101/equities-101.component';
+import { CorporateActionsComponent } from './homepage/pages/markets/corporate-actions/corporate-actions.component';
+import { ShortSellingComponent } from './homepage/pages/markets/short-selling/short-selling.component';
+import { EquityIndicesComponent } from './homepage/pages/markets/equity-indices/equity-indices.component';
+import { Futures101Component } from './homepage/pages/markets/futures-101/futures-101.component';
+import { RollAndCarryComponent } from './homepage/pages/markets/roll-and-carry/roll-and-carry.component';
+import { CalendarSpreadsComponent } from './homepage/pages/markets/calendar-spreads/calendar-spreads.component';
+import { Fx101Component } from './homepage/pages/markets/fx-101/fx-101.component';
+import { FxCarryParityComponent } from './homepage/pages/markets/fx-carry-parity/fx-carry-parity.component';
+import { FixedIncome101Component } from './homepage/pages/markets/fixed-income-101/fixed-income-101.component';
+import { YieldCurvesComponent } from './homepage/pages/markets/yield-curves/yield-curves.component';
+import { DurationConvexityComponent } from './homepage/pages/markets/duration-convexity/duration-convexity.component';
+import { CurveConstructionComponent } from './homepage/pages/markets/curve-construction/curve-construction.component';
+import { CommoditiesComponent } from './homepage/pages/markets/commodities/commodities.component';
+import { Options101Component } from './homepage/pages/derivatives/options-101/options-101.component';
+import { PayoffsParityComponent } from './homepage/pages/derivatives/payoffs-parity/payoffs-parity.component';
+import { NoArbitrageReplicationComponent } from './homepage/pages/derivatives/no-arbitrage-replication/no-arbitrage-replication.component';
+import { BinomialTreesComponent } from './homepage/pages/derivatives/binomial-trees/binomial-trees.component';
+import { BlackScholesComponent } from './homepage/pages/derivatives/black-scholes/black-scholes.component';
+import { GreeksComponent } from './homepage/pages/derivatives/greeks/greeks.component';
+import { DeltaHedgingComponent } from './homepage/pages/derivatives/delta-hedging/delta-hedging.component';
+import { ImpliedVolatilityComponent } from './homepage/pages/derivatives/implied-volatility/implied-volatility.component';
+import { VolSurfaceComponent } from './homepage/pages/derivatives/vol-surface/vol-surface.component';
+import { VolTermStructureComponent } from './homepage/pages/derivatives/vol-term-structure/vol-term-structure.component';
+import { ExoticsComponent } from './homepage/pages/derivatives/exotics/exotics.component';
+import { VarianceSwapsComponent } from './homepage/pages/derivatives/variance-swaps/variance-swaps.component';
+import { BrownianMotionComponent } from './homepage/pages/stochastic-calculus/brownian-motion/brownian-motion.component';
+import { MartingalesFiltrationsComponent } from './homepage/pages/stochastic-calculus/martingales-filtrations/martingales-filtrations.component';
+import { ItoLemmaComponent } from './homepage/pages/stochastic-calculus/ito-lemma/ito-lemma.component';
+import { SdesComponent } from './homepage/pages/stochastic-calculus/sdes/sdes.component';
+import { NumericalSchemesComponent } from './homepage/pages/stochastic-calculus/numerical-schemes/numerical-schemes.component';
+import { ChangeOfMeasureComponent } from './homepage/pages/stochastic-calculus/change-of-measure/change-of-measure.component';
+import { RiskNeutralPricingComponent } from './homepage/pages/stochastic-calculus/risk-neutral-pricing/risk-neutral-pricing.component';
+import { FeynmanKacComponent } from './homepage/pages/stochastic-calculus/feynman-kac/feynman-kac.component';
+import { OrnsteinUhlenbeckComponent } from './homepage/pages/stochastic-calculus/ornstein-uhlenbeck/ornstein-uhlenbeck.component';
+import { HypothesisTestingComponent } from './homepage/pages/stat-methods/hypothesis-testing/hypothesis-testing.component';
+import { ConfidenceIntervalsComponent } from './homepage/pages/stat-methods/confidence-intervals/confidence-intervals.component';
+import { LinearRegressionComponent } from './homepage/pages/stat-methods/linear-regression/linear-regression.component';
+import { RegressionDiagnosticsComponent } from './homepage/pages/stat-methods/regression-diagnostics/regression-diagnostics.component';
+import { FactorModelsComponent } from './homepage/pages/stat-methods/factor-models/factor-models.component';
+import { PcaComponent } from './homepage/pages/stat-methods/pca/pca.component';
+import { ArimaComponent } from './homepage/pages/stat-methods/arima/arima.component';
+import { GarchComponent } from './homepage/pages/stat-methods/garch/garch.component';
+import { UnitRootsComponent } from './homepage/pages/stat-methods/unit-roots/unit-roots.component';
+import { CointegrationComponent } from './homepage/pages/stat-methods/cointegration/cointegration.component';
+import { MultipleTestingComponent } from './homepage/pages/stat-methods/multiple-testing/multiple-testing.component';
+import { BacktestOverfittingComponent } from './homepage/pages/stat-methods/backtest-overfitting/backtest-overfitting.component';
+import { BootstrapComponent } from './homepage/pages/stat-methods/bootstrap/bootstrap.component';
+import { ExecutionOverviewComponent } from './homepage/pages/execution/execution-overview/execution-overview.component';
+import { OrderTypesComponent } from './homepage/pages/execution/order-types/order-types.component';
+import { MarketImpactComponent } from './homepage/pages/execution/market-impact/market-impact.component';
+import { AlmgrenChrissComponent } from './homepage/pages/execution/almgren-chriss/almgren-chriss.component';
+import { TwapVwapComponent } from './homepage/pages/execution/twap-vwap/twap-vwap.component';
+import { ImplementationShortfallComponent } from './homepage/pages/execution/implementation-shortfall/implementation-shortfall.component';
+import { SmartOrderRoutingComponent } from './homepage/pages/execution/smart-order-routing/smart-order-routing.component';
+import { TransactionCostAnalysisComponent } from './homepage/pages/execution/transaction-cost-analysis/transaction-cost-analysis.component';
+import { AdverseSelectionComponent } from './homepage/pages/execution/adverse-selection/adverse-selection.component';
+import { ExecutionBenchmarksComponent } from './homepage/pages/execution/execution-benchmarks/execution-benchmarks.component';
+import { Credit101Component } from './homepage/pages/credit/credit-101/credit-101.component';
+import { CreditSpreadsComponent } from './homepage/pages/credit/credit-spreads/credit-spreads.component';
+import { DefaultProbabilityComponent } from './homepage/pages/credit/default-probability/default-probability.component';
+import { MertonModelComponent } from './homepage/pages/credit/merton-model/merton-model.component';
+import { ReducedFormModelsComponent } from './homepage/pages/credit/reduced-form-models/reduced-form-models.component';
+import { CdsComponent } from './homepage/pages/credit/cds/cds.component';
+import { RecoveryRatesComponent } from './homepage/pages/credit/recovery-rates/recovery-rates.component';
+import { CreditCurvesComponent } from './homepage/pages/credit/credit-curves/credit-curves.component';
+import { MlOverviewComponent } from './homepage/pages/ml-finance/ml-overview/ml-overview.component';
+import { FeatureEngineeringComponent } from './homepage/pages/ml-finance/feature-engineering/feature-engineering.component';
+import { LabellingComponent } from './homepage/pages/ml-finance/labelling/labelling.component';
+import { MetaLabellingComponent } from './homepage/pages/ml-finance/meta-labelling/meta-labelling.component';
+import { PurgedCrossValidationComponent } from './homepage/pages/ml-finance/purged-cross-validation/purged-cross-validation.component';
+import { RegularisationComponent } from './homepage/pages/ml-finance/regularisation/regularisation.component';
+import { EnsemblesComponent } from './homepage/pages/ml-finance/ensembles/ensembles.component';
+import { InterpretabilityComponent } from './homepage/pages/ml-finance/interpretability/interpretability.component';
+import { MlPitfallsComponent } from './homepage/pages/ml-finance/ml-pitfalls/ml-pitfalls.component';
+import { RegimesOverviewComponent } from './homepage/pages/regimes-macro/regimes-overview/regimes-overview.component';
+import { MarkovSwitchingComponent } from './homepage/pages/regimes-macro/markov-switching/markov-switching.component';
+import { HiddenMarkovModelsComponent } from './homepage/pages/regimes-macro/hidden-markov-models/hidden-markov-models.component';
+import { ChangepointDetectionComponent } from './homepage/pages/regimes-macro/changepoint-detection/changepoint-detection.component';
+import { CorrelationBreakdownComponent } from './homepage/pages/regimes-macro/correlation-breakdown/correlation-breakdown.component';
+import { RatesAndInflationComponent } from './homepage/pages/regimes-macro/rates-and-inflation/rates-and-inflation.component';
+import { LiquidityCyclesComponent } from './homepage/pages/regimes-macro/liquidity-cycles/liquidity-cycles.component';
+import { MacroFactorsComponent } from './homepage/pages/regimes-macro/macro-factors/macro-factors.component';
+import { OrderingEconomicsComponent } from './homepage/pages/transaction-ordering-mev/ordering-economics/ordering-economics.component';
 
 const routes: Routes = [
   {
@@ -396,6 +482,92 @@ const routes: Routes = [
         { path: 'contributing/how-to-contribute', component: HowToContributeComponent },
         { path: 'contributing/notebook-standards', component: NotebookStandardsComponent },
         { path: 'contributing/review-process', component: ReviewProcessComponent },
+        { path: 'markets/market-participants', component: MarketParticipantsComponent },
+        { path: 'markets/instrument-map', component: InstrumentMapComponent },
+        { path: 'markets/equities-101', component: Equities101Component },
+        { path: 'markets/corporate-actions', component: CorporateActionsComponent },
+        { path: 'markets/short-selling', component: ShortSellingComponent },
+        { path: 'markets/equity-indices', component: EquityIndicesComponent },
+        { path: 'markets/futures-101', component: Futures101Component },
+        { path: 'markets/roll-and-carry', component: RollAndCarryComponent },
+        { path: 'markets/calendar-spreads', component: CalendarSpreadsComponent },
+        { path: 'markets/fx-101', component: Fx101Component },
+        { path: 'markets/fx-carry-parity', component: FxCarryParityComponent },
+        { path: 'markets/fixed-income-101', component: FixedIncome101Component },
+        { path: 'markets/yield-curves', component: YieldCurvesComponent },
+        { path: 'markets/duration-convexity', component: DurationConvexityComponent },
+        { path: 'markets/curve-construction', component: CurveConstructionComponent },
+        { path: 'markets/commodities', component: CommoditiesComponent },
+        { path: 'derivatives/options-101', component: Options101Component },
+        { path: 'derivatives/payoffs-parity', component: PayoffsParityComponent },
+        { path: 'derivatives/no-arbitrage-replication', component: NoArbitrageReplicationComponent },
+        { path: 'derivatives/binomial-trees', component: BinomialTreesComponent },
+        { path: 'derivatives/black-scholes', component: BlackScholesComponent },
+        { path: 'derivatives/greeks', component: GreeksComponent },
+        { path: 'derivatives/delta-hedging', component: DeltaHedgingComponent },
+        { path: 'derivatives/implied-volatility', component: ImpliedVolatilityComponent },
+        { path: 'derivatives/vol-surface', component: VolSurfaceComponent },
+        { path: 'derivatives/vol-term-structure', component: VolTermStructureComponent },
+        { path: 'derivatives/exotics', component: ExoticsComponent },
+        { path: 'derivatives/variance-swaps', component: VarianceSwapsComponent },
+        { path: 'stochastic-calculus/brownian-motion', component: BrownianMotionComponent },
+        { path: 'stochastic-calculus/martingales-filtrations', component: MartingalesFiltrationsComponent },
+        { path: 'stochastic-calculus/ito-lemma', component: ItoLemmaComponent },
+        { path: 'stochastic-calculus/sdes', component: SdesComponent },
+        { path: 'stochastic-calculus/numerical-schemes', component: NumericalSchemesComponent },
+        { path: 'stochastic-calculus/change-of-measure', component: ChangeOfMeasureComponent },
+        { path: 'stochastic-calculus/risk-neutral-pricing', component: RiskNeutralPricingComponent },
+        { path: 'stochastic-calculus/feynman-kac', component: FeynmanKacComponent },
+        { path: 'stochastic-calculus/ornstein-uhlenbeck', component: OrnsteinUhlenbeckComponent },
+        { path: 'stat-methods/hypothesis-testing', component: HypothesisTestingComponent },
+        { path: 'stat-methods/confidence-intervals', component: ConfidenceIntervalsComponent },
+        { path: 'stat-methods/linear-regression', component: LinearRegressionComponent },
+        { path: 'stat-methods/regression-diagnostics', component: RegressionDiagnosticsComponent },
+        { path: 'stat-methods/factor-models', component: FactorModelsComponent },
+        { path: 'stat-methods/pca', component: PcaComponent },
+        { path: 'stat-methods/arima', component: ArimaComponent },
+        { path: 'stat-methods/garch', component: GarchComponent },
+        { path: 'stat-methods/unit-roots', component: UnitRootsComponent },
+        { path: 'stat-methods/cointegration', component: CointegrationComponent },
+        { path: 'stat-methods/multiple-testing', component: MultipleTestingComponent },
+        { path: 'stat-methods/backtest-overfitting', component: BacktestOverfittingComponent },
+        { path: 'stat-methods/bootstrap', component: BootstrapComponent },
+        { path: 'execution/execution-overview', component: ExecutionOverviewComponent },
+        { path: 'execution/order-types', component: OrderTypesComponent },
+        { path: 'execution/market-impact', component: MarketImpactComponent },
+        { path: 'execution/almgren-chriss', component: AlmgrenChrissComponent },
+        { path: 'execution/twap-vwap', component: TwapVwapComponent },
+        { path: 'execution/implementation-shortfall', component: ImplementationShortfallComponent },
+        { path: 'execution/smart-order-routing', component: SmartOrderRoutingComponent },
+        { path: 'execution/transaction-cost-analysis', component: TransactionCostAnalysisComponent },
+        { path: 'execution/adverse-selection', component: AdverseSelectionComponent },
+        { path: 'execution/execution-benchmarks', component: ExecutionBenchmarksComponent },
+        { path: 'credit/credit-101', component: Credit101Component },
+        { path: 'credit/credit-spreads', component: CreditSpreadsComponent },
+        { path: 'credit/default-probability', component: DefaultProbabilityComponent },
+        { path: 'credit/merton-model', component: MertonModelComponent },
+        { path: 'credit/reduced-form-models', component: ReducedFormModelsComponent },
+        { path: 'credit/cds', component: CdsComponent },
+        { path: 'credit/recovery-rates', component: RecoveryRatesComponent },
+        { path: 'credit/credit-curves', component: CreditCurvesComponent },
+        { path: 'ml-finance/ml-overview', component: MlOverviewComponent },
+        { path: 'ml-finance/feature-engineering', component: FeatureEngineeringComponent },
+        { path: 'ml-finance/labelling', component: LabellingComponent },
+        { path: 'ml-finance/meta-labelling', component: MetaLabellingComponent },
+        { path: 'ml-finance/purged-cross-validation', component: PurgedCrossValidationComponent },
+        { path: 'ml-finance/regularisation', component: RegularisationComponent },
+        { path: 'ml-finance/ensembles', component: EnsemblesComponent },
+        { path: 'ml-finance/interpretability', component: InterpretabilityComponent },
+        { path: 'ml-finance/ml-pitfalls', component: MlPitfallsComponent },
+        { path: 'regimes-macro/regimes-overview', component: RegimesOverviewComponent },
+        { path: 'regimes-macro/markov-switching', component: MarkovSwitchingComponent },
+        { path: 'regimes-macro/hidden-markov-models', component: HiddenMarkovModelsComponent },
+        { path: 'regimes-macro/changepoint-detection', component: ChangepointDetectionComponent },
+        { path: 'regimes-macro/correlation-breakdown', component: CorrelationBreakdownComponent },
+        { path: 'regimes-macro/rates-and-inflation', component: RatesAndInflationComponent },
+        { path: 'regimes-macro/liquidity-cycles', component: LiquidityCyclesComponent },
+        { path: 'regimes-macro/macro-factors', component: MacroFactorsComponent },
+        { path: 'transaction-ordering-mev/ordering-economics', component: OrderingEconomicsComponent },
       { path: '**', redirectTo: '', pathMatch: 'full' }
     ]
   }

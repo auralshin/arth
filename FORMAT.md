@@ -57,9 +57,9 @@ The metadata block uses the info callout and must include:
 ### Level Guidelines
 
 - **All**: Suitable for all readers (welcome, overview, reference pages)
-- **Beginner**: No prior DeFi or quant knowledge required
-- **Intermediate**: Assumes basic DeFi concepts or some math/stats background
-- **Advanced**: Requires deep protocol knowledge, complex math, or both
+- **Beginner**: No prior finance or quant knowledge required
+- **Intermediate**: Assumes some maths/stats background or familiarity with markets
+- **Advanced**: Requires solid mathematical grounding, deep domain knowledge, or both
 
 ### Prerequisites
 
@@ -72,7 +72,7 @@ The metadata block uses the info callout and must include:
 Use lowercase, hyphenated tags. Common categories:
 
 - **Content type**: `overview`, `tutorial`, `reference`, `case-study`
-- **Topic area**: `defi`, `amm`, `lending`, `signals`, `risk`, `math`
+- **Topic area**: `math`, `statistics`, `derivatives`, `credit`, `execution`, `signals`, `risk`, `defi`
 - **Concepts**: `volatility`, `liquidity`, `leverage`, `backtesting`
 - **Tools**: `python`, `typescript`, `simulation`
 
@@ -151,14 +151,18 @@ Present formulas in blocks with context:
 ```markdown
 The simple return is calculated as:
 
-$$
-R_t = \frac{P_t - P_{t-1}}{P_{t-1}}
-$$
+```text
+R_t = (P_t - P_{t-1}) / P_{t-1}
+```
 
 where:
 - `P_t` is the current price
 - `P_{t-1}` is the previous price
 ```
+
+> warning **Do not use LaTeX** There is no math renderer (KaTeX/MathJax) wired into this
+> site. `$$...$$` blocks and commands like `\frac` render as literal text. Write display
+> formulas in a fenced ```text block using ASCII, and inline maths in backticks.
 
 ### Code Examples
 
@@ -212,10 +216,15 @@ Use blockquotes with special prefixes for different types of callouts:
 > warning **Risk** This approach assumes constant volatility, which rarely holds in practice.
 ```
 
-### Tip Blocks (Helpful Advice)
+> warning **Only `info` and `warning` are styled** `styles.scss` defines selectors for
+> these two types only. A `tip`, `error`, `note` or `danger` callout renders unstyled.
+> Use `info` for helpful context and `warning` for risks and caveats.
+
+Keep the title and body on a **single line** — putting the body on the next line breaks
+the rendering:
 
 ```markdown
-> tip **Pro tip** Use log returns when aggregating over time to avoid compounding bias.
+> info **Aggregating returns** Use log returns over time to avoid compounding bias.
 ```
 
 Use callouts to:
@@ -257,12 +266,12 @@ Use tables for structured comparisons:
       <td><strong>Description</strong></td>
     </tr>
     <tr>
-      <td>Building Blocks</td>
-      <td>Core DeFi concepts: AMMs, lending, oracles</td>
+      <td>Foundations</td>
+      <td>Probability, statistics, stochastic processes and calculus</td>
     </tr>
     <tr>
       <td>Signals</td>
-      <td>Indicators like RSI, MACD, and on-chain metrics</td>
+      <td>Indicators like RSI, MACD, volume and positioning features</td>
     </tr>
   </tbody>
 </table>

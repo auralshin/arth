@@ -74,4 +74,4 @@ From a protocol-design perspective, concentrated liquidity opens new possibiliti
 * [Liquidity Pools](/building-blocks/liquidity-pools) – Core concepts of reserves and LP tokens
 * [LP Business Models](/strategies/lp-business) – Evaluating profitability and risk-adjusted returns
 * [Delta-Hedged LP](/strategies/delta-hedged-lp) – Neutralising rebalancing with offsetting positions
-* [LP Returns](/simulations/lp-returns) – Simulated performance under different parameter choices
+* [LP Returns](/simulation/lp-returns) – Simulated performance under different parameter choices
